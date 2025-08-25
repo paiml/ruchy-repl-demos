@@ -1,0 +1,23 @@
+// Priority queue using BinaryHeap
+use std::collections::BinaryHeap;
+use std::cmp::Reverse;
+
+// Max heap (default)
+let mut max_heap = BinaryHeap::new();
+max_heap.push(3);
+max_heap.push(1);
+max_heap.push(4);
+max_heap.push(1);
+max_heap.push(5);
+
+println!("Max: {:?}", max_heap.peek());
+max_heap.pop()
+
+// Min heap using Reverse
+let mut min_heap = BinaryHeap::new();
+min_heap.push(Reverse(3));
+min_heap.push(Reverse(1));
+min_heap.push(Reverse(4));
+
+println!("Min: {:?}", min_heap.peek().map(|r| r.0));
+min_heap.pop()

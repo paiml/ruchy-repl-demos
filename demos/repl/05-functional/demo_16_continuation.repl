@@ -1,0 +1,33 @@
+// Continuation-passing style (CPS)
+// Convert direct style to continuation-passing style
+
+// Direct style factorial
+fn factorial_direct(n: u32) -> u32 {
+    if n <= 1 {
+        1
+    } else {
+        n * factorial_direct(n - 1)
+    }
+}
+
+// CPS factorial
+fn factorial_cps<F>(n: u32, cont: F) -> u32
+where F: FnOnce(u32) -> u32 {
+    if n <= 1 {
+        cont(1)
+    } else {
+        factorial_cps(n - 1, move |result| cont(n * result))
+    }
+}
+
+// Direct style
+let result1 = factorial_direct(5);
+println!("Direct: {}", result1);
+
+// CPS with identity continuation
+let result2 = factorial_cps(5, |x| x);
+println!("CPS: {}", result2);
+
+// CPS with custom continuation
+let result3 = factorial_cps(5, |x| x * 2);
+println!("CPS with doubling: {}", result3)

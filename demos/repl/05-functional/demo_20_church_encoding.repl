@@ -1,0 +1,52 @@
+// Church encoding - representing data with functions
+// Church numerals and booleans
+
+// Church numerals
+type ChurchNum = Box<dyn Fn(Box<dyn Fn(u32) -> u32>) -> Box<dyn Fn(u32) -> u32>>;
+
+fn zero() -> ChurchNum {
+    Box::new(|_f| Box::new(|x| x))
+}
+
+fn succ(n: ChurchNum) -> ChurchNum {
+    Box::new(move |f| {
+        let f_clone = f.clone();
+        Box::new(move |x| f(n(f_clone)(x)))
+    })
+}
+
+fn to_int(n: ChurchNum) -> u32 {
+    n(Box::new(|x| x + 1))(0)
+}
+
+// Church booleans
+type ChurchBool = Box<dyn Fn(u32, u32) -> u32>;
+
+fn church_true() -> ChurchBool {
+    Box::new(|t, _f| t)
+}
+
+fn church_false() -> ChurchBool {
+    Box::new(|_t, f| f)
+}
+
+fn church_and(a: ChurchBool, b: ChurchBool) -> ChurchBool {
+    Box::new(move |t, f| a(b(t, f), f))
+}
+
+fn church_or(a: ChurchBool, b: ChurchBool) -> ChurchBool {
+    Box::new(move |t, f| a(t, b(t, f)))
+}
+
+// Examples
+let one = succ(zero());
+let two = succ(one);
+let three = succ(two);
+
+println!("Church three as int: {}", to_int(three));
+
+let result = church_and(church_true(), church_false())(1, 0);
+println!("true AND false: {}", result);
+
+let result = church_or(church_true(), church_false())(1, 0);
+println!("true OR false: {}", result)

@@ -1,0 +1,49 @@
+// Trie (prefix tree) implementation
+use std::collections::HashMap;
+
+struct TrieNode {
+    children: HashMap<char, TrieNode>,
+    is_end: bool,
+}
+
+struct Trie {
+    root: TrieNode,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Trie {
+            root: TrieNode {
+                children: HashMap::new(),
+                is_end: false,
+            }
+        }
+    }
+    
+    fn insert(&mut self, word: &str) {
+        let mut node = &mut self.root;
+        for ch in word.chars() {
+            node = node.children.entry(ch).or_insert(TrieNode {
+                children: HashMap::new(),
+                is_end: false,
+            });
+        }
+        node.is_end = true;
+    }
+    
+    fn search(&self, word: &str) -> bool {
+        let mut node = &self.root;
+        for ch in word.chars() {
+            match node.children.get(&ch) {
+                Some(n) => node = n,
+                None => return false,
+            }
+        }
+        node.is_end
+    }
+}
+
+let mut trie = Trie::new();
+trie.insert("apple");
+trie.insert("app");
+trie.search("app")

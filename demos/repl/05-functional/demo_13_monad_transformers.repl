@@ -1,0 +1,51 @@
+// Monad transformers - combining monads
+use std::fmt::Debug;
+
+// Result<Option<T>> transformer
+#[derive(Debug)]
+struct ResultOption<T, E> {
+    inner: Result<Option<T>, E>
+}
+
+impl<T, E> ResultOption<T, E> {
+    fn new(value: T) -> Self {
+        ResultOption { inner: Ok(Some(value)) }
+    }
+    
+    fn none() -> Self {
+        ResultOption { inner: Ok(None) }
+    }
+    
+    fn error(err: E) -> Self {
+        ResultOption { inner: Err(err) }
+    }
+    
+    fn and_then<U, F>(self, f: F) -> ResultOption<U, E>
+    where F: FnOnce(T) -> ResultOption<U, E> {
+        match self.inner {
+            Ok(Some(val)) => f(val),
+            Ok(None) => ResultOption::none(),
+            Err(e) => ResultOption::error(e),
+        }
+    }
+    
+    fn map<U, F>(self, f: F) -> ResultOption<U, E>
+    where F: FnOnce(T) -> U {
+        ResultOption {
+            inner: self.inner.map(|opt| opt.map(f))
+        }
+    }
+}
+
+// Example usage
+let result = ResultOption::new(5)
+    .map(|x| x * 2)
+    .and_then(|x| {
+        if x > 5 {
+            ResultOption::new(x + 1)
+        } else {
+            ResultOption::none()
+        }
+    });
+
+println!("Monad transformer result: {:?}", result)

@@ -1,0 +1,48 @@
+// Free monad pattern for building DSLs
+enum Free<F, A> {
+    Pure(A),
+    Free(Box<F>),
+}
+
+// Example DSL for console operations
+enum ConsoleF<A> {
+    Print(String, A),
+    Read(Box<dyn FnOnce(String) -> A>),
+}
+
+type Console<A> = Free<ConsoleF<Console<A>>, A>;
+
+impl<A> Console<A> {
+    fn pure(value: A) -> Self {
+        Free::Pure(value)
+    }
+    
+    fn print(msg: String) -> Console<()> {
+        Free::Free(Box::new(ConsoleF::Print(msg, Console::pure(()))))
+    }
+    
+    fn read() -> Console<String> {
+        Free::Free(Box::new(ConsoleF::Read(Box::new(|s| Console::pure(s)))))
+    }
+}
+
+// Interpreter for the DSL
+fn run_console<A>(program: Console<A>) -> A {
+    match program {
+        Free::Pure(a) => a,
+        Free::Free(f) => match *f {
+            ConsoleF::Print(msg, next) => {
+                println!("{}", msg);
+                run_console(next)
+            },
+            ConsoleF::Read(cont) => {
+                let input = "user input".to_string(); // Simulated
+                run_console(cont(input))
+            }
+        }
+    }
+}
+
+// Example program
+let program = Console::print("Hello!".to_string());
+run_console(program)

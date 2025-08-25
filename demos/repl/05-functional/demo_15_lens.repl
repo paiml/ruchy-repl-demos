@@ -1,0 +1,71 @@
+// Lens pattern for functional updates
+struct Lens<S, A> {
+    get: Box<dyn Fn(&S) -> A>,
+    set: Box<dyn Fn(S, A) -> S>,
+}
+
+impl<S: Clone, A: Clone> Lens<S, A> {
+    fn new<G, T>(get: G, set: T) -> Self
+    where
+        G: Fn(&S) -> A + 'static,
+        T: Fn(S, A) -> S + 'static,
+    {
+        Lens {
+            get: Box::new(get),
+            set: Box::new(set),
+        }
+    }
+    
+    fn view(&self, s: &S) -> A {
+        (self.get)(s)
+    }
+    
+    fn update(&self, s: S, a: A) -> S {
+        (self.set)(s, a)
+    }
+    
+    fn modify<F>(&self, s: S, f: F) -> S
+    where F: FnOnce(A) -> A {
+        let current = self.view(&s);
+        self.update(s, f(current))
+    }
+}
+
+// Example with nested structures
+#[derive(Clone, Debug)]
+struct Address {
+    street: String,
+    city: String,
+}
+
+#[derive(Clone, Debug)]
+struct Person {
+    name: String,
+    address: Address,
+}
+
+// Create lenses
+let address_lens = Lens::new(
+    |p: &Person| p.address.clone(),
+    |mut p: Person, a: Address| { p.address = a; p }
+);
+
+let city_lens = Lens::new(
+    |a: &Address| a.city.clone(),
+    |mut a: Address, c: String| { a.city = c; a }
+);
+
+let person = Person {
+    name: "Alice".to_string(),
+    address: Address {
+        street: "123 Main St".to_string(),
+        city: "Boston".to_string(),
+    }
+};
+
+let updated = address_lens.modify(person, |mut addr| {
+    addr.city = "New York".to_string();
+    addr
+});
+
+println!("Updated person: {:?}", updated)

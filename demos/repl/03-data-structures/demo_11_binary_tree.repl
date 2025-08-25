@@ -1,0 +1,31 @@
+// Binary tree implementation
+enum Tree<T> {
+    Empty,
+    Node(T, Box<Tree<T>>, Box<Tree<T>>),
+}
+
+impl<T> Tree<T> {
+    fn leaf(value: T) -> Self {
+        Tree::Node(value, Box::new(Tree::Empty), Box::new(Tree::Empty))
+    }
+}
+
+let tree = Tree::Node(
+    5,
+    Box::new(Tree::leaf(3)),
+    Box::new(Tree::leaf(7))
+)
+
+// Tree traversal
+fn inorder<T: std::fmt::Display>(tree: &Tree<T>) {
+    match tree {
+        Tree::Empty => {},
+        Tree::Node(val, left, right) => {
+            inorder(left);
+            print!("{} ", val);
+            inorder(right);
+        }
+    }
+}
+
+inorder(&tree)

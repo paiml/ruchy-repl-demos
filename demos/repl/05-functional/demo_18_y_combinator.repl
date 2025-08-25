@@ -1,0 +1,34 @@
+// Y Combinator - fixed-point combinator for recursion
+// Allows defining recursive functions without explicit recursion
+
+// Y combinator implementation (simplified for Rust)
+fn y<A, B, F>(f: F) -> impl Fn(A) -> B
+where
+    F: Fn(&dyn Fn(A) -> B, A) -> B + Copy + 'static,
+    A: 'static,
+    B: 'static,
+{
+    move |x| f(&y(f), x)
+}
+
+// Define factorial using Y combinator
+let factorial = y(|f, n: u32| {
+    if n <= 1 {
+        1
+    } else {
+        n * f(n - 1)
+    }
+});
+
+println!("Y-combinator factorial(5): {}", factorial(5));
+
+// Define Fibonacci using Y combinator
+let fibonacci = y(|f, n: u32| {
+    if n <= 1 {
+        n
+    } else {
+        f(n - 1) + f(n - 2)
+    }
+});
+
+println!("Y-combinator fibonacci(10): {}", fibonacci(10))

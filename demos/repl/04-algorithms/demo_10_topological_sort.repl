@@ -1,0 +1,47 @@
+// Topological sort using DFS
+use std::collections::{HashMap, HashSet};
+
+fn topological_sort(graph: &HashMap<char, Vec<char>>) -> Vec<char> {
+    let mut visited = HashSet::new();
+    let mut stack = Vec::new();
+    
+    fn dfs(
+        node: char,
+        graph: &HashMap<char, Vec<char>>,
+        visited: &mut HashSet<char>,
+        stack: &mut Vec<char>
+    ) {
+        visited.insert(node);
+        
+        if let Some(neighbors) = graph.get(&node) {
+            for &neighbor in neighbors {
+                if !visited.contains(&neighbor) {
+                    dfs(neighbor, graph, visited, stack);
+                }
+            }
+        }
+        
+        stack.push(node);
+    }
+    
+    for &node in graph.keys() {
+        if !visited.contains(&node) {
+            dfs(node, &graph, &mut visited, &mut stack);
+        }
+    }
+    
+    stack.reverse();
+    stack
+}
+
+let mut graph = HashMap::new();
+graph.insert('A', vec!['C']);
+graph.insert('B', vec!['C', 'D']);
+graph.insert('C', vec!['E']);
+graph.insert('D', vec!['F']);
+graph.insert('E', vec!['F']);
+graph.insert('F', vec![]);
+
+let sorted = topological_sort(&graph);
+println!("Topological order: {:?}", sorted);
+sorted

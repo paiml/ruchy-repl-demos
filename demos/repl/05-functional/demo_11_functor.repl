@@ -1,0 +1,34 @@
+// Functor pattern implementation
+trait Functor<A> {
+    type Wrapped<B>;
+    fn fmap<B, F>(self, f: F) -> Self::Wrapped<B>
+    where F: FnOnce(A) -> B;
+}
+
+// Option as Functor
+impl<A> Functor<A> for Option<A> {
+    type Wrapped<B> = Option<B>;
+    
+    fn fmap<B, F>(self, f: F) -> Option<B>
+    where F: FnOnce(A) -> B {
+        self.map(f)
+    }
+}
+
+// Vec as Functor
+impl<A> Functor<A> for Vec<A> {
+    type Wrapped<B> = Vec<B>;
+    
+    fn fmap<B, F>(self, f: F) -> Vec<B>
+    where F: FnOnce(A) -> B {
+        self.into_iter().map(f).collect()
+    }
+}
+
+let opt = Some(5);
+let result = opt.fmap(|x| x * 2);
+println!("Functor Option: {:?}", result);
+
+let vec = vec![1, 2, 3];
+let result = vec.fmap(|x| x + 10);
+println!("Functor Vec: {:?}", result)

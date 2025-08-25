@@ -1,0 +1,30 @@
+// Linked list implementation
+enum List<T> {
+    Nil,
+    Cons(T, Box<List<T>>),
+}
+
+impl<T> List<T> {
+    fn new() -> Self {
+        List::Nil
+    }
+    
+    fn push(self, elem: T) -> Self {
+        List::Cons(elem, Box::new(self))
+    }
+}
+
+let list = List::new()
+    .push(3)
+    .push(2)
+    .push(1)
+
+// List length
+fn len<T>(list: &List<T>) -> usize {
+    match list {
+        List::Nil => 0,
+        List::Cons(_, tail) => 1 + len(tail)
+    }
+}
+
+len(&list)
