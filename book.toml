@@ -1,0 +1,75 @@
+# Ruchy REPL & One-Liner Demos - TDD Book Configuration
+# Test-driven documentation aligned with demo collection
+
+[book]
+title = "Ruchy REPL & One-Liner Demos"
+authors = ["Claude Code", "PAIML Team"]
+description = "Test-driven collection of Ruchy REPL sessions and one-liners - every example is tested"
+language = "en"
+multilingual = false
+src = "book/src"
+
+[build]
+build-dir = "book/html"
+create-missing = false  # Prevent accidental file creation
+
+[preprocessor.index]
+
+[preprocessor.links]
+
+# Custom Ruchy preprocessor for code validation (disabled for now)
+# [preprocessor.ruchy-demo]
+# command = "./scripts/ruchy-demo-preprocessor"
+# renderer = ["html"]
+
+[output.html]
+# theme = "book/theme"  # Disabled for now, using default theme
+default-theme = "rust"
+preferred-dark-theme = "coal"
+smart-punctuation = true
+mathjax-support = false
+copy-fonts = true
+# additional-css = [
+#     "book/theme/ruchy-demos.css", 
+#     "book/theme/repl-highlight.css",
+#     "book/theme/one-liner-patterns.css"
+# ]
+# additional-js = [
+#     "book/theme/ruchy-repl.js",
+#     "book/theme/one-liner-runner.js", 
+#     "book/theme/demo-validator.js"
+# ]
+git-repository-url = "https://github.com/paiml/ruchy-repl-demos"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/paiml/ruchy-repl-demos/edit/main/{path}"
+
+[output.html.print]
+enable = true
+page-break = true
+
+[output.html.fold]
+enable = true
+level = 1
+
+[output.html.playground]
+editable = true
+copyable = true
+copy-js = true
+line-numbers = true
+runnable = true
+
+[output.html.search]
+enable = true
+limit-results = 50
+teaser-word-count = 30
+use-boolean-and = true
+boost-title = 2
+boost-hierarchy = 1
+boost-paragraph = 1
+expand = true
+heading-split-level = 3
+copy-js = true
+
+# Rust configuration for Ruchy
+[rust]
+edition = "2021"

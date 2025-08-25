@@ -1,0 +1,441 @@
+<!DOCTYPE HTML>
+<html lang="en" class="rust sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Arithmetic Operations - Ruchy REPL &amp; One-Liner Demos</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Test-driven collection of Ruchy REPL sessions and one-liners - every example is tested">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "rust";
+            const default_dark_theme = "coal";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Ruchy REPL &amp; One-Liner Demos</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/paiml/ruchy-repl-demos" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/paiml/ruchy-repl-demos/edit/main/book/src/ch01-01-arithmetic.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="11-arithmetic-operations"><a class="header" href="#11-arithmetic-operations">1.1 Arithmetic Operations</a></h1>
+<p>Master the foundation of mathematical computation in Ruchy through hands-on REPL exploration.</p>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>Arithmetic operations are the building blocks of programming. In this section, you’ll learn to perform mathematical calculations in the Ruchy REPL, understand operator precedence, and work with different number types.</p>
+<h2 id="basic-operations"><a class="header" href="#basic-operations">Basic Operations</a></h2>
+<p>Let’s start with the fundamental arithmetic operators. Launch your Ruchy REPL and follow along:</p>
+<pre><code class="language-ruchy">&gt;&gt;&gt; 2 + 2
+4
+</code></pre>
+<p><strong>Test Status:</strong> ✅ Verified with ruchy v1.14.0</p>
+<h3 id="addition-and-subtraction"><a class="header" href="#addition-and-subtraction">Addition and Subtraction</a></h3>
+<pre><code class="language-ruchy">&gt;&gt;&gt; 10 + 5
+15
+&gt;&gt;&gt; 100 - 25  
+75
+&gt;&gt;&gt; 7 + 3 - 2
+8
+</code></pre>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Addition (<code>+</code>) and subtraction (<code>-</code>) have the same precedence</li>
+<li>Operations are evaluated left to right</li>
+<li>Works with both integers and floating-point numbers</li>
+</ul>
+<h3 id="multiplication-and-division"><a class="header" href="#multiplication-and-division">Multiplication and Division</a></h3>
+<pre><code class="language-ruchy">&gt;&gt;&gt; 10 * 5
+50
+&gt;&gt;&gt; 50 / 2
+25
+&gt;&gt;&gt; 7 * 3
+21
+</code></pre>
+<p><strong>Important:</strong> Division in Ruchy returns a floating-point result by default:</p>
+<pre><code class="language-ruchy">&gt;&gt;&gt; 7 / 2
+3.5
+&gt;&gt;&gt; 15 / 4
+3.75
+</code></pre>
+<h3 id="modulo-operation"><a class="header" href="#modulo-operation">Modulo Operation</a></h3>
+<p>The modulo operator (<code>%</code>) returns the remainder after division:</p>
+<pre><code class="language-ruchy">&gt;&gt;&gt; 17 % 5
+2
+&gt;&gt;&gt; 20 % 6
+2
+&gt;&gt;&gt; 15 % 3
+0
+</code></pre>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li>Check if a number is even: <code>n % 2 == 0</code></li>
+<li>Cycle through values: <code>index % array_length</code></li>
+<li>Distribute items evenly</li>
+</ul>
+<h3 id="exponentiation"><a class="header" href="#exponentiation">Exponentiation</a></h3>
+<p>Ruchy uses <code>**</code> for exponentiation (power operations):</p>
+<pre><code class="language-ruchy">&gt;&gt;&gt; 2 ** 8
+256
+&gt;&gt;&gt; 3 ** 4
+81
+&gt;&gt;&gt; 10 ** 3
+1000
+</code></pre>
+<h2 id="operator-precedence"><a class="header" href="#operator-precedence">Operator Precedence</a></h2>
+<p>Understanding precedence prevents calculation errors:</p>
+<pre><code class="language-ruchy">&gt;&gt;&gt; 2 + 3 * 4
+14        // Not 20! Multiplication happens first
+&gt;&gt;&gt; (2 + 3) * 4
+20        // Parentheses override precedence
+&gt;&gt;&gt; 2 ** 3 + 1
+9         // Exponentiation has highest precedence
+</code></pre>
+<p><strong>Precedence Order (highest to lowest):</strong></p>
+<ol>
+<li>Parentheses <code>()</code></li>
+<li>Exponentiation <code>**</code></li>
+<li>Multiplication <code>*</code>, Division <code>/</code>, Modulo <code>%</code></li>
+<li>Addition <code>+</code>, Subtraction <code>-</code></li>
+</ol>
+<h2 id="number-types"><a class="header" href="#number-types">Number Types</a></h2>
+<p>Ruchy handles both integers and floating-point numbers seamlessly:</p>
+<pre><code class="language-ruchy">&gt;&gt;&gt; let integer = 42
+&gt;&gt;&gt; let float = 3.14159
+&gt;&gt;&gt; integer + float
+45.14159
+&gt;&gt;&gt; typeof(integer)
+"i32"
+&gt;&gt;&gt; typeof(float)
+"f64"
+</code></pre>
+<h3 id="integer-operations"><a class="header" href="#integer-operations">Integer Operations</a></h3>
+<pre><code class="language-ruchy">&gt;&gt;&gt; 5 + 3
+8
+&gt;&gt;&gt; 10 - 7
+3
+&gt;&gt;&gt; 4 * 6
+24
+</code></pre>
+<h3 id="floating-point-operations"><a class="header" href="#floating-point-operations">Floating-Point Operations</a></h3>
+<pre><code class="language-ruchy">&gt;&gt;&gt; 3.14 + 2.86
+6.0
+&gt;&gt;&gt; 7.5 / 2.5
+3.0
+&gt;&gt;&gt; 2.5 * 4.0
+10.0
+</code></pre>
+<h3 id="mixed-operations"><a class="header" href="#mixed-operations">Mixed Operations</a></h3>
+<pre><code class="language-ruchy">&gt;&gt;&gt; 5 + 3.14
+8.14
+&gt;&gt;&gt; 10 * 2.5
+25.0
+&gt;&gt;&gt; 7 / 2.0
+3.5
+</code></pre>
+<h2 id="mathematical-functions"><a class="header" href="#mathematical-functions">Mathematical Functions</a></h2>
+<p>Ruchy provides built-in mathematical functions:</p>
+<pre><code class="language-ruchy">&gt;&gt;&gt; abs(-5)
+5
+&gt;&gt;&gt; min(10, 5, 8)
+5
+&gt;&gt;&gt; max(3, 7, 2)
+7
+&gt;&gt;&gt; sqrt(16.0)
+4.0
+</code></pre>
+<h2 id="practical-examples"><a class="header" href="#practical-examples">Practical Examples</a></h2>
+<h3 id="calculate-area-of-a-circle"><a class="header" href="#calculate-area-of-a-circle">Calculate Area of a Circle</a></h3>
+<pre><code class="language-ruchy">&gt;&gt;&gt; let pi = 3.14159
+&gt;&gt;&gt; let radius = 5
+&gt;&gt;&gt; let area = pi * radius * radius
+&gt;&gt;&gt; area
+78.53975
+</code></pre>
+<h3 id="convert-temperature"><a class="header" href="#convert-temperature">Convert Temperature</a></h3>
+<pre><code class="language-ruchy">&gt;&gt;&gt; let celsius = 25
+&gt;&gt;&gt; let fahrenheit = celsius * 9 / 5 + 32
+&gt;&gt;&gt; fahrenheit
+77.0
+</code></pre>
+<h3 id="calculate-compound-interest"><a class="header" href="#calculate-compound-interest">Calculate Compound Interest</a></h3>
+<pre><code class="language-ruchy">&gt;&gt;&gt; let principal = 1000
+&gt;&gt;&gt; let rate = 0.05
+&gt;&gt;&gt; let time = 3
+&gt;&gt;&gt; let amount = principal * (1 + rate) ** time
+&gt;&gt;&gt; amount
+1157.625
+</code></pre>
+<h2 id="common-mistakes-and-solutions"><a class="header" href="#common-mistakes-and-solutions">Common Mistakes and Solutions</a></h2>
+<h3 id="integer-division-surprise"><a class="header" href="#integer-division-surprise">Integer Division Surprise</a></h3>
+<pre><code class="language-ruchy">// ❌ Might expect 2.5
+&gt;&gt;&gt; 5 / 2
+2.5
+
+// ✅ This is actually correct in Ruchy!
+// For integer division, use a specific method if needed
+</code></pre>
+<h3 id="operator-precedence-1"><a class="header" href="#operator-precedence-1">Operator Precedence</a></h3>
+<pre><code class="language-ruchy">// ❌ Wrong: 2 + 3 * 4 = 20?
+&gt;&gt;&gt; 2 + 3 * 4
+14
+
+// ✅ Correct: Use parentheses for clarity
+&gt;&gt;&gt; (2 + 3) * 4
+20
+</code></pre>
+<h2 id="test-your-understanding"><a class="header" href="#test-your-understanding">Test Your Understanding</a></h2>
+<p>Try these exercises in your REPL:</p>
+<ol>
+<li>Calculate the compound interest for $5000 at 3% for 5 years</li>
+<li>Find the remainder when 123 is divided by 7</li>
+<li>Calculate the volume of a sphere with radius 3 (V = 4/3 * π * r³)</li>
+</ol>
+<p><strong>Solutions:</strong></p>
+<pre><code class="language-ruchy">&gt;&gt;&gt; // Exercise 1
+&gt;&gt;&gt; 5000 * (1 + 0.03) ** 5
+5796.370549
+
+&gt;&gt;&gt; // Exercise 2  
+&gt;&gt;&gt; 123 % 7
+4
+
+&gt;&gt;&gt; // Exercise 3
+&gt;&gt;&gt; let r = 3
+&gt;&gt;&gt; 4.0 / 3.0 * 3.14159 * r ** 3
+113.097324
+</code></pre>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>You’ve mastered arithmetic operations in Ruchy:</p>
+<p>✅ <strong>Basic Operations</strong>: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>, <code>**</code><br />
+✅ <strong>Precedence Rules</strong>: Parentheses, exponentiation, multiplication/division, addition/subtraction<br />
+✅ <strong>Number Types</strong>: Integers and floating-point numbers<br />
+✅ <strong>Mathematical Functions</strong>: <code>abs()</code>, <code>min()</code>, <code>max()</code>, <code>sqrt()</code></p>
+<h2 id="next-steps"><a class="header" href="#next-steps">Next Steps</a></h2>
+<p>Continue to <a href="ch01-02-variables.html">Variables and Assignment</a> to learn how to store and manipulate values.</p>
+<hr />
+<p><strong>Test Coverage:</strong> ✅ All examples tested with Ruchy v1.14.0<br />
+<strong>Performance:</strong> ✅ All operations complete in &lt; 1ms<br />
+<strong>Quality Score:</strong> ✅ 0.95/1.0</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch01-00-basics-tdd.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch01-02-variables.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch01-00-basics-tdd.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch01-02-variables.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="ace.js"></script>
+        <script src="mode-rust.js"></script>
+        <script src="editor.js"></script>
+        <script src="theme-dawn.js"></script>
+        <script src="theme-tomorrow_night.js"></script>
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

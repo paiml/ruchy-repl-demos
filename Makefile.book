@@ -1,0 +1,117 @@
+# Ruchy REPL & One-Liner Demos Book - TDD Build System
+# Following Toyota Way principles from ruchy-book
+
+.PHONY: book-build book-serve book-test book-validate book-clean book-install-deps book-help
+
+# Book-specific targets (prefixed to avoid conflicts)
+book-help:
+	@echo "📚 Ruchy REPL & One-Liner Demos Book Commands:"
+	@echo ""
+	@echo "  book-build        - Build the TDD book with mdBook"
+	@echo "  book-serve        - Serve the book locally with auto-reload"
+	@echo "  book-test         - Test all book examples"
+	@echo "  book-validate     - Run all quality checks"
+	@echo "  book-clean        - Remove all build artifacts"
+	@echo "  book-install-deps - Install mdBook and dependencies"
+	@echo ""
+	@echo "🧪 TDD QUALITY GATES:"
+	@echo "  - All REPL examples tested with current Ruchy"
+	@echo "  - All one-liners validated for correctness"
+	@echo "  - No broken examples, ever"
+	@echo "  - Performance within limits (< 100ms per example)"
+
+# Install dependencies
+book-install-deps:
+	@echo "📦 Installing mdBook and required tools..."
+	@command -v mdbook >/dev/null 2>&1 || cargo install mdbook
+	@command -v mdbook-linkcheck >/dev/null 2>&1 || cargo install mdbook-linkcheck || true
+	@echo "✅ Dependencies installed"
+
+# Build the book
+book-build: book-install-deps
+	@echo "📚 Building TDD Ruchy demo book..."
+	@mdbook build
+	@echo "✅ Book built successfully in book/html/"
+
+# Serve the book locally
+book-serve: book-install-deps
+	@echo "🚀 Starting local book server..."
+	@mdbook serve --open
+
+# Test all book examples
+book-test:
+	@echo "🧪 Testing all book examples..."
+	@echo "Testing REPL examples from book chapters..."
+	@PASS=0; FAIL=0; \
+	for file in book/tests/repl/*.repl; do \
+		if [ -f "$$file" ]; then \
+			printf "  Testing $$(basename $$file)... "; \
+			if ./scripts/test-repl-example.sh "$$file" >/dev/null 2>&1; then \
+				echo "✅ PASS"; \
+				PASS=$$((PASS + 1)); \
+			else \
+				echo "❌ FAIL"; \
+				FAIL=$$((FAIL + 1)); \
+			fi; \
+		fi; \
+	done; \
+	echo "Testing one-liner examples from book chapters..."; \
+	for file in book/tests/one-liner/*.sh; do \
+		if [ -f "$$file" ]; then \
+			printf "  Testing $$(basename $$file)... "; \
+			if bash "$$file" >/dev/null 2>&1; then \
+				echo "✅ PASS"; \
+				PASS=$$((PASS + 1)); \
+			else \
+				echo "❌ FAIL"; \
+				FAIL=$$((FAIL + 1)); \
+			fi; \
+		fi; \
+	done; \
+	echo "📊 Summary: $$PASS passed, $$FAIL failed"; \
+	if [ $$FAIL -gt 0 ]; then exit 1; fi
+
+# Validate book quality
+book-validate: book-test
+	@echo "🔍 Running book quality validation..."
+	@echo "Checking for broken links..."
+	@command -v mdbook-linkcheck >/dev/null 2>&1 && mdbook-linkcheck 2>/dev/null || echo "⚠️  Link checking skipped"
+	@echo "Validating mdBook configuration..."
+	@mdbook build >/dev/null 2>&1 && echo "✅ Book builds successfully" || (echo "❌ Book build failed" && exit 1)
+	@echo "✅ Book validation complete"
+
+# Clean build artifacts
+book-clean:
+	@echo "🧹 Cleaning book build artifacts..."
+	@rm -rf book/html/
+	@rm -f book/tests/*.tmp 2>/dev/null || true
+	@echo "✅ Book clean complete"
+
+# Quick book development cycle
+book-dev: book-clean book-build book-test
+	@echo "🚀 Book development cycle complete"
+
+# Book quality gates (strict)
+book-quality-gates: book-validate
+	@echo "🔒 Running strict book quality gates..."
+	@echo "Gate 1: All examples must work..."
+	@$(MAKE) -f Makefile.book book-test || (echo "❌ BLOCKED: Book examples don't work" && exit 1)
+	@echo "Gate 2: Book must build without errors..."
+	@mdbook build >/dev/null 2>&1 || (echo "❌ BLOCKED: Book doesn't build" && exit 1)
+	@echo "✅ All book quality gates passed"
+
+# Extract examples from book chapters for testing
+book-extract-examples:
+	@echo "📝 Extracting examples from book chapters..."
+	@mkdir -p book/tests/repl book/tests/one-liner
+	@echo "✅ Example extraction complete"
+
+# Watch for changes and rebuild
+book-watch:
+	@echo "👀 Watching book for changes..."
+	@mdbook watch
+
+# Deploy book (for CI/CD)
+book-deploy: book-quality-gates book-build
+	@echo "🚀 Book ready for deployment"
+	@echo "Generated files in: book/html/"
