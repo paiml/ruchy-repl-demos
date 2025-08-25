@@ -1,0 +1,53 @@
+// Option type handling patterns
+// Safe handling of nullable values
+
+// Basic Option usage
+let some_number = Some(5);
+let no_number: Option<i32> = None;
+
+// Pattern matching
+match some_number {
+    Some(n) => println!("Got number: {}", n),
+    None => println!("No number"),
+}
+
+// Using if let
+if let Some(n) = some_number {
+    println!("Number is: {}", n);
+}
+
+// Chaining with map
+let doubled = some_number.map(|x| x * 2);
+println!("Doubled: {:?}", doubled);
+
+// Using and_then for flattening
+fn divide(x: i32, y: i32) -> Option<i32> {
+    if y == 0 {
+        None
+    } else {
+        Some(x / y)
+    }
+}
+
+let result = Some(20)
+    .and_then(|x| divide(x, 5))
+    .and_then(|x| divide(x, 2));
+println!("Chain result: {:?}", result);
+
+// Using or_else for fallback
+let value = None.or_else(|| Some(42));
+println!("Fallback value: {:?}", value);
+
+// Combining Options with zip
+let x = Some(5);
+let y = Some(10);
+let sum = x.zip(y).map(|(a, b)| a + b);
+println!("Sum: {:?}", sum);
+
+// Converting to Result
+let as_result: Result<i32, &str> = some_number.ok_or("No value present");
+println!("As Result: {:?}", as_result);
+
+// Using filter
+let filtered = Some(10).filter(|&x| x > 5);
+println!("Filtered: {:?}", filtered)

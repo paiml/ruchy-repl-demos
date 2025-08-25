@@ -1,0 +1,40 @@
+// Panic recovery and catch_unwind
+use std::panic;
+
+// Basic panic recovery
+let result = panic::catch_unwind(|| {
+    println!("About to panic!");
+    panic!("This is a panic!");
+});
+
+match result {
+    Ok(_) => println!("No panic occurred"),
+    Err(_) => println!("Panic was caught!"),
+}
+
+// Recovering with a value
+let result = panic::catch_unwind(|| {
+    let vec = vec![1, 2, 3];
+    vec[10]  // This will panic
+}).unwrap_or(0);
+
+println!("Recovered value: {}", result);
+
+// Setting panic hook
+panic::set_hook(Box::new(|info| {
+    println!("Custom panic handler: {}", info);
+}));
+
+// AssertUnwindSafe wrapper
+use std::panic::AssertUnwindSafe;
+
+let mut value = 5;
+let result = panic::catch_unwind(AssertUnwindSafe(|| {
+    value += 1;
+    if value > 5 {
+        panic!("Value too large");
+    }
+    value
+}));
+
+println!("Result: {:?}", result)

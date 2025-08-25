@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+    
+    - name: Install dependencies
+      run: |
+        cargo install ruchy
+        sudo apt-get update && sudo apt-get install -y shellcheck
+    
+    - name: Run full test suite
+      run: |
+        make test
+        make shellcheck
+        make quality-gate
+    
+    - name: Generate release artifacts
+      run: |
+        tar -czf ruchy-demos-${{ github.ref_name }}.tar.gz demos/
+        zip -r ruchy-demos-${{ github.ref_name }}.zip demos/
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ruchy-demos-*.tar.gz
+          ruchy-demos-*.zip
+        body: |
+          ## Ruchy REPL & One-Liner Demos ${{ github.ref_name }}
+          
+          ### Features
+          - 165+ working demonstrations
+          - Full test coverage
+          - POSIX-compliant scripts
+          - Version compatibility matrix
+          
+          ### Requirements
+          - Ruchy v1.9.1 or higher
+          - POSIX shell
+          
+          See [CHANGELOG.md](CHANGELOG.md) for details.
+        draft: false
+        prerelease: false

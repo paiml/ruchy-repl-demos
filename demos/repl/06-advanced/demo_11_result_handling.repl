@@ -1,0 +1,34 @@
+// Result type error handling
+use std::fs::File;
+use std::io::{self, Read};
+
+fn read_file(path: &str) -> Result<String, io::Error> {
+    let mut file = File::open(path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    Ok(contents)
+}
+
+// Using match for error handling
+let result = read_file("test.txt");
+match result {
+    Ok(contents) => println!("File contents: {}", contents),
+    Err(error) => println!("Error reading file: {}", error),
+}
+
+// Using if let
+if let Err(e) = read_file("nonexistent.txt") {
+    println!("Expected error: {}", e);
+}
+
+// Chaining with and_then
+fn parse_number(s: &str) -> Result<i32, std::num::ParseIntError> {
+    s.parse()
+}
+
+let result = read_file("number.txt")
+    .and_then(|contents| parse_number(&contents));
+
+// Using unwrap_or_else
+let value = parse_number("42").unwrap_or_else(|_| 0);
+println!("Parsed value: {}", value)

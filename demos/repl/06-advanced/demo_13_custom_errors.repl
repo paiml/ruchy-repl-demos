@@ -1,0 +1,65 @@
+// Custom error types
+use std::fmt;
+use std::error::Error;
+
+#[derive(Debug)]
+enum AppError {
+    IoError(std::io::Error),
+    ParseError(std::num::ParseIntError),
+    ValidationError(String),
+}
+
+impl fmt::Display for AppError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            AppError::IoError(e) => write!(f, "IO error: {}", e),
+            AppError::ParseError(e) => write!(f, "Parse error: {}", e),
+            AppError::ValidationError(msg) => write!(f, "Validation error: {}", msg),
+        }
+    }
+}
+
+impl Error for AppError {}
+
+// From trait implementations
+impl From<std::io::Error> for AppError {
+    fn from(error: std::io::Error) -> Self {
+        AppError::IoError(error)
+    }
+}
+
+impl From<std::num::ParseIntError> for AppError {
+    fn from(error: std::num::ParseIntError) -> Self {
+        AppError::ParseError(error)
+    }
+}
+
+// Using custom errors
+fn validate_age(age_str: &str) -> Result<u8, AppError> {
+    let age = age_str.parse::<u8>()?;
+    
+    if age < 18 {
+        return Err(AppError::ValidationError("Must be 18 or older".to_string()));
+    }
+    
+    if age > 120 {
+        return Err(AppError::ValidationError("Invalid age".to_string()));
+    }
+    
+    Ok(age)
+}
+
+// Test the custom error
+let results = vec![
+    validate_age("25"),
+    validate_age("15"),
+    validate_age("abc"),
+    validate_age("150"),
+];
+
+for result in results {
+    match result {
+        Ok(age) => println!("Valid age: {}", age),
+        Err(e) => println!("Error: {}", e),
+    }
+}

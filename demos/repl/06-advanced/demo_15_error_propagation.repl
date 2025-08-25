@@ -1,0 +1,56 @@
+// Error propagation with ? operator
+use std::fs::File;
+use std::io::{self, Read, Write};
+
+// Function using ? operator for error propagation
+fn copy_file(from: &str, to: &str) -> io::Result<u64> {
+    let mut source = File::open(from)?;
+    let mut dest = File::create(to)?;
+    
+    let mut buffer = String::new();
+    source.read_to_string(&mut buffer)?;
+    
+    let bytes_written = dest.write(buffer.as_bytes())?;
+    Ok(bytes_written as u64)
+}
+
+// Multiple error types with Box<dyn Error>
+use std::error::Error;
+
+fn process_data(input: &str) -> Result<i32, Box<dyn Error>> {
+    let trimmed = input.trim();
+    let number = trimmed.parse::<i32>()?;
+    
+    if number < 0 {
+        return Err("Negative numbers not allowed".into());
+    }
+    
+    Ok(number * 2)
+}
+
+// Early return pattern
+fn validate_input(input: &str) -> Result<String, String> {
+    if input.is_empty() {
+        return Err("Input cannot be empty".to_string());
+    }
+    
+    if input.len() > 100 {
+        return Err("Input too long".to_string());
+    }
+    
+    if !input.chars().all(|c| c.is_alphanumeric() || c.is_whitespace()) {
+        return Err("Invalid characters in input".to_string());
+    }
+    
+    Ok(input.to_uppercase())
+}
+
+// Testing error propagation
+let test_cases = vec!["42", "-5", "abc", "  10  "];
+
+for test in test_cases {
+    match process_data(test) {
+        Ok(result) => println!("Processed '{}': {}", test, result),
+        Err(e) => println!("Error processing '{}': {}", test, e),
+    }
+}

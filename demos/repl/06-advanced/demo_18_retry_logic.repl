@@ -1,0 +1,77 @@
+// Retry logic for error recovery
+use std::thread;
+use std::time::Duration;
+
+// Retry configuration
+struct RetryConfig {
+    max_attempts: u32,
+    delay_ms: u64,
+    exponential_backoff: bool,
+}
+
+impl Default for RetryConfig {
+    fn default() -> Self {
+        RetryConfig {
+            max_attempts: 3,
+            delay_ms: 100,
+            exponential_backoff: true,
+        }
+    }
+}
+
+// Retry function
+fn retry<T, E, F>(config: RetryConfig, mut operation: F) -> Result<T, E>
+where
+    F: FnMut() -> Result<T, E>,
+    E: std::fmt::Display,
+{
+    let mut attempts = 0;
+    let mut delay = config.delay_ms;
+    
+    loop {
+        attempts += 1;
+        
+        match operation() {
+            Ok(result) => return Ok(result),
+            Err(e) if attempts >= config.max_attempts => {
+                println!("Failed after {} attempts", attempts);
+                return Err(e);
+            }
+            Err(e) => {
+                println!("Attempt {} failed: {}", attempts, e);
+                thread::sleep(Duration::from_millis(delay));
+                
+                if config.exponential_backoff {
+                    delay *= 2;
+                }
+            }
+        }
+    }
+}
+
+// Simulated flaky operation
+fn flaky_operation() -> Result<String, &'static str> {
+    static mut COUNTER: u32 = 0;
+    
+    unsafe {
+        COUNTER += 1;
+        if COUNTER < 3 {
+            Err("Service temporarily unavailable")
+        } else {
+            Ok("Success!".to_string())
+        }
+    }
+}
+
+// Using retry
+let config = RetryConfig {
+    max_attempts: 5,
+    delay_ms: 50,
+    exponential_backoff: true,
+};
+
+let result = retry(config, flaky_operation);
+match result {
+    Ok(msg) => println!("Final result: {}", msg),
+    Err(e) => println!("Final error: {}", e),
+}

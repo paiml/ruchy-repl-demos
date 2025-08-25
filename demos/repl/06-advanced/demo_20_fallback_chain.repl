@@ -1,0 +1,88 @@
+// Fallback chain pattern for resilience
+use std::fmt::Debug;
+
+// Fallback chain builder
+struct FallbackChain<T> {
+    operations: Vec<Box<dyn Fn() -> Option<T>>>,
+}
+
+impl<T: Debug> FallbackChain<T> {
+    fn new() -> Self {
+        FallbackChain {
+            operations: Vec::new(),
+        }
+    }
+    
+    fn try_with<F>(mut self, operation: F) -> Self
+    where F: Fn() -> Option<T> + 'static {
+        self.operations.push(Box::new(operation));
+        self
+    }
+    
+    fn execute(self) -> Option<T> {
+        for (i, operation) in self.operations.iter().enumerate() {
+            println!("Trying operation {}", i + 1);
+            if let Some(result) = operation() {
+                println!("Success at operation {}", i + 1);
+                return Some(result);
+            }
+            println!("Operation {} failed, trying next...", i + 1);
+        }
+        println!("All operations failed");
+        None
+    }
+    
+    fn execute_or_default(self, default: T) -> T {
+        self.execute().unwrap_or(default)
+    }
+}
+
+// Example: Configuration loading with fallbacks
+fn load_from_env() -> Option<String> {
+    std::env::var("CONFIG").ok()
+}
+
+fn load_from_file() -> Option<String> {
+    // Simulated file read
+    None // Would normally read from file
+}
+
+fn load_from_network() -> Option<String> {
+    // Simulated network fetch
+    None // Would normally fetch from network
+}
+
+fn load_default() -> Option<String> {
+    Some("default_config".to_string())
+}
+
+// Use fallback chain
+let config = FallbackChain::new()
+    .try_with(load_from_env)
+    .try_with(load_from_file)
+    .try_with(load_from_network)
+    .try_with(load_default)
+    .execute();
+
+match config {
+    Some(cfg) => println!("Loaded configuration: {}", cfg),
+    None => println!("Failed to load any configuration"),
+}
+
+// Another example: Data source fallback
+let data = FallbackChain::<Vec<i32>>::new()
+    .try_with(|| {
+        println!("Trying primary database...");
+        None // Simulated failure
+    })
+    .try_with(|| {
+        println!("Trying cache...");
+        None // Simulated cache miss
+    })
+    .try_with(|| {
+        println!("Trying backup database...");
+        Some(vec![1, 2, 3, 4, 5])
+    })
+    .execute_or_default(vec![]);
+
+println!("Retrieved data: {:?}", data)
