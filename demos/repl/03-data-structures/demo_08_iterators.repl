@@ -1,0 +1,27 @@
+// Working with iterators in Ruchy
+let numbers = [1, 2, 3, 4, 5]
+
+// Basic iteration
+for num in numbers {
+    println(num)
+}
+
+// Iterator methods
+let doubled: Vec<i32> = numbers.iter().map(|x| x * 2).collect()
+println("Doubled: {:?}", doubled)
+
+let evens: Vec<i32> = numbers.iter().filter(|&x| x % 2 == 0).collect()
+println("Evens: {:?}", evens)
+
+let sum: i32 = numbers.iter().sum()
+println("Sum: {}", sum)
+
+// Chain iterators
+let more_numbers = [6, 7, 8]
+let combined: Vec<i32> = numbers.iter().chain(more_numbers.iter()).cloned().collect()
+println("Combined: {:?}", combined)
+
+// Enumerate
+for (index, value) in numbers.iter().enumerate() {
+    println("Index {}: Value {}", index, value)
+}

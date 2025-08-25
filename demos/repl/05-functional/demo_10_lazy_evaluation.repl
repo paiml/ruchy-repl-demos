@@ -1,0 +1,166 @@
+// Lazy evaluation and infinite iterators in Ruchy
+
+// Basic lazy iterator
+fn fibonacci() -> impl Iterator<Item = u64> {
+    let mut a = 0;
+    let mut b = 1;
+    
+    std::iter::from_fn(move || {
+        let current = a;
+        let next = a + b;
+        a = b;
+        b = next;
+        Some(current)
+    })
+}
+
+// Take first 10 fibonacci numbers
+let first_10_fib: Vec<u64> = fibonacci().take(10).collect();
+println("First 10 Fibonacci numbers: {:?}", first_10_fib);
+
+// Lazy evaluation with generators
+fn infinite_primes() -> impl Iterator<Item = u64> {
+    (2..).filter(|&n| is_prime(n))
+}
+
+fn is_prime(n: u64) -> bool {
+    if n < 2 { return false; }
+    for i in 2..=((n as f64).sqrt() as u64) {
+        if n % i == 0 { return false; }
+    }
+    true
+}
+
+// Take first 10 primes
+let first_10_primes: Vec<u64> = infinite_primes().take(10).collect();
+println("First 10 prime numbers: {:?}", first_10_primes);
+
+// Lazy evaluation with custom iterator
+struct PowersOfTwo {
+    current: u64,
+}
+
+impl PowersOfTwo {
+    fn new() -> Self {
+        PowersOfTwo { current: 1 }
+    }
+}
+
+impl Iterator for PowersOfTwo {
+    type Item = u64;
+    
+    fn next(&mut self) -> Option<Self::Item> {
+        let result = self.current;
+        self.current *= 2;
+        Some(result)
+    }
+}
+
+// Use lazy powers of two
+let powers: Vec<u64> = PowersOfTwo::new().take(15).collect();
+println("First 15 powers of 2: {:?}", powers);
+
+// Lazy evaluation with complex transformations
+fn natural_numbers() -> impl Iterator<Item = i32> {
+    1..
+}
+
+// Complex lazy pipeline
+let complex_result: Vec<i32> = natural_numbers()
+    .filter(|&x| x % 2 == 0)  // Even numbers
+    .map(|x| x * x)           // Square them
+    .filter(|&x| x % 3 == 0)  // Divisible by 3
+    .take(10)                 // First 10 results
+    .collect();
+
+println("Complex lazy evaluation result: {:?}", complex_result);
+
+// Lazy evaluation with memoization
+use std::cell::RefCell;
+use std::collections::HashMap;
+
+struct MemoizedIterator<T, F> {
+    generator: F,
+    cache: RefCell<HashMap<usize, T>>,
+    index: usize,
+}
+
+impl<T, F> MemoizedIterator<T, F>
+where
+    T: Clone,
+    F: Fn(usize) -> T,
+{
+    fn new(generator: F) -> Self {
+        MemoizedIterator {
+            generator,
+            cache: RefCell::new(HashMap::new()),
+            index: 0,
+        }
+    }
+}
+
+impl<T, F> Iterator for MemoizedIterator<T, F>
+where
+    T: Clone,
+    F: Fn(usize) -> T,
+{
+    type Item = T;
+    
+    fn next(&mut self) -> Option<Self::Item> {
+        let mut cache = self.cache.borrow_mut();
+        
+        let result = if let Some(cached) = cache.get(&self.index) {
+            cached.clone()
+        } else {
+            let computed = (self.generator)(self.index);
+            cache.insert(self.index, computed.clone());
+            computed
+        };
+        
+        self.index += 1;
+        Some(result)
+    }
+}
+
+// Expensive computation with memoization
+fn expensive_sequence(n: usize) -> i32 {
+    println!("Computing expensive value for index {}", n);
+    (n * n + n) as i32
+}
+
+let mut memoized_iter = MemoizedIterator::new(expensive_sequence);
+
+// First iteration - computes values
+let first_batch: Vec<i32> = memoized_iter.by_ref().take(5).collect();
+println("First batch: {:?}", first_batch);
+
+// Second iteration from same iterator - uses cached values where possible
+let second_batch: Vec<i32> = memoized_iter.take(3).collect();
+println("Second batch: {:?}", second_batch);
+
+// Lazy evaluation with conditional logic
+fn conditional_sequence() -> impl Iterator<Item = String> {
+    (1..).map(|n| {
+        if n % 15 == 0 {
+            "FizzBuzz".to_string()
+        } else if n % 3 == 0 {
+            "Fizz".to_string()
+        } else if n % 5 == 0 {
+            "Buzz".to_string()
+        } else {
+            n.to_string()
+        }
+    })
+}
+
+let fizzbuzz: Vec<String> = conditional_sequence().take(20).collect();
+println("FizzBuzz sequence: {:?}", fizzbuzz);
+
+// Infinite iterator composition
+let composed_infinite: Vec<u64> = fibonacci()
+    .zip(PowersOfTwo::new())
+    .map(|(fib, pow)| fib + pow)
+    .take(10)
+    .collect();
+
+println("Fibonacci + Powers of 2: {:?}", composed_infinite)

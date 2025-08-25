@@ -1,0 +1,31 @@
+// Map function examples in Ruchy
+let numbers = [1, 2, 3, 4, 5]
+
+// Basic map - double each number
+let doubled: Vec<i32> = numbers.iter().map(|x| x * 2).collect()
+println("Original: {:?}", numbers)
+println("Doubled: {:?}", doubled)
+
+// Map with different transformations
+let squared: Vec<i32> = numbers.iter().map(|x| x * x).collect()
+println("Squared: {:?}", squared)
+
+// Map to different types
+let as_strings: Vec<String> = numbers.iter().map(|x| format!("Number: {}", x)).collect()
+println("As strings: {:?}", as_strings)
+
+// Map with custom function
+fn is_even(n: &i32) -> bool {
+    n % 2 == 0
+}
+
+let even_check: Vec<bool> = numbers.iter().map(is_even).collect()
+println("Even check: {:?}", even_check)
+
+// Chained maps
+let complex: Vec<String> = numbers.iter()
+    .map(|x| x * 3)
+    .map(|x| x + 1)
+    .map(|x| format!("Result: {}", x))
+    .collect()
+println("Complex transformation: {:?}", complex)

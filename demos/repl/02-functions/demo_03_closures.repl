@@ -1,0 +1,19 @@
+// Closures and lambda functions
+let add_one = |x| x + 1
+add_one(5)
+add_one(10)
+
+let multiply = |x, y| x * y
+multiply(3, 4)
+multiply(7, 8)
+
+let outer_val = 10
+let closure = |x| x + outer_val
+closure(5)
+closure(20)
+
+// Function composition with closures
+let double = |x| x * 2
+let add_ten = |x| x + 10
+let transform = |x| add_ten(double(x))
+transform(5)

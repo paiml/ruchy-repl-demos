@@ -1,0 +1,20 @@
+// Recursive functions
+fn factorial(n: i32) -> i32 {
+    if n <= 1 { 
+        1 
+    } else { 
+        n * factorial(n - 1) 
+    }
+}
+factorial(5)
+factorial(10)
+
+fn fibonacci(n: i32) -> i32 {
+    if n <= 1 {
+        n
+    } else {
+        fibonacci(n - 1) + fibonacci(n - 2)
+    }
+}
+fibonacci(10)
+fibonacci(15)

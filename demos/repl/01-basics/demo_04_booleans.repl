@@ -1,0 +1,13 @@
+// Boolean operations and comparisons
+true && false
+true || false
+!true
+5 > 3
+10 <= 10
+"hello" == "hello"
+"a" != "b"
+let age = 25
+age >= 18 && age < 65
+let is_valid = true
+let is_active = false
+is_valid && !is_active

@@ -1,0 +1,8 @@
+// Variable assignment and mutation
+let x = 10
+x
+let mut y = 20
+y = y + 5
+y
+let name = "Ruchy"
+name

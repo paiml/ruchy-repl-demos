@@ -1,0 +1,231 @@
+// Advanced error handling in Ruchy
+
+// Custom error types
+#[derive(Debug)]
+enum MathError {
+    DivisionByZero,
+    NegativeSquareRoot,
+    InvalidInput(String),
+}
+
+impl std::fmt::Display for MathError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            MathError::DivisionByZero => write!(f, "Cannot divide by zero"),
+            MathError::NegativeSquareRoot => write!(f, "Cannot take square root of negative number"),
+            MathError::InvalidInput(msg) => write!(f, "Invalid input: {}", msg),
+        }
+    }
+}
+
+impl std::error::Error for MathError {}
+
+// Functions that return Results
+fn safe_divide(a: f64, b: f64) -> Result<f64, MathError> {
+    if b == 0.0 {
+        Err(MathError::DivisionByZero)
+    } else {
+        Ok(a / b)
+    }
+}
+
+fn safe_sqrt(x: f64) -> Result<f64, MathError> {
+    if x < 0.0 {
+        Err(MathError::NegativeSquareRoot)
+    } else {
+        Ok(x.sqrt())
+    }
+}
+
+fn parse_and_process(input: &str) -> Result<f64, MathError> {
+    let num: f64 = input.parse()
+        .map_err(|_| MathError::InvalidInput(input.to_string()))?;
+    
+    if num < 0.0 {
+        return Err(MathError::InvalidInput("Negative numbers not allowed".to_string()));
+    }
+    
+    Ok(num * 2.0)
+}
+
+// Testing error handling
+let division_results = [
+    safe_divide(10.0, 2.0),
+    safe_divide(5.0, 0.0),
+    safe_divide(-8.0, 4.0),
+];
+
+for (i, result) in division_results.iter().enumerate() {
+    match result {
+        Ok(value) => println!("Division {}: {:.2}", i + 1, value),
+        Err(e) => println!("Division {}: Error - {}", i + 1, e),
+    }
+}
+
+// Chaining operations with ?
+fn complex_calculation(a: f64, b: f64) -> Result<f64, MathError> {
+    let quotient = safe_divide(a, b)?;
+    let sqrt_result = safe_sqrt(quotient)?;
+    Ok(sqrt_result * 3.0)
+}
+
+println!("\nComplex calculations:");
+let calculations = [
+    complex_calculation(16.0, 4.0),
+    complex_calculation(10.0, 0.0),
+    complex_calculation(9.0, -3.0),
+];
+
+for (i, result) in calculations.iter().enumerate() {
+    match result {
+        Ok(value) => println!("Calculation {}: {:.2}", i + 1, value),
+        Err(e) => println!("Calculation {}: Error - {}", i + 1, e),
+    }
+}
+
+// Multiple error types with From trait
+#[derive(Debug)]
+enum ApplicationError {
+    Math(MathError),
+    Parse(std::num::ParseFloatError),
+    Io(String),
+}
+
+impl std::fmt::Display for ApplicationError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            ApplicationError::Math(e) => write!(f, "Math error: {}", e),
+            ApplicationError::Parse(e) => write!(f, "Parse error: {}", e),
+            ApplicationError::Io(e) => write!(f, "IO error: {}", e),
+        }
+    }
+}
+
+impl From<MathError> for ApplicationError {
+    fn from(error: MathError) -> Self {
+        ApplicationError::Math(error)
+    }
+}
+
+impl From<std::num::ParseFloatError> for ApplicationError {
+    fn from(error: std::num::ParseFloatError) -> Self {
+        ApplicationError::Parse(error)
+    }
+}
+
+fn process_string_input(input: &str) -> Result<f64, ApplicationError> {
+    let number: f64 = input.parse()?;
+    let processed = safe_divide(number, 2.0)?;
+    let final_result = safe_sqrt(processed)?;
+    Ok(final_result)
+}
+
+let string_inputs = ["16.0", "invalid", "-4.0", "0.0"];
+
+println!("\nString processing:");
+for input in string_inputs {
+    match process_string_input(input) {
+        Ok(result) => println!("'{}' -> {:.2}", input, result),
+        Err(e) => println!("'{}' -> {}", input, e),
+    }
+}
+
+// Option and Result interop
+fn find_and_divide(numbers: &[f64], index: usize, divisor: f64) -> Result<f64, String> {
+    let number = numbers.get(index)
+        .ok_or_else(|| format!("Index {} out of bounds", index))?;
+    
+    if divisor == 0.0 {
+        Err("Cannot divide by zero".to_string())
+    } else {
+        Ok(*number / divisor)
+    }
+}
+
+let numbers = [10.0, 20.0, 30.0];
+let operations = [
+    (0, 2.0),
+    (3, 5.0),
+    (1, 0.0),
+];
+
+println!("\nFind and divide operations:");
+for (i, (index, divisor)) in operations.iter().enumerate() {
+    match find_and_divide(&numbers, *index, *divisor) {
+        Ok(result) => println!("Operation {}: {:.2}", i + 1, result),
+        Err(e) => println!("Operation {}: Error - {}", i + 1, e),
+    }
+}
+
+// Result combinators
+fn combine_results() {
+    let results = vec![
+        Ok(2),
+        Ok(3),
+        Err("Error 1"),
+        Ok(4),
+        Err("Error 2"),
+    ];
+    
+    // Collect all Ok values
+    let successes: Vec<i32> = results.iter().filter_map(|r| r.as_ref().ok()).cloned().collect();
+    println!("Successes: {:?}", successes);
+    
+    // Find first error
+    let first_error = results.iter().find_map(|r| r.as_ref().err());
+    println!("First error: {:?}", first_error);
+    
+    // Transform Ok values
+    let doubled: Vec<Result<i32, &str>> = results.iter()
+        .map(|r| r.as_ref().map(|v| v * 2).map_err(|e| *e))
+        .collect();
+    println!("Doubled results: {:?}", doubled);
+}
+
+combine_results();
+
+// Early return patterns
+fn validate_and_process(data: &str) -> Result<String, String> {
+    if data.is_empty() {
+        return Err("Empty input".to_string());
+    }
+    
+    if data.len() < 3 {
+        return Err("Input too short".to_string());
+    }
+    
+    if !data.chars().all(|c| c.is_ascii_alphanumeric()) {
+        return Err("Invalid characters".to_string());
+    }
+    
+    Ok(data.to_uppercase())
+}
+
+let test_data = ["", "ab", "abc123", "abc@def", "validInput"];
+
+println!("\nValidation results:");
+for data in test_data {
+    match validate_and_process(data) {
+        Ok(processed) => println!("'{}' -> '{}'", data, processed),
+        Err(e) => println!("'{}' -> Error: {}", data, e),
+    }
+}
+
+// Panic handling
+fn may_panic(should_panic: bool) -> Result<String, String> {
+    if should_panic {
+        panic!("Something went wrong!")
+    } else {
+        Ok("Success!".to_string())
+    }
+}
+
+fn safe_call_panic_function(should_panic: bool) -> Result<String, String> {
+    std::panic::catch_unwind(|| may_panic(should_panic))
+        .map_err(|_| "Function panicked".to_string())
+        .and_then(|r| r)
+}
+
+println!("\nPanic handling:");
+println!("Safe call (false): {:?}", safe_call_panic_function(false));
+println!("Safe call (true): {:?}", safe_call_panic_function(true))

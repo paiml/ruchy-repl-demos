@@ -1,0 +1,13 @@
+// Array operations
+let numbers = [1, 2, 3, 4, 5]
+numbers[0]
+numbers[2]
+numbers.len()
+let doubled = numbers.map(|x| x * 2)
+doubled
+let evens = numbers.filter(|x| x % 2 == 0)
+evens
+let sum = numbers.sum()
+sum
+[10, 20, 30].max()
+[10, 20, 30].min()

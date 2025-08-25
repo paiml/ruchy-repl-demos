@@ -1,0 +1,22 @@
+// Memoization example
+use std::collections::HashMap;
+
+fn memoize_fib() -> impl FnMut(u32) -> u32 {
+    let mut cache = HashMap::new();
+    move |n| {
+        if let Some(&result) = cache.get(&n) {
+            return result;
+        }
+        let result = if n <= 1 {
+            n
+        } else {
+            fib(n - 1) + fib(n - 2)
+        };
+        cache.insert(n, result);
+        result
+    }
+}
+
+let mut fib = memoize_fib();
+fib(10)
+fib(20)

@@ -1,0 +1,70 @@
+// Dynamic Programming examples in Ruchy
+
+// Fibonacci with memoization
+fn fibonacci_memo(n: usize, memo: &mut HashMap<usize, u64>) -> u64 {
+    if n <= 1 {
+        return n as u64;
+    }
+    
+    if let Some(&result) = memo.get(&n) {
+        return result;
+    }
+    
+    let result = fibonacci_memo(n - 1, memo) + fibonacci_memo(n - 2, memo);
+    memo.insert(n, result);
+    result
+}
+
+let mut memo = HashMap::new();
+println("Fibonacci(10) with memoization: {}", fibonacci_memo(10, &mut memo));
+println("Fibonacci(20) with memoization: {}", fibonacci_memo(20, &mut memo));
+
+// Longest Common Subsequence
+fn lcs(text1: &str, text2: &str) -> usize {
+    let chars1: Vec<char> = text1.chars().collect();
+    let chars2: Vec<char> = text2.chars().collect();
+    let m = chars1.len();
+    let n = chars2.len();
+    
+    let mut dp = vec![vec![0; n + 1]; m + 1];
+    
+    for i in 1..=m {
+        for j in 1..=n {
+            if chars1[i - 1] == chars2[j - 1] {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = std::cmp::max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+    
+    dp[m][n]
+}
+
+let str1 = "ABCDGH";
+let str2 = "AEDFHR";
+println("LCS of '{}' and '{}': {}", str1, str2, lcs(str1, str2));
+
+// Coin Change Problem
+fn coin_change(coins: &[i32], amount: i32) -> i32 {
+    let mut dp = vec![amount + 1; (amount + 1) as usize];
+    dp[0] = 0;
+    
+    for i in 1..=amount as usize {
+        for &coin in coins {
+            if coin <= i as i32 {
+                dp[i] = std::cmp::min(dp[i], dp[i - coin as usize] + 1);
+            }
+        }
+    }
+    
+    if dp[amount as usize] > amount {
+        -1
+    } else {
+        dp[amount as usize]
+    }
+}
+
+let coins = [1, 3, 4];
+let amount = 6;
+println("Minimum coins needed for amount {}: {}", amount, coin_change(&coins, amount))

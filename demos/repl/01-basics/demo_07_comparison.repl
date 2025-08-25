@@ -1,0 +1,8 @@
+// Comparison operators
+5 > 3
+10 <= 10
+"apple" == "apple"
+"cat" != "dog"
+5 >= 2 && 3 < 10
+true || false
+!false

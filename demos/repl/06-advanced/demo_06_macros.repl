@@ -1,0 +1,272 @@
+// Macros and metaprogramming in Ruchy
+
+// Basic macro definition
+macro_rules! say_hello {
+    () => {
+        println!("Hello, World!");
+    };
+}
+
+say_hello!();
+
+// Macro with parameters
+macro_rules! greet {
+    ($name:expr) => {
+        println!("Hello, {}!", $name);
+    };
+}
+
+greet!("Alice");
+greet!("Bob");
+
+// Macro with multiple patterns
+macro_rules! calculate {
+    // Addition
+    ($a:expr + $b:expr) => {
+        $a + $b
+    };
+    // Subtraction
+    ($a:expr - $b:expr) => {
+        $a - $b
+    };
+    // Multiplication
+    ($a:expr * $b:expr) => {
+        $a * $b
+    };
+}
+
+println!("5 + 3 = {}", calculate!(5 + 3));
+println!("10 - 4 = {}", calculate!(10 - 4));
+println!("6 * 7 = {}", calculate!(6 * 7));
+
+// Repetition in macros
+macro_rules! vec_of {
+    ($element:expr; $count:expr) => {
+        {
+            let mut v = Vec::new();
+            for _ in 0..$count {
+                v.push($element.clone());
+            }
+            v
+        }
+    };
+}
+
+let fives = vec_of!(5; 4);
+println!("Vector of fives: {:?}", fives);
+
+// Variable arguments macro
+macro_rules! print_all {
+    ($($arg:expr),*) => {
+        $(
+            println!("{}", $arg);
+        )*
+    };
+}
+
+print_all!("First", "Second", "Third");
+print_all!(1, 2, 3, 4, 5);
+
+// Creating hash maps with macro
+macro_rules! hashmap {
+    ($($key:expr => $value:expr),*) => {
+        {
+            let mut map = std::collections::HashMap::new();
+            $(
+                map.insert($key, $value);
+            )*
+            map
+        }
+    };
+}
+
+let scores = hashmap![
+    "Alice" => 100,
+    "Bob" => 85,
+    "Charlie" => 92
+];
+println!("Scores: {:?}", scores);
+
+// Debugging macro
+macro_rules! debug_var {
+    ($var:expr) => {
+        println!("{} = {:?}", stringify!($var), $var);
+    };
+}
+
+let x = 42;
+let name = "Rust";
+debug_var!(x);
+debug_var!(name);
+debug_var!(x + 10);
+
+// Conditional compilation macro
+macro_rules! platform_specific {
+    (windows => $windows_code:block, unix => $unix_code:block) => {
+        #[cfg(target_os = "windows")]
+        $windows_code
+        
+        #[cfg(target_family = "unix")]
+        $unix_code
+    };
+}
+
+platform_specific! {
+    windows => {
+        println!("Running on Windows");
+    },
+    unix => {
+        println!("Running on Unix-like system");
+    }
+}
+
+// Macro for creating structs with default values
+macro_rules! struct_with_defaults {
+    ($name:ident { $($field:ident: $type:ty = $default:expr),* }) => {
+        #[derive(Debug)]
+        struct $name {
+            $($field: $type),*
+        }
+        
+        impl Default for $name {
+            fn default() -> Self {
+                Self {
+                    $($field: $default),*
+                }
+            }
+        }
+        
+        impl $name {
+            fn new() -> Self {
+                Self::default()
+            }
+        }
+    };
+}
+
+struct_with_defaults! {
+    Config {
+        host: String = "localhost".to_string(),
+        port: u16 = 8080,
+        timeout: u32 = 30,
+        debug: bool = false
+    }
+}
+
+let config = Config::new();
+println!("Default config: {:?}", config);
+
+// Macro for implementing traits
+macro_rules! impl_display {
+    ($type:ty, $format:expr) => {
+        impl std::fmt::Display for $type {
+            fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+                write!(f, $format, self)
+            }
+        }
+    };
+}
+
+#[derive(Debug)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl_display!(Point, "Point({}, {})");
+
+let point = Point { x: 3, y: 4 };
+println!("Point display: {}", point);
+
+// Macro for creating enums with string conversion
+macro_rules! string_enum {
+    ($name:ident { $($variant:ident => $string:expr),* }) => {
+        #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+        enum $name {
+            $($variant),*
+        }
+        
+        impl $name {
+            fn as_str(&self) -> &'static str {
+                match self {
+                    $(Self::$variant => $string),*
+                }
+            }
+            
+            fn from_str(s: &str) -> Option<Self> {
+                match s {
+                    $($string => Some(Self::$variant)),*,
+                    _ => None
+                }
+            }
+        }
+        
+        impl std::fmt::Display for $name {
+            fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+                write!(f, "{}", self.as_str())
+            }
+        }
+    };
+}
+
+string_enum! {
+    Color {
+        Red => "red",
+        Green => "green",
+        Blue => "blue",
+        Yellow => "yellow"
+    }
+}
+
+let color = Color::Red;
+println!("Color: {}", color);
+println!("Color as string: {}", color.as_str());
+
+if let Some(parsed_color) = Color::from_str("green") {
+    println!("Parsed color: {}", parsed_color);
+}
+
+// Function-like macro for logging
+macro_rules! log {
+    (info, $msg:expr) => {
+        println!("[INFO] {}", $msg);
+    };
+    (warn, $msg:expr) => {
+        println!("[WARN] {}", $msg);
+    };
+    (error, $msg:expr) => {
+        eprintln!("[ERROR] {}", $msg);
+    };
+    ($level:expr, $msg:expr) => {
+        println!("[{}] {}", $level.to_uppercase(), $msg);
+    };
+}
+
+log!(info, "Application started");
+log!(warn, "Low memory warning");
+log!(error, "Connection failed");
+log!("debug", "Variable x = 42");
+
+// Macro for creating test cases
+macro_rules! test_cases {
+    ($test_name:ident, $($input:expr => $expected:expr),*) => {
+        fn $test_name() {
+            $(
+                let result = $input;
+                assert_eq!(result, $expected, "Test failed for input: {}", stringify!($input));
+                println!("✓ Test passed: {} => {}", stringify!($input), $expected);
+            )*
+            println!("All {} tests passed!", [$(stringify!($input)),*].len());
+        }
+    };
+}
+
+test_cases! {
+    test_arithmetic,
+    2 + 3 => 5,
+    10 - 4 => 6,
+    5 * 6 => 30,
+    15 / 3 => 5
+}
+
+test_arithmetic();

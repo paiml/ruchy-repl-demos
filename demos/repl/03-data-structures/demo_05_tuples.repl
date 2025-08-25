@@ -1,0 +1,22 @@
+// Working with tuples in Ruchy
+let point = (10, 20)
+println("Point: {:?}", point)
+
+// Accessing tuple elements
+println("X: {}", point.0)
+println("Y: {}", point.1)
+
+// Tuple destructuring
+let (x, y) = point
+println("X: {}, Y: {}", x, y)
+
+// Mixed type tuple
+let person_info = ("Alice", 30, true)
+let (name, age, is_married) = person_info
+println("Name: {}, Age: {}, Married: {}", name, age, is_married)
+
+// Nested tuples
+let nested = ((1, 2), (3, 4))
+println("Nested: {:?}", nested)
+println("First pair: {:?}", nested.0)
+println("Second pair: {:?}", nested.1)

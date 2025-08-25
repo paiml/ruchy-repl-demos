@@ -1,0 +1,24 @@
+// Working with hashmaps in Ruchy
+let mut map = HashMap::new()
+map.insert("name", "Alice")
+map.insert("age", "30")
+map.insert("city", "New York")
+
+println(map)
+
+// Accessing values
+println(map.get("name"))
+println(map["age"])
+
+// Checking existence
+println(map.contains_key("email"))
+println(map.contains_key("name"))
+
+// Iterating over hashmap
+for (key, value) in map {
+    println("{}: {}", key, value)
+}
+
+// Remove entry
+map.remove("city")
+println(map)

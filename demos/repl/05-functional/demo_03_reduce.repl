@@ -1,0 +1,39 @@
+// Reduce function examples in Ruchy
+let numbers = [1, 2, 3, 4, 5]
+
+// Sum all numbers
+let sum = numbers.iter().fold(0, |acc, x| acc + x)
+println("Numbers: {:?}", numbers)
+println("Sum: {}", sum)
+
+// Product of all numbers
+let product = numbers.iter().fold(1, |acc, x| acc * x)
+println("Product: {}", product)
+
+// Find maximum
+let max = numbers.iter().fold(numbers[0], |acc, &x| if x > acc { x } else { acc })
+println("Maximum: {}", max)
+
+// Using reduce instead of fold (no initial value)
+let sum_reduce = numbers.iter().reduce(|acc, x| acc + x).unwrap()
+println("Sum using reduce: {}", sum_reduce)
+
+// Concatenate strings
+let words = ["Hello", " ", "World", "!"]
+let sentence = words.iter().fold(String::new(), |acc, &word| acc + word)
+println("Concatenated: {}", sentence)
+
+// Count occurrences
+let chars = ['a', 'b', 'a', 'c', 'b', 'a']
+let counts = chars.iter().fold(HashMap::new(), |mut acc, &ch| {
+    *acc.entry(ch).or_insert(0) += 1;
+    acc
+})
+println("Character counts: {:?}", counts)
+
+// Complex reduction - sum of squares of even numbers
+let sum_squares_even = numbers.iter()
+    .filter(|&x| x % 2 == 0)
+    .map(|x| x * x)
+    .fold(0, |acc, x| acc + x)
+println("Sum of squares of even numbers: {}", sum_squares_even)

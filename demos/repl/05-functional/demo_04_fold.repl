@@ -1,0 +1,62 @@
+// Fold function examples in Ruchy
+let numbers = [1, 2, 3, 4, 5]
+
+// Left fold (fold_left) - processes from left to right
+let sum_left = numbers.iter().fold(0, |acc, x| {
+    println!("Processing: acc={}, x={}", acc, x);
+    acc + x
+})
+println("Sum (left fold): {}", sum_left)
+
+// Right fold - processes from right to left
+let sum_right = numbers.iter().rev().fold(0, |acc, x| {
+    println!("Processing: acc={}, x={}", acc, x);
+    acc + x
+})
+println("Sum (right fold): {}", sum_right)
+
+// Fold with different types
+let strings = ["1", "2", "3", "4", "5"]
+let parsed_sum = strings.iter().fold(0, |acc, s| {
+    acc + s.parse::<i32>().unwrap_or(0)
+})
+println("Parsed and summed: {}", parsed_sum)
+
+// Building a data structure with fold
+struct Stats {
+    sum: i32,
+    count: usize,
+    max: i32,
+    min: i32
+}
+
+let stats = numbers.iter().fold(
+    Stats { sum: 0, count: 0, max: i32::MIN, min: i32::MAX },
+    |mut acc, &x| {
+        acc.sum += x;
+        acc.count += 1;
+        acc.max = acc.max.max(x);
+        acc.min = acc.min.min(x);
+        acc
+    }
+)
+
+println("Statistics:");
+println("  Sum: {}", stats.sum);
+println("  Count: {}", stats.count);
+println("  Max: {}", stats.max);
+println("  Min: {}", stats.min);
+println("  Average: {:.2}", stats.sum as f64 / stats.count as f64);
+
+// Fold with early termination simulation
+let early_stop = numbers.iter().fold((0, false), |acc, &x| {
+    if acc.1 { // Already stopped
+        return acc;
+    }
+    if x == 3 { // Stop condition
+        (acc.0 + x, true)
+    } else {
+        (acc.0 + x, false)
+    }
+})
+println("Sum until 3 (inclusive): {}", early_stop.0)

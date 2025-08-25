@@ -1,0 +1,11 @@
+// Variable definitions and usage
+let x = 10
+let y = 20
+x + y
+let name = "Ruchy"
+let greeting = "Hello, " + name
+greeting
+let pi = 3.14159
+let radius = 5
+let area = pi * radius * radius
+area

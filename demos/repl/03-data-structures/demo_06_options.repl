@@ -1,0 +1,26 @@
+// Working with Option types in Ruchy
+let some_value = Some(42)
+let no_value = None
+
+println("Some value: {:?}", some_value)
+println("No value: {:?}", no_value)
+
+// Pattern matching with Option
+match some_value {
+    Some(x) => println("Got value: {}", x),
+    None => println("No value")
+}
+
+match no_value {
+    Some(x) => println("Got value: {}", x),
+    None => println("No value found")
+}
+
+// Option methods
+println("Is some: {}", some_value.is_some())
+println("Is none: {}", no_value.is_none())
+println("Unwrap or default: {}", no_value.unwrap_or(0))
+
+// Map over Option
+let doubled = some_value.map(|x| x * 2)
+println("Doubled: {:?}", doubled)

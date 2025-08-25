@@ -1,0 +1,21 @@
+name: "String Reversal Test"
+description: "Test string reversal one-liner"
+version: "1.9.1"
+category: "text-processing"
+
+tests:
+  - name: "Reverse hello"
+    command: 'ruchy -e ''print("hello".reverse())'''
+    expected: "olleh"
+    
+  - name: "Reverse palindrome"
+    command: 'ruchy -e ''"racecar".reverse() == "racecar"'''
+    expected: "true"
+    
+  - name: "Reverse empty"
+    command: 'ruchy -e ''print("".reverse())'''
+    expected: ""
+
+requirements:
+  - ruchy_version: ">=1.9.1"
+  - features: ["strings", "methods"]

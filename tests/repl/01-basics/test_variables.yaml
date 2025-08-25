@@ -1,0 +1,32 @@
+name: "Variable Assignment and Usage"
+description: "Test variable declaration and mutation"
+version: "1.9.1"
+category: "basics"
+
+tests:
+  - name: "Immutable variable"
+    session:
+      - input: "let x = 10"
+        output: ""
+      - input: "x"
+        output: "10"
+        
+  - name: "Mutable variable"
+    session:
+      - input: "let mut y = 5"
+        output: ""
+      - input: "y = y + 3"
+        output: ""
+      - input: "y"
+        output: "8"
+        
+  - name: "String variable"
+    session:
+      - input: "let name = \"Ruchy\""
+        output: ""
+      - input: "name"
+        output: "\"Ruchy\""
+
+requirements:
+  - ruchy_version: ">=1.9.1"
+  - features: ["variables", "mutation"]

@@ -1,0 +1,15 @@
+// Function chaining and pipelines
+fn add_one(x: i32) -> i32 { x + 1 }
+fn double(x: i32) -> i32 { x * 2 }
+fn square(x: i32) -> i32 { x * x }
+
+// Chain functions
+let result = square(double(add_one(3)))
+result
+
+// Using method chaining
+3.add_one().double().square()
+
+// Pipeline operator simulation
+let pipeline = |x| square(double(add_one(x)))
+pipeline(5)

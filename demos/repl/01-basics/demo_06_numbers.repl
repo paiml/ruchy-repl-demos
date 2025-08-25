@@ -1,0 +1,8 @@
+// Number operations and types
+42
+3.14159
+-17
+0xFF  // Hexadecimal
+0b1010  // Binary
+1_000_000  // With underscores
+1.5e3  // Scientific notation

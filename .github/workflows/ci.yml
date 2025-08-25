@@ -1,0 +1,174 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+
+env:
+  RUST_VERSION: '1.75.0'
+  RUCHY_VERSION: '1.10.0'
+
+jobs:
+  validate:
+    name: Validate Project Structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Check directory structure
+        run: |
+          ./scripts/validate.sh
+
+      - name: Count demos
+        run: |
+          echo "REPL demos: $(find demos/repl -name '*.repl' | wc -l)"
+          echo "One-liner demos: $(find demos/one-liners -name '*.sh' | wc -l)"
+
+  test:
+    name: Test Demos
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+      
+      - name: Cache Cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      
+      - name: Install Ruchy
+        run: |
+          cargo install ruchy --version ${{ env.RUCHY_VERSION }}
+      
+      - name: Run tests
+        run: |
+          make test
+      
+      - name: Run quality gates
+        run: |
+          make quality-gate
+
+  benchmark:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+      
+      - name: Install Ruchy
+        run: |
+          cargo install ruchy --version ${{ env.RUCHY_VERSION }}
+      
+      - name: Run benchmarks
+        run: |
+          ./scripts/benchmark.sh
+      
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v3
+        with:
+          name: benchmarks
+          path: benchmark-results.txt
+        if: always()
+
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Check for TODOs
+        run: |
+          ! grep -r "TODO\|FIXME\|HACK" demos/ --include="*.ruchy" --include="*.repl"
+      
+      - name: Check file permissions
+        run: |
+          find demos/one-liners -name "*.sh" -exec test -x {} \;
+      
+      - name: Validate documentation
+        run: |
+          test -f README.md
+          test -f CONTRIBUTING.md
+          test -f CHANGELOG.md
+          test -f ROADMAP.md
+
+  coverage:
+    name: Test Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+      
+      - name: Install Ruchy
+        run: |
+          cargo install ruchy --version ${{ env.RUCHY_VERSION }}
+      
+      - name: Generate coverage report
+        run: |
+          make coverage
+      
+      - name: Upload coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
+        if: always()
+
+  release:
+    name: Prepare Release
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: [validate, test, benchmark, lint, coverage]
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Check version
+        run: |
+          VERSION=$(grep "version" README.md | head -1 | grep -oP 'v[\d.]+')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+      
+      - name: Create release bundle
+        run: |
+          tar -czf ruchy-demos-${{ env.VERSION }}.tar.gz \
+            demos/ \
+            tests/ \
+            scripts/ \
+            docs/ \
+            Makefile \
+            README.md \
+            CHANGELOG.md \
+            CONTRIBUTING.md \
+            LICENSE
+      
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-bundle
+          path: ruchy-demos-*.tar.gz

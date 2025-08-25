@@ -1,0 +1,371 @@
+// Unsafe Rust patterns and FFI in Ruchy
+
+// Basic unsafe operations
+fn basic_unsafe_operations() {
+    println!("=== Basic Unsafe Operations ===");
+    
+    // Raw pointers
+    let mut x = 42;
+    let raw_ptr = &mut x as *mut i32;
+    let const_raw_ptr = &x as *const i32;
+    
+    println!("Raw pointer address: {:p}", raw_ptr);
+    println!("Const raw pointer address: {:p}", const_raw_ptr);
+    
+    // Dereferencing raw pointers requires unsafe
+    unsafe {
+        println!("Value through raw pointer: {}", *raw_ptr);
+        *raw_ptr = 100;
+        println!("Modified value: {}", *raw_ptr);
+    }
+    
+    println!("Original variable: {}", x);
+}
+
+basic_unsafe_operations();
+
+// Working with uninitialized memory
+use std::mem::MaybeUninit;
+
+fn uninitialized_memory_example() {
+    println!("\n=== Uninitialized Memory ===");
+    
+    // Safe way to work with uninitialized memory
+    let mut array: [MaybeUninit<i32>; 5] = unsafe {
+        MaybeUninit::uninit().assume_init()
+    };
+    
+    // Initialize elements
+    for (i, elem) in array.iter_mut().enumerate() {
+        elem.write(i as i32 * 10);
+    }
+    
+    // Convert to initialized array
+    let initialized_array: [i32; 5] = unsafe {
+        std::mem::transmute(array)
+    };
+    
+    println!("Initialized array: {:?}", initialized_array);
+    
+    // Alternative safer approach
+    let mut safe_array = Vec::with_capacity(5);
+    for i in 0..5 {
+        safe_array.push(i * 10);
+    }
+    println!("Safe array: {:?}", safe_array);
+}
+
+uninitialized_memory_example();
+
+// Transmutation and type casting
+fn transmutation_examples() {
+    println!("\n=== Transmutation Examples ===");
+    
+    // Transmute between compatible types
+    let float_bits: u32 = unsafe {
+        std::mem::transmute(3.14f32)
+    };
+    println!("Float 3.14 as u32 bits: 0x{:08x}", float_bits);
+    
+    let back_to_float: f32 = unsafe {
+        std::mem::transmute(float_bits)
+    };
+    println!("Back to float: {}", back_to_float);
+    
+    // Transmute array to different type
+    let bytes = [1u8, 2, 3, 4];
+    let as_u32: u32 = unsafe {
+        std::mem::transmute(bytes)
+    };
+    println!("Bytes {:?} as u32: {}", bytes, as_u32);
+    
+    // Union for safe transmutation alternative
+    union FloatOrInt {
+        f: f32,
+        i: u32,
+    }
+    
+    let union_val = FloatOrInt { f: 2.718 };
+    unsafe {
+        println!("Union float: {}, as int: 0x{:08x}", union_val.f, union_val.i);
+    }
+}
+
+transmutation_examples();
+
+// Manual memory management
+fn manual_memory_management() {
+    println!("\n=== Manual Memory Management ===");
+    
+    use std::alloc::{alloc, dealloc, Layout};
+    
+    unsafe {
+        // Allocate memory for 10 integers
+        let layout = Layout::array::<i32>(10).unwrap();
+        let ptr = alloc(layout) as *mut i32;
+        
+        if ptr.is_null() {
+            panic!("Failed to allocate memory");
+        }
+        
+        // Initialize the memory
+        for i in 0..10 {
+            ptr.add(i).write(i as i32);
+        }
+        
+        // Read back the values
+        print!("Manually allocated array: [");
+        for i in 0..10 {
+            if i > 0 { print!(", "); }
+            print!("{}", ptr.add(i).read());
+        }
+        println!("]");
+        
+        // IMPORTANT: Must deallocate manually
+        dealloc(ptr as *mut u8, layout);
+    }
+    
+    println!("Memory deallocated successfully");
+}
+
+manual_memory_management();
+
+// Unsafe traits and implementations
+unsafe trait UnsafeTrait {
+    fn dangerous_method(&self);
+}
+
+struct SafeStruct {
+    value: i32,
+}
+
+unsafe impl UnsafeTrait for SafeStruct {
+    fn dangerous_method(&self) {
+        println!("Performing dangerous operation with value: {}", self.value);
+    }
+}
+
+fn unsafe_traits_example() {
+    println!("\n=== Unsafe Traits ===");
+    
+    let safe_struct = SafeStruct { value: 42 };
+    safe_struct.dangerous_method();
+}
+
+unsafe_traits_example();
+
+// Send and Sync marker traits
+use std::sync::Arc;
+use std::thread;
+
+#[derive(Debug)]
+struct NotSendSync {
+    ptr: *const u8,
+}
+
+// Manually implement Send and Sync (DANGEROUS - only do if you know what you're doing)
+unsafe impl Send for NotSendSync {}
+unsafe impl Sync for NotSendSync {}
+
+fn send_sync_example() {
+    println!("\n=== Send and Sync Traits ===");
+    
+    let data = Arc::new(NotSendSync {
+        ptr: std::ptr::null(),
+    });
+    
+    let handles: Vec<_> = (0..3)
+        .map(|i| {
+            let data_clone = Arc::clone(&data);
+            thread::spawn(move || {
+                println!("Thread {}: {:?}", i, data_clone);
+            })
+        })
+        .collect();
+    
+    for handle in handles {
+        handle.join().unwrap();
+    }
+}
+
+send_sync_example();
+
+// Foreign Function Interface (FFI)
+extern "C" {
+    fn abs(input: i32) -> i32;
+    fn strlen(s: *const i8) -> usize;
+}
+
+fn ffi_example() {
+    println!("\n=== Foreign Function Interface ===");
+    
+    unsafe {
+        let result = abs(-42);
+        println!("abs(-42) = {}", result);
+        
+        // Working with C strings
+        let c_string = std::ffi::CString::new("Hello, FFI!").unwrap();
+        let c_str_ptr = c_string.as_ptr();
+        let length = strlen(c_str_ptr);
+        println!("C string length: {}", length);
+    }
+}
+
+ffi_example();
+
+// Inline assembly (platform-specific)
+#[cfg(target_arch = "x86_64")]
+fn inline_assembly_example() {
+    println!("\n=== Inline Assembly (x86_64) ===");
+    
+    unsafe {
+        let mut result: u64;
+        std::arch::asm!(
+            "mov {}, 42",
+            out(reg) result,
+        );
+        println!("Assembly result: {}", result);
+        
+        // Simple addition in assembly
+        let a: u64 = 10;
+        let b: u64 = 20;
+        let sum: u64;
+        
+        std::arch::asm!(
+            "add {result}, {a}",
+            a = in(reg) a,
+            result = inout(reg) b => sum,
+        );
+        
+        println!("Assembly addition: {} + {} = {}", a, b, sum);
+    }
+}
+
+#[cfg(not(target_arch = "x86_64"))]
+fn inline_assembly_example() {
+    println!("\n=== Inline Assembly ===");
+    println!("Inline assembly example only available on x86_64");
+}
+
+inline_assembly_example();
+
+// Unsafe cell for interior mutability
+use std::cell::UnsafeCell;
+
+struct CustomCell<T> {
+    value: UnsafeCell<T>,
+}
+
+impl<T> CustomCell<T> {
+    fn new(value: T) -> Self {
+        CustomCell {
+            value: UnsafeCell::new(value),
+        }
+    }
+    
+    fn get(&self) -> *mut T {
+        self.value.get()
+    }
+    
+    fn set(&self, value: T) {
+        unsafe {
+            *self.get() = value;
+        }
+    }
+    
+    fn read(&self) -> T
+    where
+        T: Copy,
+    {
+        unsafe { *self.get() }
+    }
+}
+
+unsafe impl<T: Send> Sync for CustomCell<T> {}
+
+fn unsafe_cell_example() {
+    println!("\n=== UnsafeCell Example ===");
+    
+    let cell = CustomCell::new(42);
+    println!("Initial value: {}", cell.read());
+    
+    cell.set(100);
+    println!("After set: {}", cell.read());
+    
+    // Demonstrate shared mutable access (DANGEROUS!)
+    unsafe {
+        let ptr1 = cell.get();
+        let ptr2 = cell.get();
+        
+        *ptr1 = 200;
+        println!("Modified through ptr1: {}", *ptr2);
+    }
+}
+
+unsafe_cell_example();
+
+// Global mutable state
+static mut GLOBAL_COUNTER: i32 = 0;
+
+fn modify_global_state() {
+    unsafe {
+        GLOBAL_COUNTER += 1;
+        println!("Global counter: {}", GLOBAL_COUNTER);
+    }
+}
+
+fn global_state_example() {
+    println!("\n=== Global Mutable State ===");
+    
+    for _ in 0..5 {
+        modify_global_state();
+    }
+    
+    // Better alternative: use Mutex or atomic types
+    use std::sync::atomic::{AtomicI32, Ordering};
+    
+    static ATOMIC_COUNTER: AtomicI32 = AtomicI32::new(0);
+    
+    for _ in 0..5 {
+        let old_value = ATOMIC_COUNTER.fetch_add(1, Ordering::SeqCst);
+        println!("Atomic counter (old value): {}", old_value);
+    }
+    
+    println!("Final atomic counter value: {}", ATOMIC_COUNTER.load(Ordering::SeqCst));
+}
+
+global_state_example();
+
+// Unsafe function and calling conventions
+unsafe fn unsafe_function(ptr: *mut i32) {
+    if !ptr.is_null() {
+        *ptr = 42;
+    }
+}
+
+extern "C" fn c_callable_function(x: i32) -> i32 {
+    x * 2
+}
+
+fn unsafe_functions_example() {
+    println!("\n=== Unsafe Functions ===");
+    
+    let mut value = 0;
+    let ptr = &mut value as *mut i32;
+    
+    unsafe {
+        unsafe_function(ptr);
+    }
+    
+    println!("Value after unsafe function: {}", value);
+    
+    // Function pointer
+    let fn_ptr: extern "C" fn(i32) -> i32 = c_callable_function;
+    let result = fn_ptr(21);
+    println!("C callable function result: {}", result);
+}
+
+unsafe_functions_example();
+
+println!("\n=== Unsafe Rust Examples Complete ===");
+println!("Remember: Use unsafe only when necessary and always verify safety invariants!")

@@ -1,0 +1,68 @@
+// Function pipeline examples in Ruchy
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+// Traditional nested approach
+let traditional = numbers.iter()
+    .filter(|&x| x % 2 == 0)
+    .map(|x| x * x)
+    .filter(|&x| x > 10)
+    .collect::<Vec<i32>>();
+
+println("Traditional pipeline: {:?}", traditional);
+
+// Pipeline with intermediate steps for clarity
+let step1: Vec<&i32> = numbers.iter().filter(|&x| x % 2 == 0).collect();
+println("Step 1 - Even numbers: {:?}", step1);
+
+let step2: Vec<i32> = step1.iter().map(|&x| x * x).collect();
+println("Step 2 - Squared: {:?}", step2);
+
+let step3: Vec<i32> = step2.iter().filter(|&x| x > 10).cloned().collect();
+println("Step 3 - Greater than 10: {:?}", step3);
+
+// Complex data processing pipeline
+#[derive(Debug)]
+struct Person {
+    name: String,
+    age: i32,
+    salary: f64
+}
+
+let people = vec![
+    Person { name: "Alice".to_string(), age: 30, salary: 50000.0 },
+    Person { name: "Bob".to_string(), age: 25, salary: 45000.0 },
+    Person { name: "Charlie".to_string(), age: 35, salary: 60000.0 },
+    Person { name: "Diana".to_string(), age: 28, salary: 55000.0 },
+];
+
+// Pipeline: adults only -> high earners -> names
+let high_earning_adults: Vec<String> = people.iter()
+    .filter(|person| person.age >= 30)
+    .filter(|person| person.salary > 50000.0)
+    .map(|person| person.name.clone())
+    .collect();
+
+println("High earning adults: {:?}", high_earning_adults);
+
+// Mathematical pipeline
+fn add_one(x: i32) -> i32 { x + 1 }
+fn multiply_by_two(x: i32) -> i32 { x * 2 }
+fn subtract_three(x: i32) -> i32 { x - 3 }
+
+let pipeline_result = numbers.iter()
+    .map(|&x| add_one(x))
+    .map(multiply_by_two)
+    .map(subtract_three)
+    .collect::<Vec<i32>>();
+
+println("Mathematical pipeline (x+1)*2-3: {:?}", pipeline_result);
+
+// String processing pipeline
+let text = "Hello World Rust Programming";
+let processed: Vec<String> = text.split_whitespace()
+    .filter(|word| word.len() > 4)
+    .map(|word| word.to_uppercase())
+    .map(|word| format!("[{}]", word))
+    .collect();
+
+println("Text processing pipeline: {:?}", processed)

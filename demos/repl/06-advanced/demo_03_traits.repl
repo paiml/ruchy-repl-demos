@@ -1,0 +1,237 @@
+// Traits and trait implementations in Ruchy
+
+// Basic trait definition
+trait Describable {
+    fn describe(&self) -> String;
+}
+
+#[derive(Debug)]
+struct Person {
+    name: String,
+    age: u32,
+}
+
+#[derive(Debug)]
+struct Book {
+    title: String,
+    author: String,
+    pages: u32,
+}
+
+// Implementing trait for different types
+impl Describable for Person {
+    fn describe(&self) -> String {
+        format!("Person: {} is {} years old", self.name, self.age)
+    }
+}
+
+impl Describable for Book {
+    fn describe(&self) -> String {
+        format!("Book: '{}' by {} ({} pages)", self.title, self.author, self.pages)
+    }
+}
+
+let person = Person {
+    name: "Alice".to_string(),
+    age: 30,
+};
+
+let book = Book {
+    title: "The Rust Book".to_string(),
+    author: "Steve Klabnik".to_string(),
+    pages: 500,
+};
+
+println!("{}", person.describe());
+println!("{}", book.describe());
+
+// Trait with default implementation
+trait Greetings {
+    fn hello(&self) -> String {
+        "Hello!".to_string()
+    }
+    
+    fn goodbye(&self) -> String {
+        "Goodbye!".to_string()
+    }
+    
+    fn name(&self) -> String;
+    
+    fn full_greeting(&self) -> String {
+        format!("{} I'm {}. {}", self.hello(), self.name(), self.goodbye())
+    }
+}
+
+impl Greetings for Person {
+    fn name(&self) -> String {
+        self.name.clone()
+    }
+    
+    // Override default hello
+    fn hello(&self) -> String {
+        "Hi there!".to_string()
+    }
+}
+
+println!("{}", person.full_greeting());
+
+// Trait with associated types
+trait Container {
+    type Item;
+    
+    fn add(&mut self, item: Self::Item);
+    fn remove(&mut self) -> Option<Self::Item>;
+    fn len(&self) -> usize;
+}
+
+struct NumberContainer {
+    numbers: Vec<i32>,
+}
+
+impl Container for NumberContainer {
+    type Item = i32;
+    
+    fn add(&mut self, item: Self::Item) {
+        self.numbers.push(item);
+    }
+    
+    fn remove(&mut self) -> Option<Self::Item> {
+        self.numbers.pop()
+    }
+    
+    fn len(&self) -> usize {
+        self.numbers.len()
+    }
+}
+
+let mut container = NumberContainer { numbers: Vec::new() };
+container.add(1);
+container.add(2);
+container.add(3);
+
+println!("Container length: {}", container.len());
+println!("Removed: {:?}", container.remove());
+println!("Container length after removal: {}", container.len());
+
+// Multiple trait bounds
+trait Printable {
+    fn print(&self);
+}
+
+trait Cloneable {
+    fn clone_me(&self) -> Self;
+}
+
+impl Printable for i32 {
+    fn print(&self) {
+        println!("Integer: {}", self);
+    }
+}
+
+impl Cloneable for i32 {
+    fn clone_me(&self) -> Self {
+        *self
+    }
+}
+
+fn process_item<T>(item: &T) -> T
+where
+    T: Printable + Cloneable,
+{
+    item.print();
+    item.clone_me()
+}
+
+let number = 42;
+let cloned = process_item(&number);
+println!("Original: {}, Cloned: {}", number, cloned);
+
+// Trait objects (dynamic dispatch)
+fn describe_all(items: &[&dyn Describable]) {
+    for item in items {
+        println!("{}", item.describe());
+    }
+}
+
+let items: &[&dyn Describable] = &[&person, &book];
+describe_all(items);
+
+// Generic trait with constraints
+trait Comparable<T> {
+    fn is_greater_than(&self, other: &T) -> bool;
+}
+
+impl Comparable<Person> for Person {
+    fn is_greater_than(&self, other: &Person) -> bool {
+        self.age > other.age
+    }
+}
+
+let person1 = Person { name: "Alice".to_string(), age: 30 };
+let person2 = Person { name: "Bob".to_string(), age: 25 };
+
+println!("Alice older than Bob: {}", person1.is_greater_than(&person2));
+
+// Operator overloading through traits
+use std::ops::Add;
+
+#[derive(Debug, Clone, Copy)]
+struct Point {
+    x: f64,
+    y: f64,
+}
+
+impl Add for Point {
+    type Output = Point;
+    
+    fn add(self, other: Point) -> Point {
+        Point {
+            x: self.x + other.x,
+            y: self.y + other.y,
+        }
+    }
+}
+
+let p1 = Point { x: 1.0, y: 2.0 };
+let p2 = Point { x: 3.0, y: 4.0 };
+let p3 = p1 + p2;
+
+println!("Point addition: {:?} + {:?} = {:?}", p1, p2, p3);
+
+// Marker traits
+trait Serializable {}
+
+impl Serializable for Person {}
+impl Serializable for Book {}
+
+fn serialize<T: Serializable>(item: &T) -> String {
+    "Serialized data".to_string() // Placeholder
+}
+
+println!("Serialized person: {}", serialize(&person));
+println!("Serialized book: {}", serialize(&book));
+
+// Trait with generic methods
+trait Transformer {
+    fn transform<T, F>(&self, value: T, f: F) -> T
+    where
+        F: Fn(T) -> T;
+}
+
+struct Processor;
+
+impl Transformer for Processor {
+    fn transform<T, F>(&self, value: T, f: F) -> T
+    where
+        F: Fn(T) -> T,
+    {
+        f(value)
+    }
+}
+
+let processor = Processor;
+let doubled = processor.transform(5, |x| x * 2);
+let uppercased = processor.transform("hello".to_string(), |s| s.to_uppercase());
+
+println!("Transformed number: {}", doubled);
+println!("Transformed string: {}", uppercased)

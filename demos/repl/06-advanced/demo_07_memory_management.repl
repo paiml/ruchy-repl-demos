@@ -1,0 +1,279 @@
+// Memory management patterns in Ruchy
+
+// Reference counting with Rc
+use std::rc::Rc;
+
+#[derive(Debug)]
+struct Node {
+    data: i32,
+    children: Vec<Rc<Node>>,
+}
+
+fn create_shared_tree() {
+    let leaf1 = Rc::new(Node { data: 1, children: vec![] });
+    let leaf2 = Rc::new(Node { data: 2, children: vec![] });
+    
+    println!("leaf1 reference count: {}", Rc::strong_count(&leaf1));
+    
+    let branch = Rc::new(Node {
+        data: 10,
+        children: vec![leaf1.clone(), leaf2.clone()],
+    });
+    
+    println!("leaf1 reference count after branch: {}", Rc::strong_count(&leaf1));
+    println!("branch reference count: {}", Rc::strong_count(&branch));
+    
+    let root = Rc::new(Node {
+        data: 100,
+        children: vec![branch.clone(), leaf1.clone()],
+    });
+    
+    println!("Final reference counts:");
+    println!("  leaf1: {}", Rc::strong_count(&leaf1));
+    println!("  leaf2: {}", Rc::strong_count(&leaf2));
+    println!("  branch: {}", Rc::strong_count(&branch));
+    println!("  root: {}", Rc::strong_count(&root));
+    
+    println!("Tree structure: {:?}", root);
+}
+
+create_shared_tree();
+
+// Weak references to avoid cycles
+use std::rc::Weak;
+use std::cell::RefCell;
+
+#[derive(Debug)]
+struct Parent {
+    children: RefCell<Vec<Rc<Child>>>,
+}
+
+#[derive(Debug)]
+struct Child {
+    parent: RefCell<Weak<Parent>>,
+    name: String,
+}
+
+fn demonstrate_weak_references() {
+    println!("\n--- Weak References ---");
+    
+    let parent = Rc::new(Parent {
+        children: RefCell::new(vec![]),
+    });
+    
+    let child1 = Rc::new(Child {
+        parent: RefCell::new(Rc::downgrade(&parent)),
+        name: "Child 1".to_string(),
+    });
+    
+    let child2 = Rc::new(Child {
+        parent: RefCell::new(Rc::downgrade(&parent)),
+        name: "Child 2".to_string(),
+    });
+    
+    parent.children.borrow_mut().push(child1.clone());
+    parent.children.borrow_mut().push(child2.clone());
+    
+    println!("Parent strong count: {}", Rc::strong_count(&parent));
+    println!("Parent weak count: {}", Rc::weak_count(&parent));
+    
+    // Access parent from child
+    if let Some(parent_ref) = child1.parent.borrow().upgrade() {
+        println!("Child1 can access parent with {} children", 
+                parent_ref.children.borrow().len());
+    }
+    
+    // Demonstrate weak reference becomes None when parent is dropped
+    {
+        let temp_parent = Rc::new(Parent {
+            children: RefCell::new(vec![]),
+        });
+        
+        let temp_child = Child {
+            parent: RefCell::new(Rc::downgrade(&temp_parent)),
+            name: "Temp Child".to_string(),
+        };
+        
+        println!("Temp parent accessible: {}", temp_child.parent.borrow().upgrade().is_some());
+        // temp_parent goes out of scope here
+    }
+}
+
+demonstrate_weak_references();
+
+// Arc for thread-safe reference counting
+use std::sync::Arc;
+use std::thread;
+
+fn demonstrate_arc() {
+    println!("\n--- Arc (Atomic Reference Counting) ---");
+    
+    let shared_data = Arc::new(vec![1, 2, 3, 4, 5]);
+    let mut handles = vec![];
+    
+    for i in 0..3 {
+        let data = Arc::clone(&shared_data);
+        let handle = thread::spawn(move || {
+            println!("Thread {}: {:?}", i, data);
+            println!("Thread {} sees length: {}", i, data.len());
+            data.iter().sum::<i32>()
+        });
+        handles.push(handle);
+    }
+    
+    let results: Vec<i32> = handles.into_iter().map(|h| h.join().unwrap()).collect();
+    println!("Thread results: {:?}", results);
+    
+    println!("Original data reference count: {}", Arc::strong_count(&shared_data));
+}
+
+demonstrate_arc();
+
+// Box for heap allocation
+fn demonstrate_box() {
+    println!("\n--- Box (Heap Allocation) ---");
+    
+    // Large data on heap
+    let large_array = Box::new([0; 1000]);
+    println!("Large array length: {}", large_array.len());
+    
+    // Recursive data structure
+    #[derive(Debug)]
+    enum List<T> {
+        Cons(T, Box<List<T>>),
+        Nil,
+    }
+    
+    let list = List::Cons(1, 
+        Box::new(List::Cons(2, 
+            Box::new(List::Cons(3, 
+                Box::new(List::Nil))))));
+    
+    println!("Recursive list: {:?}", list);
+    
+    // Moving boxed data
+    let boxed_int = Box::new(42);
+    let moved_box = boxed_int; // Ownership moved
+    println!("Moved box value: {}", moved_box);
+    // println!("{}", boxed_int); // This would cause a compile error
+}
+
+demonstrate_box();
+
+// Interior mutability with RefCell
+use std::cell::Cell;
+
+fn demonstrate_interior_mutability() {
+    println!("\n--- Interior Mutability ---");
+    
+    // Cell for Copy types
+    let cell_value = Cell::new(42);
+    println!("Cell value: {}", cell_value.get());
+    cell_value.set(100);
+    println!("Cell value after set: {}", cell_value.get());
+    
+    // RefCell for non-Copy types
+    let ref_cell_vec = RefCell::new(vec![1, 2, 3]);
+    
+    // Borrow immutably
+    {
+        let borrowed = ref_cell_vec.borrow();
+        println!("RefCell contents: {:?}", *borrowed);
+    }
+    
+    // Borrow mutably
+    {
+        let mut borrowed = ref_cell_vec.borrow_mut();
+        borrowed.push(4);
+        borrowed.push(5);
+    }
+    
+    println!("RefCell after mutation: {:?}", ref_cell_vec.borrow());
+    
+    // Multiple immutable borrows are allowed
+    let borrow1 = ref_cell_vec.borrow();
+    let borrow2 = ref_cell_vec.borrow();
+    println!("Multiple borrows: len={}, first={}", borrow1.len(), borrow2[0]);
+}
+
+demonstrate_interior_mutability();
+
+// Cow (Clone on Write)
+use std::borrow::Cow;
+
+fn process_string(input: Cow<str>) -> Cow<str> {
+    if input.contains("modify") {
+        Cow::Owned(input.replace("modify", "MODIFIED").to_uppercase())
+    } else {
+        input // No cloning needed
+    }
+}
+
+fn demonstrate_cow() {
+    println!("\n--- Cow (Clone on Write) ---");
+    
+    let original = "hello world";
+    let result1 = process_string(Cow::Borrowed(original));
+    println!("No modification: '{}'", result1);
+    
+    let modify_string = "please modify this";
+    let result2 = process_string(Cow::Borrowed(modify_string));
+    println!("With modification: '{}'", result2);
+    
+    // Working with Vec
+    fn maybe_modify_vec(input: Cow<[i32]>) -> Cow<[i32]> {
+        if input.len() > 3 {
+            let mut owned = input.into_owned();
+            owned.truncate(3);
+            Cow::Owned(owned)
+        } else {
+            input
+        }
+    }
+    
+    let small_vec = vec![1, 2];
+    let large_vec = vec![1, 2, 3, 4, 5];
+    
+    let result3 = maybe_modify_vec(Cow::Borrowed(&small_vec));
+    let result4 = maybe_modify_vec(Cow::Borrowed(&large_vec));
+    
+    println!("Small vec (no change): {:?}", result3);
+    println!("Large vec (truncated): {:?}", result4);
+}
+
+demonstrate_cow();
+
+// Memory layout and size
+fn demonstrate_memory_layout() {
+    println!("\n--- Memory Layout and Size ---");
+    
+    println!("Size of different types:");
+    println!("  i32: {} bytes", std::mem::size_of::<i32>());
+    println!("  f64: {} bytes", std::mem::size_of::<f64>());
+    println!("  String: {} bytes", std::mem::size_of::<String>());
+    println!("  Vec<i32>: {} bytes", std::mem::size_of::<Vec<i32>>());
+    println!("  Box<i32>: {} bytes", std::mem::size_of::<Box<i32>>());
+    println!("  Rc<i32>: {} bytes", std::mem::size_of::<Rc<i32>>());
+    println!("  Arc<i32>: {} bytes", std::mem::size_of::<Arc<i32>>());
+    println!("  Option<i32>: {} bytes", std::mem::size_of::<Option<i32>>());
+    
+    // Alignment
+    println!("\nAlignment requirements:");
+    println!("  i32: {} bytes", std::mem::align_of::<i32>());
+    println!("  f64: {} bytes", std::mem::align_of::<f64>());
+    println!("  String: {} bytes", std::mem::align_of::<String>());
+    
+    // Stack vs heap
+    let stack_array = [1, 2, 3, 4, 5];
+    let heap_vec = vec![1, 2, 3, 4, 5];
+    let boxed_array = Box::new([1, 2, 3, 4, 5]);
+    
+    println!("\nStack array address: {:p}", &stack_array);
+    println!("Heap vec data address: {:p}", heap_vec.as_ptr());
+    println!("Boxed array address: {:p}", &*boxed_array);
+    
+    println!("Vec struct address: {:p}", &heap_vec);
+    println!("Vec data address: {:p}", heap_vec.as_ptr());
+}
+
+demonstrate_memory_layout()

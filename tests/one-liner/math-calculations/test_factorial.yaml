@@ -1,0 +1,21 @@
+name: "Factorial Calculation Test"
+description: "Test factorial one-liner"
+version: "1.9.1"
+category: "math-calculations"
+
+tests:
+  - name: "Factorial of 5"
+    command: 'ruchy -e ''1 * 2 * 3 * 4 * 5'''
+    expected: "120"
+    
+  - name: "Factorial of 1"
+    command: 'ruchy -e ''1'''
+    expected: "1"
+    
+  - name: "Factorial of 0"
+    command: 'ruchy -e ''1'''
+    expected: "1"
+
+requirements:
+  - ruchy_version: ">=1.9.1"
+  - features: ["arithmetic"]

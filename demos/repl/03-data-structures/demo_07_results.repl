@@ -1,0 +1,30 @@
+// Working with Result types for error handling
+fn divide(a: f64, b: f64) -> Result<f64, String> {
+    if b == 0.0 {
+        Err("Division by zero")
+    } else {
+        Ok(a / b)
+    }
+}
+
+let success = divide(10.0, 2.0)
+let error = divide(10.0, 0.0)
+
+println("Success: {:?}", success)
+println("Error: {:?}", error)
+
+// Pattern matching with Result
+match success {
+    Ok(value) => println("Result: {}", value),
+    Err(e) => println("Error: {}", e)
+}
+
+match error {
+    Ok(value) => println("Result: {}", value),
+    Err(e) => println("Error: {}", e)
+}
+
+// Result methods
+println("Is ok: {}", success.is_ok())
+println("Is err: {}", error.is_err())
+println("Unwrap or default: {}", error.unwrap_or(0.0))

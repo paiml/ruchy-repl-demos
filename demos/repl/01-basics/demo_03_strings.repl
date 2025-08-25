@@ -1,0 +1,10 @@
+// String operations
+let str1 = "Hello"
+let str2 = "World"
+str1 + " " + str2
+let message = "Ruchy is awesome!"
+message.len()
+message.contains("awesome")
+message.replace("awesome", "amazing")
+"ruchy".to_uppercase()
+"HELLO".to_lowercase()

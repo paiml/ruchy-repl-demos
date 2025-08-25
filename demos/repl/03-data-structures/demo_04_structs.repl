@@ -1,0 +1,31 @@
+// Defining and using structs in Ruchy
+struct Person {
+    name: String,
+    age: i32,
+    email: String
+}
+
+// Creating struct instances
+let person1 = Person {
+    name: "Alice",
+    age: 30,
+    email: "alice@example.com"
+}
+
+println("Name: {}", person1.name)
+println("Age: {}", person1.age)
+println("Email: {}", person1.email)
+
+// Struct with methods
+impl Person {
+    fn greeting(&self) -> String {
+        format!("Hi, I'm {} and I'm {} years old", self.name, self.age)
+    }
+    
+    fn is_adult(&self) -> bool {
+        self.age >= 18
+    }
+}
+
+println(person1.greeting())
+println("Is adult: {}", person1.is_adult())

@@ -1,0 +1,97 @@
+// Currying examples in Ruchy
+
+// Basic currying - transform multi-argument function into chain of single-argument functions
+fn add_three_args(a: i32, b: i32, c: i32) -> i32 {
+    a + b + c
+}
+
+// Curried version
+fn add_curried(a: i32) -> impl Fn(i32) -> impl Fn(i32) -> i32 {
+    move |b: i32| move |c: i32| a + b + c
+}
+
+println("Traditional: {}", add_three_args(1, 2, 3));
+println("Curried: {}", add_curried(1)(2)(3));
+
+// Partial application with currying
+let add_5 = add_curried(5);
+let add_5_and_10 = add_5(10);
+println("Partially applied: {}", add_5_and_10(2)); // 5 + 10 + 2 = 17
+
+// More practical currying examples
+fn multiply_curried(a: f64) -> impl Fn(f64) -> f64 {
+    move |b: f64| a * b
+}
+
+let double = multiply_curried(2.0);
+let triple = multiply_curried(3.0);
+
+println("Double 7: {}", double(7.0));
+println("Triple 4: {}", triple(4.0));
+
+// String processing with currying
+fn string_replace_curried(from: String) -> impl Fn(String) -> impl Fn(String) -> String {
+    move |to: String| {
+        let to_clone = to.clone();
+        let from_clone = from.clone();
+        move |text: String| text.replace(&from_clone, &to_clone)
+    }
+}
+
+let replace_hello = string_replace_curried("hello".to_string());
+let replace_hello_with_hi = replace_hello("hi".to_string());
+
+println("Replace: {}", replace_hello_with_hi("hello world".to_string()));
+
+// List processing with currying
+fn map_curried<T, U, F>(f: F) -> impl Fn(Vec<T>) -> Vec<U>
+where
+    F: Fn(T) -> U + Clone,
+    T: Clone,
+{
+    move |list: Vec<T>| list.into_iter().map(f.clone()).collect()
+}
+
+fn filter_curried<T, F>(predicate: F) -> impl Fn(Vec<T>) -> Vec<T>
+where
+    F: Fn(&T) -> bool + Clone,
+{
+    move |list: Vec<T>| {
+        list.into_iter().filter(predicate.clone()).collect()
+    }
+}
+
+let double_all = map_curried(|x: i32| x * 2);
+let filter_evens = filter_curried(|x: &i32| x % 2 == 0);
+
+let numbers = vec![1, 2, 3, 4, 5];
+println("Original: {:?}", numbers);
+println("Doubled: {:?}", double_all(numbers.clone()));
+println("Evens: {:?}", filter_evens(numbers.clone()));
+
+// Combining curried functions
+let process_numbers = |nums: Vec<i32>| {
+    filter_evens(double_all(nums))
+};
+
+println("Doubled then filtered evens: {:?}", process_numbers(numbers));
+
+// Curried comparison functions
+fn greater_than_curried(threshold: i32) -> impl Fn(i32) -> bool {
+    move |value: i32| value > threshold
+}
+
+fn less_than_curried(threshold: i32) -> impl Fn(i32) -> bool {
+    move |value: i32| value < threshold
+}
+
+let is_greater_than_5 = greater_than_curried(5);
+let is_less_than_10 = less_than_curried(10);
+
+println("7 > 5: {}", is_greater_than_5(7));
+println("3 < 10: {}", is_less_than_10(3));
+
+// Combine predicates
+let in_range = |value: i32| is_greater_than_5(value) && is_less_than_10(value);
+println("7 in range (5, 10): {}", in_range(7));
+println("12 in range (5, 10): {}", in_range(12))

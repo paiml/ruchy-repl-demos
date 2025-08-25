@@ -1,0 +1,37 @@
+// Filter function examples in Ruchy
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+// Filter even numbers
+let evens: Vec<i32> = numbers.iter().filter(|&x| x % 2 == 0).cloned().collect()
+println("Original: {:?}", numbers)
+println("Evens: {:?}", evens)
+
+// Filter odd numbers
+let odds: Vec<i32> = numbers.iter().filter(|&x| x % 2 == 1).cloned().collect()
+println("Odds: {:?}", odds)
+
+// Filter numbers greater than 5
+let greater_than_five: Vec<i32> = numbers.iter().filter(|&x| x > 5).cloned().collect()
+println("Greater than 5: {:?}", greater_than_five)
+
+// Filter with complex condition
+let complex_filter: Vec<i32> = numbers.iter()
+    .filter(|&x| x % 2 == 0 && x > 4)
+    .cloned()
+    .collect()
+println("Even and greater than 4: {:?}", complex_filter)
+
+// Filter strings
+let words = ["hello", "world", "rust", "programming", "filter"]
+let long_words: Vec<&str> = words.iter()
+    .filter(|word| word.len() > 5)
+    .cloned()
+    .collect()
+println("Words longer than 5 chars: {:?}", long_words)
+
+// Combine filter and map
+let processed: Vec<String> = numbers.iter()
+    .filter(|&x| x % 2 == 0)
+    .map(|x| format!("Even: {}", x))
+    .collect()
+println("Filtered and mapped: {:?}", processed)

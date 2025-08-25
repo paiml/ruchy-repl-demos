@@ -1,0 +1,211 @@
+// Async/await patterns in Ruchy
+use std::time::Duration;
+
+// Basic async function
+async fn simple_async_task() -> String {
+    println!("Starting async task...");
+    // Simulate async work
+    tokio::time::sleep(Duration::from_millis(100)).await;
+    println!("Async task completed!");
+    "Task result".to_string()
+}
+
+// Async function that returns a Result
+async fn fallible_async_task(should_fail: bool) -> Result<i32, String> {
+    println!("Starting fallible async task...");
+    tokio::time::sleep(Duration::from_millis(50)).await;
+    
+    if should_fail {
+        Err("Task failed!".to_string())
+    } else {
+        Ok(42)
+    }
+}
+
+// Multiple async operations
+async fn fetch_data(id: u32) -> Result<String, String> {
+    println!("Fetching data for ID: {}", id);
+    
+    if id == 0 {
+        return Err("Invalid ID".to_string());
+    }
+    
+    tokio::time::sleep(Duration::from_millis(id as u64 * 10)).await;
+    Ok(format!("Data for ID {}", id))
+}
+
+// Sequential async execution
+async fn sequential_execution() {
+    println!("\n--- Sequential Execution ---");
+    
+    let start = std::time::Instant::now();
+    
+    let result1 = fetch_data(1).await;
+    let result2 = fetch_data(2).await;
+    let result3 = fetch_data(3).await;
+    
+    println!("Result 1: {:?}", result1);
+    println!("Result 2: {:?}", result2);
+    println!("Result 3: {:?}", result3);
+    
+    println!("Sequential execution took: {:?}", start.elapsed());
+}
+
+// Concurrent async execution
+async fn concurrent_execution() {
+    println!("\n--- Concurrent Execution ---");
+    
+    let start = std::time::Instant::now();
+    
+    let task1 = fetch_data(1);
+    let task2 = fetch_data(2);
+    let task3 = fetch_data(3);
+    
+    let (result1, result2, result3) = tokio::join!(task1, task2, task3);
+    
+    println!("Result 1: {:?}", result1);
+    println!("Result 2: {:?}", result2);
+    println!("Result 3: {:?}", result3);
+    
+    println!("Concurrent execution took: {:?}", start.elapsed());
+}
+
+// Error handling with async
+async fn async_with_error_handling() {
+    println!("\n--- Async Error Handling ---");
+    
+    let tasks = vec![
+        fallible_async_task(false),
+        fallible_async_task(true),
+        fallible_async_task(false),
+    ];
+    
+    for (i, task) in tasks.into_iter().enumerate() {
+        match task.await {
+            Ok(value) => println!("Task {}: Success with value {}", i + 1, value),
+            Err(e) => println!("Task {}: Failed with error: {}", i + 1, e),
+        }
+    }
+}
+
+// Async stream processing
+use tokio_stream::{self as stream, StreamExt};
+
+async fn process_async_stream() {
+    println!("\n--- Async Stream Processing ---");
+    
+    let numbers = stream::iter(1..=10);
+    
+    let processed = numbers
+        .filter(|&n| async move { n % 2 == 0 })
+        .map(|n| async move { 
+            tokio::time::sleep(Duration::from_millis(10)).await;
+            n * n 
+        })
+        .buffer_unordered(3); // Process up to 3 items concurrently
+    
+    tokio::pin!(processed);
+    
+    while let Some(result) = processed.next().await {
+        println!("Processed: {}", result);
+    }
+}
+
+// Async with timeout
+async fn async_with_timeout() {
+    println!("\n--- Async with Timeout ---");
+    
+    let quick_task = async {
+        tokio::time::sleep(Duration::from_millis(50)).await;
+        "Quick result"
+    };
+    
+    let slow_task = async {
+        tokio::time::sleep(Duration::from_millis(200)).await;
+        "Slow result"
+    };
+    
+    // Task that completes within timeout
+    match tokio::time::timeout(Duration::from_millis(100), quick_task).await {
+        Ok(result) => println!("Quick task result: {}", result),
+        Err(_) => println!("Quick task timed out"),
+    }
+    
+    // Task that times out
+    match tokio::time::timeout(Duration::from_millis(100), slow_task).await {
+        Ok(result) => println!("Slow task result: {}", result),
+        Err(_) => println!("Slow task timed out"),
+    }
+}
+
+// Async closure and higher-order functions
+async fn async_higher_order() {
+    println!("\n--- Async Higher-Order Functions ---");
+    
+    async fn process_with_async_closure<F, Fut>(items: Vec<i32>, f: F) -> Vec<String>
+    where
+        F: Fn(i32) -> Fut,
+        Fut: std::future::Future<Output = String>,
+    {
+        let mut results = Vec::new();
+        for item in items {
+            let result = f(item).await;
+            results.push(result);
+        }
+        results
+    }
+    
+    let items = vec![1, 2, 3, 4, 5];
+    
+    let async_processor = |x: i32| async move {
+        tokio::time::sleep(Duration::from_millis(10)).await;
+        format!("Processed: {}", x * 2)
+    };
+    
+    let results = process_with_async_closure(items, async_processor).await;
+    
+    for result in results {
+        println!("{}", result);
+    }
+}
+
+// Async recursion
+async fn async_factorial(n: u64) -> u64 {
+    if n <= 1 {
+        1
+    } else {
+        tokio::time::sleep(Duration::from_millis(1)).await;
+        n * Box::pin(async_factorial(n - 1)).await
+    }
+}
+
+async fn test_async_recursion() {
+    println!("\n--- Async Recursion ---");
+    
+    let result = async_factorial(5).await;
+    println!("Async factorial(5) = {}", result);
+}
+
+// Main async function to run all examples
+#[tokio::main]
+async fn main() {
+    println!("=== Async/Await Examples ===");
+    
+    // Basic async task
+    let result = simple_async_task().await;
+    println!("Simple task result: {}", result);
+    
+    // Run all examples
+    sequential_execution().await;
+    concurrent_execution().await;
+    async_with_error_handling().await;
+    process_async_stream().await;
+    async_with_timeout().await;
+    async_higher_order().await;
+    test_async_recursion().await;
+    
+    println!("\n=== All async examples completed ===");
+}
+
+// Call main to run examples
+main()

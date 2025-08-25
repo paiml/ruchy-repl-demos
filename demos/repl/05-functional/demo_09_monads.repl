@@ -1,0 +1,159 @@
+// Monad-like patterns in Ruchy (Option and Result)
+
+// Option monad-like operations
+let some_value = Some(42);
+let none_value: Option<i32> = None;
+
+// Functor mapping
+let doubled_some = some_value.map(|x| x * 2);
+let doubled_none = none_value.map(|x| x * 2);
+
+println("Some(42) doubled: {:?}", doubled_some);
+println("None doubled: {:?}", doubled_none);
+
+// Monadic bind (and_then)
+fn safe_divide(x: i32, y: i32) -> Option<i32> {
+    if y != 0 {
+        Some(x / y)
+    } else {
+        None
+    }
+}
+
+let chained_operations = Some(100)
+    .and_then(|x| safe_divide(x, 2))
+    .and_then(|x| safe_divide(x, 5))
+    .and_then(|x| safe_divide(x, 2));
+
+println("Chained divisions (100/2/5/2): {:?}", chained_operations);
+
+let failed_chain = Some(100)
+    .and_then(|x| safe_divide(x, 0))  // This fails
+    .and_then(|x| safe_divide(x, 5));  // This won't execute
+
+println("Failed chain (100/0/5): {:?}", failed_chain);
+
+// Result monad-like operations
+#[derive(Debug)]
+enum MathError {
+    DivisionByZero,
+    NegativeSquareRoot,
+}
+
+fn safe_divide_result(x: f64, y: f64) -> Result<f64, MathError> {
+    if y == 0.0 {
+        Err(MathError::DivisionByZero)
+    } else {
+        Ok(x / y)
+    }
+}
+
+fn safe_sqrt(x: f64) -> Result<f64, MathError> {
+    if x < 0.0 {
+        Err(MathError::NegativeSquareRoot)
+    } else {
+        Ok(x.sqrt())
+    }
+}
+
+// Chaining Result operations
+let result_chain = safe_divide_result(100.0, 4.0)
+    .and_then(|x| safe_sqrt(x))
+    .map(|x| x * 2.0);
+
+println("Result chain (sqrt(100/4)*2): {:?}", result_chain);
+
+let error_chain = safe_divide_result(100.0, 0.0)
+    .and_then(|x| safe_sqrt(x));
+
+println("Error chain (sqrt(100/0)): {:?}", error_chain);
+
+// Custom Maybe-like monad
+#[derive(Debug, Clone)]
+enum Maybe<T> {
+    Just(T),
+    Nothing,
+}
+
+impl<T> Maybe<T> {
+    fn map<U, F>(self, f: F) -> Maybe<U>
+    where
+        F: FnOnce(T) -> U,
+    {
+        match self {
+            Maybe::Just(value) => Maybe::Just(f(value)),
+            Maybe::Nothing => Maybe::Nothing,
+        }
+    }
+    
+    fn and_then<U, F>(self, f: F) -> Maybe<U>
+    where
+        F: FnOnce(T) -> Maybe<U>,
+    {
+        match self {
+            Maybe::Just(value) => f(value),
+            Maybe::Nothing => Maybe::Nothing,
+        }
+    }
+    
+    fn or_else<F>(self, f: F) -> Maybe<T>
+    where
+        F: FnOnce() -> Maybe<T>,
+    {
+        match self {
+            Maybe::Nothing => f(),
+            _ => self,
+        }
+    }
+}
+
+fn parse_int(s: &str) -> Maybe<i32> {
+    match s.parse() {
+        Ok(n) => Maybe::Just(n),
+        Err(_) => Maybe::Nothing,
+    }
+}
+
+fn validate_positive(n: i32) -> Maybe<i32> {
+    if n > 0 {
+        Maybe::Just(n)
+    } else {
+        Maybe::Nothing
+    }
+}
+
+// Using custom Maybe monad
+let maybe_result = parse_int("42")
+    .and_then(validate_positive)
+    .map(|x| x * 2);
+
+println("Maybe result ('42' -> positive -> *2): {:?}", maybe_result);
+
+let maybe_error = parse_int("invalid")
+    .and_then(validate_positive)
+    .map(|x| x * 2);
+
+println("Maybe error ('invalid'): {:?}", maybe_error);
+
+// List monad-like operations (Vec as monad)
+fn double_and_triple(x: i32) -> Vec<i32> {
+    vec![x * 2, x * 3]
+}
+
+let list_monad: Vec<i32> = vec![1, 2, 3]
+    .into_iter()
+    .flat_map(double_and_triple)
+    .collect();
+
+println("List monad (double and triple each): {:?}", list_monad);
+
+// Combining multiple Maybe values
+fn add_maybes(a: Maybe<i32>, b: Maybe<i32>) -> Maybe<i32> {
+    a.and_then(|x| b.map(|y| x + y))
+}
+
+let maybe_sum = add_maybes(Maybe::Just(5), Maybe::Just(3));
+let maybe_fail = add_maybes(Maybe::Just(5), Maybe::Nothing);
+
+println("Add two Justs: {:?}", maybe_sum);
+println("Add Just and Nothing: {:?}", maybe_fail)

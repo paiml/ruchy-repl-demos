@@ -1,0 +1,257 @@
+// Generic types and functions in Ruchy
+
+// Generic function
+fn swap<T>(a: T, b: T) -> (T, T) {
+    (b, a)
+}
+
+let (x, y) = swap(1, 2);
+println!("Swapped integers: ({}, {})", x, y);
+
+let (a, b) = swap("hello", "world");
+println!("Swapped strings: ({}, {})", a, b);
+
+// Generic struct
+#[derive(Debug)]
+struct Pair<T> {
+    first: T,
+    second: T,
+}
+
+impl<T> Pair<T> {
+    fn new(first: T, second: T) -> Self {
+        Pair { first, second }
+    }
+    
+    fn swap(self) -> Pair<T> {
+        Pair {
+            first: self.second,
+            second: self.first,
+        }
+    }
+}
+
+impl<T> Pair<T>
+where
+    T: std::fmt::Display,
+{
+    fn display(&self) {
+        println!("Pair: ({}, {})", self.first, self.second);
+    }
+}
+
+let int_pair = Pair::new(10, 20);
+let string_pair = Pair::new("foo", "bar");
+
+int_pair.display();
+string_pair.display();
+
+let swapped = int_pair.swap();
+swapped.display();
+
+// Multiple generic types
+#[derive(Debug)]
+struct Triple<T, U, V> {
+    first: T,
+    second: U,
+    third: V,
+}
+
+impl<T, U, V> Triple<T, U, V> {
+    fn new(first: T, second: U, third: V) -> Self {
+        Triple { first, second, third }
+    }
+    
+    fn get_first(&self) -> &T {
+        &self.first
+    }
+}
+
+let mixed_triple = Triple::new(42, "hello", true);
+println!("Mixed triple: {:?}", mixed_triple);
+println!("First element: {}", mixed_triple.get_first());
+
+// Generic enum
+#[derive(Debug)]
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+
+impl<T, E> Result<T, E> {
+    fn is_ok(&self) -> bool {
+        matches!(self, Result::Ok(_))
+    }
+    
+    fn is_err(&self) -> bool {
+        matches!(self, Result::Err(_))
+    }
+    
+    fn map<U, F>(self, f: F) -> Result<U, E>
+    where
+        F: FnOnce(T) -> U,
+    {
+        match self {
+            Result::Ok(value) => Result::Ok(f(value)),
+            Result::Err(error) => Result::Err(error),
+        }
+    }
+}
+
+fn divide(a: f64, b: f64) -> Result<f64, String> {
+    if b == 0.0 {
+        Result::Err("Division by zero".to_string())
+    } else {
+        Result::Ok(a / b)
+    }
+}
+
+let success = divide(10.0, 2.0);
+let error = divide(10.0, 0.0);
+
+println!("Division success: {:?}", success);
+println!("Division error: {:?}", error);
+
+let doubled = success.map(|x| x * 2.0);
+println!("Doubled result: {:?}", doubled);
+
+// Generic collections
+#[derive(Debug)]
+struct Stack<T> {
+    items: Vec<T>,
+}
+
+impl<T> Stack<T> {
+    fn new() -> Self {
+        Stack { items: Vec::new() }
+    }
+    
+    fn push(&mut self, item: T) {
+        self.items.push(item);
+    }
+    
+    fn pop(&mut self) -> Option<T> {
+        self.items.pop()
+    }
+    
+    fn peek(&self) -> Option<&T> {
+        self.items.last()
+    }
+    
+    fn len(&self) -> usize {
+        self.items.len()
+    }
+    
+    fn is_empty(&self) -> bool {
+        self.items.is_empty()
+    }
+}
+
+let mut int_stack = Stack::new();
+int_stack.push(1);
+int_stack.push(2);
+int_stack.push(3);
+
+println!("Stack: {:?}", int_stack);
+println!("Peek: {:?}", int_stack.peek());
+println!("Pop: {:?}", int_stack.pop());
+println!("Stack after pop: {:?}", int_stack);
+
+// Generic with bounds
+use std::cmp::PartialOrd;
+
+fn find_max<T>(slice: &[T]) -> Option<&T>
+where
+    T: PartialOrd,
+{
+    if slice.is_empty() {
+        return None;
+    }
+    
+    let mut max = &slice[0];
+    for item in slice.iter().skip(1) {
+        if item > max {
+            max = item;
+        }
+    }
+    Some(max)
+}
+
+let numbers = [3, 1, 4, 1, 5, 9, 2, 6];
+let strings = ["apple", "zebra", "banana", "cherry"];
+
+println!("Max number: {:?}", find_max(&numbers));
+println!("Max string: {:?}", find_max(&strings));
+
+// Associated types
+trait Iterator<T> {
+    fn next(&mut self) -> Option<T>;
+}
+
+struct Counter {
+    current: usize,
+    max: usize,
+}
+
+impl Counter {
+    fn new(max: usize) -> Self {
+        Counter { current: 0, max }
+    }
+}
+
+impl Iterator<usize> for Counter {
+    fn next(&mut self) -> Option<usize> {
+        if self.current < self.max {
+            let result = self.current;
+            self.current += 1;
+            Some(result)
+        } else {
+            None
+        }
+    }
+}
+
+let mut counter = Counter::new(5);
+while let Some(value) = counter.next() {
+    println!("Counter: {}", value);
+}
+
+// Generic trait implementation
+trait Drawable {
+    fn draw(&self);
+}
+
+#[derive(Debug)]
+struct Circle<T> {
+    radius: T,
+}
+
+#[derive(Debug)]
+struct Rectangle<T> {
+    width: T,
+    height: T,
+}
+
+impl<T> Drawable for Circle<T>
+where
+    T: std::fmt::Display,
+{
+    fn draw(&self) {
+        println!("Drawing circle with radius: {}", self.radius);
+    }
+}
+
+impl<T> Drawable for Rectangle<T>
+where
+    T: std::fmt::Display,
+{
+    fn draw(&self) {
+        println!("Drawing rectangle {}x{}", self.width, self.height);
+    }
+}
+
+let circle = Circle { radius: 5.0 };
+let rectangle = Rectangle { width: 10, height: 20 };
+
+circle.draw();
+rectangle.draw()

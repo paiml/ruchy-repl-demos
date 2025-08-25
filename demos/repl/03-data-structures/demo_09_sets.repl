@@ -1,0 +1,33 @@
+// Working with sets in Ruchy
+let mut set1 = HashSet::new()
+set1.insert("apple")
+set1.insert("banana")
+set1.insert("cherry")
+set1.insert("apple") // Duplicate won't be added
+
+println("Set1: {:?}", set1)
+println("Length: {}", set1.len())
+
+// Set operations
+let mut set2 = HashSet::new()
+set2.insert("banana")
+set2.insert("date")
+set2.insert("elderberry")
+
+println("Set2: {:?}", set2)
+
+// Contains check
+println("Contains apple: {}", set1.contains("apple"))
+println("Contains grape: {}", set1.contains("grape"))
+
+// Set intersection
+let intersection: HashSet<_> = set1.intersection(&set2).collect()
+println("Intersection: {:?}", intersection)
+
+// Set union
+let union: HashSet<_> = set1.union(&set2).collect()
+println("Union: {:?}", union)
+
+// Set difference
+let difference: HashSet<_> = set1.difference(&set2).collect()
+println("Difference: {:?}", difference)
