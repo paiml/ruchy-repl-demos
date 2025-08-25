@@ -4,7 +4,7 @@
         test-oneliner-text test-oneliner-data test-oneliner-file \
         test-oneliner-math test-oneliner-system test-oneliner-functional \
         demos-repl demos-oneliner verify lint pre-commit release \
-        test-latest test-version monitor-releases compat-matrix
+        test-local test-latest test-version monitor-releases compat-matrix
 
 # Use strict POSIX shell
 SHELL := /bin/sh
@@ -384,6 +384,11 @@ release: quality-gate
 	@echo "✓ Ready for release"
 
 # Version compatibility testing
+test-local:
+	@echo "Testing against locally installed Ruchy version..."
+	@chmod +x scripts/test-local-ruchy.sh
+	@./scripts/test-local-ruchy.sh
+
 test-latest:
 	@echo "Testing against latest Ruchy version..."
 	@chmod +x scripts/test-ruchy-version.sh
