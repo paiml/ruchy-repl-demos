@@ -1,0 +1,255 @@
+name: Ruchy Version Compatibility
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # Every 4 hours to catch new releases
+  workflow_dispatch:  # Manual trigger
+  push:
+    paths:
+      - 'demos/**'
+      - 'tests/**'
+      - '.github/workflows/ruchy-compat.yml'
+
+jobs:
+  detect-versions:
+    name: Detect Ruchy Versions
+    runs-on: ubuntu-latest
+    outputs:
+      latest: ${{ steps.versions.outputs.latest }}
+      versions: ${{ steps.versions.outputs.versions }}
+    steps:
+      - name: Get Ruchy versions
+        id: versions
+        run: |
+          # Get latest version from crates.io
+          LATEST=$(curl -s https://crates.io/api/v1/crates/ruchy | jq -r '.crate.max_version')
+          echo "latest=$LATEST" >> $GITHUB_OUTPUT
+          
+          # Get last 5 versions for testing
+          VERSIONS=$(curl -s https://crates.io/api/v1/crates/ruchy/versions | \
+            jq -r '.versions[:5] | map(.num) | @json')
+          echo "versions=$VERSIONS" >> $GITHUB_OUTPUT
+          
+          echo "Latest Ruchy version: $LATEST"
+          echo "Testing versions: $VERSIONS"
+
+  test-latest:
+    name: Test Latest Ruchy
+    needs: detect-versions
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      
+      - name: Install latest Ruchy
+        run: |
+          echo "Installing Ruchy ${{ needs.detect-versions.outputs.latest }}"
+          cargo install ruchy --version ${{ needs.detect-versions.outputs.latest }}
+          ruchy --version
+      
+      - name: Test all demos
+        run: |
+          make test || true  # Continue even if some fail
+          
+      - name: Generate compatibility report
+        run: |
+          cat > compat-report-${{ matrix.os }}.json << EOF
+          {
+            "ruchy_version": "${{ needs.detect-versions.outputs.latest }}",
+            "os": "${{ matrix.os }}",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "demos_tested": $(find demos -name "*.repl" -o -name "*.sh" | wc -l),
+            "test_status": "$(make test >/dev/null 2>&1 && echo 'passed' || echo 'failed')"
+          }
+          EOF
+      
+      - name: Upload compatibility report
+        uses: actions/upload-artifact@v3
+        with:
+          name: compat-report-${{ needs.detect-versions.outputs.latest }}
+          path: compat-report-*.json
+
+  test-matrix:
+    name: Version Matrix Test
+    needs: detect-versions
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: ${{ fromJson(needs.detect-versions.outputs.versions) }}
+      fail-fast: false  # Continue testing other versions if one fails
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      
+      - name: Install Ruchy ${{ matrix.version }}
+        run: |
+          cargo install ruchy --version ${{ matrix.version }} --force
+          ruchy --version
+      
+      - name: Run compatibility test
+        id: test
+        run: |
+          echo "Testing with Ruchy ${{ matrix.version }}"
+          
+          # Test basic functionality
+          if ruchy -e '1 + 1' > /dev/null 2>&1; then
+            echo "basic_test=passed" >> $GITHUB_OUTPUT
+          else
+            echo "basic_test=failed" >> $GITHUB_OUTPUT
+          fi
+          
+          # Test REPL demos
+          REPL_PASS=0
+          REPL_FAIL=0
+          for demo in demos/repl/*/*.repl; do
+            if ruchy repl < "$demo" > /dev/null 2>&1; then
+              REPL_PASS=$((REPL_PASS + 1))
+            else
+              REPL_FAIL=$((REPL_FAIL + 1))
+            fi
+          done
+          echo "repl_pass=$REPL_PASS" >> $GITHUB_OUTPUT
+          echo "repl_fail=$REPL_FAIL" >> $GITHUB_OUTPUT
+          
+          # Test one-liners
+          ONELINER_PASS=0
+          ONELINER_FAIL=0
+          for script in demos/one-liners/*/*.sh; do
+            if sh "$script" > /dev/null 2>&1; then
+              ONELINER_PASS=$((ONELINER_PASS + 1))
+            else
+              ONELINER_FAIL=$((ONELINER_FAIL + 1))
+            fi
+          done
+          echo "oneliner_pass=$ONELINER_PASS" >> $GITHUB_OUTPUT
+          echo "oneliner_fail=$ONELINER_FAIL" >> $GITHUB_OUTPUT
+      
+      - name: Create version report
+        run: |
+          cat > version-report-${{ matrix.version }}.json << EOF
+          {
+            "version": "${{ matrix.version }}",
+            "basic_test": "${{ steps.test.outputs.basic_test }}",
+            "repl": {
+              "passed": ${{ steps.test.outputs.repl_pass }},
+              "failed": ${{ steps.test.outputs.repl_fail }}
+            },
+            "oneliner": {
+              "passed": ${{ steps.test.outputs.oneliner_pass }},
+              "failed": ${{ steps.test.outputs.oneliner_fail }}
+            },
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          EOF
+      
+      - name: Upload version report
+        uses: actions/upload-artifact@v3
+        with:
+          name: version-reports
+          path: version-report-*.json
+
+  update-compatibility-matrix:
+    name: Update Compatibility Matrix
+    needs: [test-latest, test-matrix]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download all reports
+        uses: actions/download-artifact@v3
+      
+      - name: Generate compatibility matrix
+        run: |
+          echo "# Ruchy Version Compatibility Matrix" > COMPATIBILITY.md
+          echo "" >> COMPATIBILITY.md
+          echo "Last updated: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> COMPATIBILITY.md
+          echo "" >> COMPATIBILITY.md
+          echo "## Latest Version Status" >> COMPATIBILITY.md
+          echo "" >> COMPATIBILITY.md
+          
+          # Process latest version report
+          if [ -d "compat-report-*" ]; then
+            for report in compat-report-*/*.json; do
+              VERSION=$(jq -r '.ruchy_version' "$report")
+              STATUS=$(jq -r '.test_status' "$report")
+              echo "- Ruchy $VERSION: $STATUS" >> COMPATIBILITY.md
+            done
+          fi
+          
+          echo "" >> COMPATIBILITY.md
+          echo "## Version Compatibility Table" >> COMPATIBILITY.md
+          echo "" >> COMPATIBILITY.md
+          echo "| Version | Basic | REPL Demos | One-Liners | Overall |" >> COMPATIBILITY.md
+          echo "|---------|-------|------------|------------|---------|" >> COMPATIBILITY.md
+          
+          # Process version reports
+          if [ -d "version-reports" ]; then
+            for report in version-reports/*.json; do
+              VERSION=$(jq -r '.version' "$report")
+              BASIC=$(jq -r '.basic_test' "$report")
+              REPL_PASS=$(jq -r '.repl.passed' "$report")
+              REPL_FAIL=$(jq -r '.repl.failed' "$report")
+              ONELINER_PASS=$(jq -r '.oneliner.passed' "$report")
+              ONELINER_FAIL=$(jq -r '.oneliner.failed' "$report")
+              
+              REPL_PCT=$((REPL_PASS * 100 / (REPL_PASS + REPL_FAIL)))
+              ONELINER_PCT=$((ONELINER_PASS * 100 / (ONELINER_PASS + ONELINER_FAIL)))
+              
+              if [ "$REPL_PCT" -ge 90 ] && [ "$ONELINER_PCT" -ge 90 ]; then
+                OVERALL="✅ Full"
+              elif [ "$REPL_PCT" -ge 70 ] || [ "$ONELINER_PCT" -ge 70 ]; then
+                OVERALL="⚠️ Partial"
+              else
+                OVERALL="❌ Limited"
+              fi
+              
+              echo "| $VERSION | $BASIC | ${REPL_PCT}% | ${ONELINER_PCT}% | $OVERALL |" >> COMPATIBILITY.md
+            done
+          fi
+          
+          cat COMPATIBILITY.md
+      
+      - name: Create issue if compatibility breaks
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const title = `Ruchy Compatibility Issue Detected`;
+            const body = `A new version of Ruchy has compatibility issues with our demos.
+            
+            Please check the latest compatibility matrix and update demos as needed.
+            
+            Workflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['compatibility', 'automated']
+            });
+
+  notify-breaking-changes:
+    name: Notify Breaking Changes
+    needs: [test-latest, test-matrix]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Send notification
+        run: |
+          echo "Breaking changes detected in latest Ruchy version!"
+          echo "Check the compatibility reports for details."

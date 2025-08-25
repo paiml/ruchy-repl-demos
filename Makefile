@@ -3,7 +3,8 @@
         test-repl-algorithms test-repl-functional test-repl-advanced \
         test-oneliner-text test-oneliner-data test-oneliner-file \
         test-oneliner-math test-oneliner-system test-oneliner-functional \
-        demos-repl demos-oneliner verify lint pre-commit release
+        demos-repl demos-oneliner verify lint pre-commit release \
+        test-latest test-version monitor-releases compat-matrix
 
 # Use strict POSIX shell
 SHELL := /bin/sh
@@ -381,6 +382,32 @@ release: quality-gate
 		echo "⚠️  Warning: Less than 150 demos"; \
 	fi
 	@echo "✓ Ready for release"
+
+# Version compatibility testing
+test-latest:
+	@echo "Testing against latest Ruchy version..."
+	@chmod +x scripts/test-ruchy-version.sh
+	@./scripts/test-ruchy-version.sh
+
+test-version:
+	@echo "Testing against Ruchy version: $(VERSION)"
+	@test -n "$(VERSION)" || (echo "Usage: make test-version VERSION=x.y.z" && exit 1)
+	@chmod +x scripts/test-ruchy-version.sh
+	@./scripts/test-ruchy-version.sh "$(VERSION)"
+
+monitor-releases:
+	@echo "Monitoring for new Ruchy releases..."
+	@chmod +x scripts/monitor-ruchy-releases.sh
+	@./scripts/monitor-ruchy-releases.sh
+
+compat-matrix:
+	@echo "Generating compatibility matrix..."
+	@mkdir -p compatibility-reports
+	@for version in 1.9.1 1.10.0 1.11.0; do \
+		echo "Testing version $$version..."; \
+		./scripts/test-ruchy-version.sh "$$version" || true; \
+	done
+	@echo "✓ Compatibility matrix generated"
 
 # All
 all: install test quality-gate coverage
