@@ -8,7 +8,7 @@
         tdd-verify test-readme test-example verify-version-compatibility \
         check-documentation-examples test-all-examples continuous-tdd-check \
         ruchy-lint ruchy-format ruchy-ast ruchy-prove ruchy-bench ruchy-quality \
-        ruchy-doc ruchy-optimize ruchy-all-tools dogfood
+        ruchy-doc ruchy-optimize ruchy-all-tools validate-comments dogfood
 
 # Use strict POSIX shell
 SHELL := /bin/sh
@@ -554,7 +554,12 @@ ruchy-quality:
 		ruchy score "$$file" 2>/dev/null | grep -E "Score|Quality" || echo "N/A"; \
 	done
 
-ruchy-all-tools: 
+validate-comments:
+	@echo "🔍 Validating comment syntax in documentation..."
+	@chmod +x scripts/validate_comment_syntax.sh
+	@./scripts/validate_comment_syntax.sh
+
+ruchy-all-tools: validate-comments
 	@echo "Running ALL Ruchy tools for maximum dogfooding..."
 	@chmod +x scripts/ruchy_quality_all.sh
 	@./scripts/ruchy_quality_all.sh

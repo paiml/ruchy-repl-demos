@@ -35,8 +35,30 @@
 5. **DOCUMENT**: Explain what it demonstrates
 6. **INTEGRATE**: Add to test suite
 
+### Comment Syntax Rules (MANDATORY)
+**P0 REQUIREMENT: All comments must use syntactically correct Ruchy syntax**
+
+```ruchy
+// CORRECT: Use // for all Ruchy code comments
+let x = 5    // This works
+```
+
+```ruchy
+# INCORRECT: Never use # in Ruchy code  
+let x = 5    # This breaks syntax
+```
+
+**Context-Specific Rules:**
+- **Ruchy code blocks**: Always use `//` comments
+- **Bash code blocks**: Use `#` comments (bash standard)
+- **Markdown headers**: Use `#` for headers (markdown standard)  
+- **Directory trees**: Use `#` for annotations (text format)
+
+**Validation**: All documentation must pass comment syntax validation before release.
+
 ### Quality Gates (MANDATORY)
 Every demo MUST pass:
+- [ ] Comment syntax validation: `make validate-comments`
 - [ ] Syntax validation: `ruchy check demo.ruchy`
 - [ ] Execution test: Demo runs without errors
 - [ ] Output verification: Expected output matches
