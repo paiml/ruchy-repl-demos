@@ -1,9 +1,9 @@
 // Longest Common Subsequence
-fn lcs(s1: &str, s2: &str) -> usize {
+fun lcs(s1, s2) {
     let m = s1.len();
     let n = s2.len();
-    let s1_chars: Vec<char> = s1.chars().collect();
-    let s2_chars: Vec<char> = s2.chars().collect();
+    let s1_chars = s1.chars().collect();
+    let s2_chars = s2.chars().collect();
     
     let mut dp = vec![vec![0; n + 1]; m + 1];
     

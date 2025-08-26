@@ -2,24 +2,24 @@
 use std::fmt::Debug;
 
 // Fallback chain builder
-struct FallbackChain<T> {
-    operations: Vec<Box<dyn Fn() -> Option<T>>>,
+FallbackChain {
+    operations Option>>,
 }
 
-impl<T: Debug> FallbackChain<T> {
-    fn new() -> Self {
+impl<T> FallbackChain {
+    fun new() -> Self {
         FallbackChain {
-            operations: Vec::new(),
+            operations(),
         }
     }
     
-    fn try_with<F>(mut self, operation: F) -> Self
-    where F: Fn() -> Option<T> + 'static {
+    fun try_with(self, operation) -> Self
+    where F() + 'static {
         self.operations.push(Box::new(operation));
         self
     }
     
-    fn execute(self) -> Option<T> {
+    fun execute(self) {
         for (i, operation) in self.operations.iter().enumerate() {
             println!("Trying operation {}", i + 1);
             if let Some(result) = operation() {
@@ -32,27 +32,27 @@ impl<T: Debug> FallbackChain<T> {
         None
     }
     
-    fn execute_or_default(self, default: T) -> T {
+    fun execute_or_default(self, default) -> T {
         self.execute().unwrap_or(default)
     }
 }
 
-// Example: Configuration loading with fallbacks
-fn load_from_env() -> Option<String> {
+// Example loading with fallbacks
+fun load_from_env() {
     std::env::var("CONFIG").ok()
 }
 
-fn load_from_file() -> Option<String> {
+fun load_from_file() {
     // Simulated file read
     None // Would normally read from file
 }
 
-fn load_from_network() -> Option<String> {
+fun load_from_network() {
     // Simulated network fetch
     None // Would normally fetch from network
 }
 
-fn load_default() -> Option<String> {
+fun load_default() {
     Some("default_config".to_string())
 }
 
@@ -69,7 +69,7 @@ match config {
     None => println!("Failed to load any configuration"),
 }
 
-// Another example: Data source fallback
+// Another example source fallback
 let data = FallbackChain::<Vec<i32>>::new()
     .try_with(|| {
         println!("Trying primary database...");

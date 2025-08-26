@@ -1,13 +1,13 @@
 // Function composition patterns
-fn compose<A, B, C>(f: fn(A) -> B, g: fn(B) -> C) -> fn(A) -> C {
+fun compose(f, g) {
     |x| g(f(x))
 }
 
-fn add_one(x: i32) -> i32 {
+fun add_one(x) {
     x + 1
 }
 
-fn double(x: i32) -> i32 {
+fun double(x) {
     x * 2
 }
 
@@ -18,7 +18,7 @@ let double_then_add = compose(double, add_one)
 double_then_add(5)
 
 // Multiple composition
-fn triple(x: i32) -> i32 {
+fun triple(x) {
     x * 3
 }
 

@@ -7,18 +7,18 @@ for num in numbers {
 }
 
 // Iterator methods
-let doubled: Vec<i32> = numbers.iter().map(|x| x * 2).collect()
+let doubled = numbers.iter().map(|x| x * 2).collect()
 println("Doubled: {:?}", doubled)
 
-let evens: Vec<i32> = numbers.iter().filter(|&x| x % 2 == 0).collect()
+let evens = numbers.iter().filter(|&x| x % 2 == 0).collect()
 println("Evens: {:?}", evens)
 
-let sum: i32 = numbers.iter().sum()
+let sum = numbers.iter().sum()
 println("Sum: {}", sum)
 
 // Chain iterators
 let more_numbers = [6, 7, 8]
-let combined: Vec<i32> = numbers.iter().chain(more_numbers.iter()).cloned().collect()
+let combined = numbers.iter().chain(more_numbers.iter()).cloned().collect()
 println("Combined: {:?}", combined)
 
 // Enumerate

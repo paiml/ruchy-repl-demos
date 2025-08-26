@@ -1,17 +1,17 @@
 // Basic function definitions
-fn greet(name: String) -> String {
+fun greet(name) {
     "Hello, " + name + "!"
 }
 greet("Ruchy")
 greet("World")
 
-fn add(a: i32, b: i32) -> i32 {
+fun add(a, b) {
     a + b
 }
 add(5, 3)
 add(100, 200)
 
-fn square(x: i32) -> i32 {
+fun square(x) {
     x * x
 }
 square(5)

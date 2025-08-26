@@ -1,32 +1,32 @@
 // Transducers - composable transformations
-trait Transducer<A, B> {
-    fn apply<R, F>(&self, rf: F) -> impl FnMut(R, A) -> R
-    where F: FnMut(R, B) -> R;
+Transducer {
+    fun apply(&self, rf) -> FnMut(R, A) -> R
+    where F(R, B) -> R;
 }
 
 // Map transducer
-struct Map<G> {
-    f: G,
+Map {
+    f,
 }
 
-impl<A, B, G> Transducer<A, B> for Map<G>
-where G: Fn(A) -> B + Clone {
-    fn apply<R, F>(&self, mut rf: F) -> impl FnMut(R, A) -> R
-    where F: FnMut(R, B) -> R {
+Transducer for Map
+where G(A) -> B + Clone {
+    fun apply(&self, rf) -> FnMut(R, A) -> R
+    where F(R, B) -> R {
         let f = self.f.clone();
         move |acc, x| rf(acc, f(x))
     }
 }
 
 // Filter transducer
-struct Filter<P> {
-    pred: P,
+Filter {
+    pred,
 }
 
-impl<A: Clone, P> Transducer<A, A> for Filter<P>
-where P: Fn(&A) -> bool + Clone {
-    fn apply<R, F>(&self, mut rf: F) -> impl FnMut(R, A) -> R
-    where F: FnMut(R, A) -> R {
+impl<A, P> Transducer for Filter
+where P(&A) + Clone {
+    fun apply(&self, rf) -> FnMut(R, A) -> R
+    where F(R, A) -> R {
         let pred = self.pred.clone();
         move |acc, x| {
             if pred(&x) {
@@ -39,27 +39,27 @@ where P: Fn(&A) -> bool + Clone {
 }
 
 // Transduce function
-fn transduce<A, B, R, T, F>(
-    xform: T,
-    rf: F,
-    init: R,
-    coll: Vec<A>
+fun transduce<A, B, R, T, F>(
+    xform,
+    rf,
+    init,
+    coll
 ) -> R
 where
-    T: Transducer<A, B>,
-    F: FnMut(R, B) -> R,
+    T,
+    F(R, B) -> R,
 {
-    let mut reducing_fn = xform.apply(rf);
+    let reducing_fn = xform.apply(rf);
     coll.into_iter().fold(init, |acc, x| reducing_fn(acc, x))
 }
 
 // Example usage
-let map_xf = Map { f: |x: i32| x * 2 };
-let filter_xf = Filter { pred: |x: &i32| *x > 5 };
+let map_xf = Map { f: |x| x * 2 };
+let filter_xf = Filter { pred: |x| *x > 5 };
 
 let result = transduce(
     map_xf,
-    |acc: Vec<i32>, x| { let mut v = acc; v.push(x); v },
+    |acc, x| { let v = acc; v.push(x); v },
     vec![],
     vec![1, 2, 3, 4, 5]
 );

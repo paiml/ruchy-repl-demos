@@ -3,30 +3,30 @@ use std::thread;
 use std::time::Duration;
 
 // Retry configuration
-struct RetryConfig {
-    max_attempts: u32,
-    delay_ms: u64,
-    exponential_backoff: bool,
+RetryConfig {
+    max_attempts,
+    delay_ms,
+    exponential_backoff,
 }
 
-impl Default for RetryConfig {
-    fn default() -> Self {
+Default for RetryConfig {
+    fun default() -> Self {
         RetryConfig {
             max_attempts: 3,
             delay_ms: 100,
-            exponential_backoff: true,
+            exponential_backoff,
         }
     }
 }
 
 // Retry function
-fn retry<T, E, F>(config: RetryConfig, mut operation: F) -> Result<T, E>
+fun retry(config, operation)
 where
-    F: FnMut() -> Result<T, E>,
-    E: std::fmt::Display,
+    F(),
+    E::fmt::Display,
 {
-    let mut attempts = 0;
-    let mut delay = config.delay_ms;
+    let attempts = 0;
+    let delay = config.delay_ms;
     
     loop {
         attempts += 1;
@@ -50,10 +50,10 @@ where
 }
 
 // Simulated flaky operation
-fn flaky_operation() -> Result<String, &'static str> {
-    static mut COUNTER: u32 = 0;
+fun flaky_operation() {
+    static COUNTER = 0;
     
-    unsafe {
+    {
         COUNTER += 1;
         if COUNTER < 3 {
             Err("Service temporarily unavailable")
@@ -67,7 +67,7 @@ fn flaky_operation() -> Result<String, &'static str> {
 let config = RetryConfig {
     max_attempts: 5,
     delay_ms: 50,
-    exponential_backoff: true,
+    exponential_backoff,
 };
 
 let result = retry(config, flaky_operation);

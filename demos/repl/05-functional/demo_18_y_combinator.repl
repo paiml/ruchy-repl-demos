@@ -2,9 +2,9 @@
 // Allows defining recursive functions without explicit recursion
 
 // Y combinator implementation (simplified for Rust)
-fn y<A, B, F>(f: F) -> impl Fn(A) -> B
+fun y(f) -> Fn(A) -> B
 where
-    F: Fn(&dyn Fn(A) -> B, A) -> B + Copy + 'static,
+    F(&dyn Fn(A) -> B, A) -> B + Copy + 'static,
     A: 'static,
     B: 'static,
 {
@@ -12,7 +12,7 @@ where
 }
 
 // Define factorial using Y combinator
-let factorial = y(|f, n: u32| {
+let factorial = y(|f, n| {
     if n <= 1 {
         1
     } else {
@@ -23,7 +23,7 @@ let factorial = y(|f, n: u32| {
 println!("Y-combinator factorial(5): {}", factorial(5));
 
 // Define Fibonacci using Y combinator
-let fibonacci = y(|f, n: u32| {
+let fibonacci = y(|f, n| {
     if n <= 1 {
         n
     } else {

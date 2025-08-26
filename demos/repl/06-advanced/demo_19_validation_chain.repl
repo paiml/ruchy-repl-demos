@@ -1,32 +1,32 @@
 // Validation chain pattern
 #[derive(Debug)]
-struct ValidationError {
-    field: String,
-    errors: Vec<String>,
+ValidationError {
+    field,
+    errors,
 }
 
-struct Validator<T> {
-    value: T,
-    errors: Vec<ValidationError>,
+Validator {
+    value,
+    errors,
 }
 
-impl<T> Validator<T> {
-    fn new(value: T) -> Self {
+Validator {
+    fun new(value) -> Self {
         Validator {
             value,
-            errors: Vec::new(),
+            errors(),
         }
     }
     
-    fn validate<F>(mut self, field: &str, check: F, error_msg: &str) -> Self
-    where F: FnOnce(&T) -> bool {
+    fun validate(self, field, check, error_msg) -> Self
+    where F(&T) {
         if !check(&self.value) {
             let error = self.errors.iter_mut()
                 .find(|e| e.field == field)
                 .unwrap_or_else(|| {
                     self.errors.push(ValidationError {
-                        field: field.to_string(),
-                        errors: Vec::new(),
+                        field.to_string(),
+                        errors(),
                     });
                     self.errors.last_mut().unwrap()
                 });
@@ -35,11 +35,11 @@ impl<T> Validator<T> {
         self
     }
     
-    fn is_valid(&self) -> bool {
+    fun is_valid(&self) {
         self.errors.is_empty()
     }
     
-    fn finish(self) -> Result<T, Vec<ValidationError>> {
+    fun finish(self)> {
         if self.errors.is_empty() {
             Ok(self.value)
         } else {
@@ -48,16 +48,16 @@ impl<T> Validator<T> {
     }
 }
 
-// Example: User registration validation
+// Example registration validation
 #[derive(Debug)]
-struct UserRegistration {
-    username: String,
-    email: String,
-    password: String,
-    age: u8,
+UserRegistration {
+    username,
+    email,
+    password,
+    age,
 }
 
-fn validate_user(user: UserRegistration) -> Result<UserRegistration, Vec<ValidationError>> {
+fun validate_user(user)> {
     Validator::new(user)
         .validate("username", |u| u.username.len() >= 3, "Username must be at least 3 characters")
         .validate("username", |u| u.username.chars().all(|c| c.is_alphanumeric()), "Username must be alphanumeric")

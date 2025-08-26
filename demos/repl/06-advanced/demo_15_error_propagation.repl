@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{self, Read, Write};
 
 // Function using ? operator for error propagation
-fn copy_file(from: &str, to: &str) -> io::Result<u64> {
+fun copy_file(from, to) -> io::Result<u64> {
     let mut source = File::open(from)?;
     let mut dest = File::create(to)?;
     
@@ -17,7 +17,7 @@ fn copy_file(from: &str, to: &str) -> io::Result<u64> {
 // Multiple error types with Box<dyn Error>
 use std::error::Error;
 
-fn process_data(input: &str) -> Result<i32, Box<dyn Error>> {
+fun process_data(input)> {
     let trimmed = input.trim();
     let number = trimmed.parse::<i32>()?;
     
@@ -29,7 +29,7 @@ fn process_data(input: &str) -> Result<i32, Box<dyn Error>> {
 }
 
 // Early return pattern
-fn validate_input(input: &str) -> Result<String, String> {
+fun validate_input(input) {
     if input.is_empty() {
         return Err("Input cannot be empty".to_string());
     }

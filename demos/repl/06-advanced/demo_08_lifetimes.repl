@@ -1,7 +1,9 @@
-// Lifetime management in Ruchy
+// Memory and reference management in Ruchy
+// Note: Ruchy handles memory management differently than Rust
+// This demo shows basic reference and scope concepts
 
-// Basic lifetime annotations
-fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+// Basic function with references
+fun longest(x, y) {
     if x.len() > y.len() {
         x
     } else {
@@ -9,291 +11,84 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
     }
 }
 
-let string1 = "Hello";
-let string2 = "World!";
-let result = longest(string1, string2);
-println!("Longest string: {}", result);
+let string1 = "Hello"
+let string2 = "World!"
+let result = longest(string1, string2)
+println("Longest string: " + result)
 
-// Struct with lifetime parameters
-#[derive(Debug)]
-struct StringHolder<'a> {
-    content: &'a str,
-}
-
-impl<'a> StringHolder<'a> {
-    fn new(content: &'a str) -> Self {
-        StringHolder { content }
-    }
-    
-    fn get_content(&self) -> &str {
-        self.content
-    }
-    
-    fn get_length(&self) -> usize {
-        self.content.len()
+// Data holder example
+fun create_holder(content) {
+    {
+        content: content,
+        get_content: || content,
+        get_length: || content.len()
     }
 }
 
-let text = "Hello, lifetimes!";
-let holder = StringHolder::new(text);
-println!("Holder: {:?}", holder);
-println!("Content: {}", holder.get_content());
-println!("Length: {}", holder.get_length());
+let text = "Hello, Ruchy!"
+let holder = create_holder(text)
+println("Content: " + holder.get_content())
+println("Length: " + holder.get_length())
 
-// Multiple lifetime parameters
-fn compare_and_return<'a, 'b>(x: &'a str, y: &'b str, return_first: bool) -> &'a str
-where
-    'b: 'a, // 'b must outlive 'a
-{
-    if return_first {
-        x
-    } else {
-        // This would be a compile error without the 'b: 'a bound
-        // y // Cannot return &'b str as &'a str
-        x // Must return x instead
-    }
-}
-
-let first = "First string";
-let second = "Second string";
-let chosen = compare_and_return(first, second, true);
-println!("Chosen string: {}", chosen);
-
-// Lifetime elision rules
-fn first_word(s: &str) -> &str {
-    // Lifetime elision: fn first_word<'a>(s: &'a str) -> &'a str
-    let bytes = s.as_bytes();
-    for (i, &item) in bytes.iter().enumerate() {
-        if item == b' ' {
-            return &s[0..i];
-        }
-    }
-    s
-}
-
-let sentence = "Hello world from Ruchy";
-let first = first_word(sentence);
-println!("First word: {}", first);
-
-// Struct methods with lifetimes
-#[derive(Debug)]
-struct TextAnalyzer<'a> {
-    text: &'a str,
-}
-
-impl<'a> TextAnalyzer<'a> {
-    fn new(text: &'a str) -> Self {
-        TextAnalyzer { text }
-    }
-    
-    // Method with same lifetime as struct
-    fn get_text(&self) -> &'a str {
-        self.text
-    }
-    
-    // Method returning slice with same lifetime
-    fn get_first_line(&self) -> &'a str {
-        if let Some(pos) = self.text.find('\n') {
-            &self.text[..pos]
-        } else {
-            self.text
-        }
-    }
-    
-    // Method with independent lifetime
-    fn count_word<'b>(&self, word: &'b str) -> usize {
-        self.text.matches(word).count()
-    }
-}
-
-let multiline_text = "First line\nSecond line\nThird line";
-let analyzer = TextAnalyzer::new(multiline_text);
-println!("Analyzer text: {}", analyzer.get_text());
-println!("First line: {}", analyzer.get_first_line());
-println!("Count 'line': {}", analyzer.count_word("line"));
-
-// Static lifetime
-fn get_static_str() -> &'static str {
-    "This string has static lifetime"
-}
-
-static GLOBAL_STR: &str = "Global static string";
-
-println!("Static string: {}", get_static_str());
-println!("Global string: {}", GLOBAL_STR);
-
-// Lifetime with generics
-#[derive(Debug)]
-struct Wrapper<'a, T> {
-    data: &'a T,
-}
-
-impl<'a, T> Wrapper<'a, T>
-where
-    T: std::fmt::Display,
-{
-    fn new(data: &'a T) -> Self {
-        Wrapper { data }
-    }
-    
-    fn display(&self) {
-        println!("Wrapped data: {}", self.data);
-    }
-    
-    fn get_data(&self) -> &'a T {
-        self.data
-    }
-}
-
-let number = 42;
-let wrapped_number = Wrapper::new(&number);
-wrapped_number.display();
-
-let text_data = "Wrapped text";
-let wrapped_text = Wrapper::new(&text_data);
-wrapped_text.display();
-
-// Higher-ranked trait bounds (HRTB)
-fn apply_to_all<F>(items: &[&str], f: F) 
-where
-    F: for<'a> Fn(&'a str) -> &'a str,
-{
-    for item in items {
-        let result = f(item);
-        println!("Applied function to '{}' -> '{}'", item, result);
-    }
-}
-
-fn make_uppercase(s: &str) -> &str {
-    // Note: This is a simplified example
-    // In practice, you'd need to return an owned String
-    s // Just return the original for this example
-}
-
-let words = ["hello", "world", "ruchy"];
-apply_to_all(&words, |s| s); // Identity function
-
-// Lifetime bounds in where clauses
-fn process_references<'a, T>(x: &'a T, y: &'a T) -> &'a T
-where
-    T: PartialOrd,
-    'a: 'static, // 'a must be 'static - very restrictive
-{
-    if x > y { x } else { y }
-}
-
-// This only works with static references
-static NUM1: i32 = 10;
-static NUM2: i32 = 20;
-let max_static = process_references(&NUM1, &NUM2);
-println!("Max of static references: {}", max_static);
-
-// Covariance and contravariance examples
-#[derive(Debug)]
-struct Container<'a> {
-    items: Vec<&'a str>,
-}
-
-impl<'a> Container<'a> {
-    fn new() -> Self {
-        Container { items: Vec::new() }
-    }
-    
-    fn add(&mut self, item: &'a str) {
-        self.items.push(item);
-    }
-    
-    fn get_items(&self) -> &[&'a str] {
-        &self.items
-    }
-}
-
-// Demonstrate lifetime variance
-fn lifetime_variance_example() {
-    let long_lived = "Long lived string";
-    
-    let mut container = Container::new();
-    container.add(long_lived);
+// Scope and ownership
+fun demonstrate_scope() {
+    let outer = "Outer scope"
     
     {
-        let short_lived = "Short lived string";
-        // container.add(short_lived); // This would fail - short_lived doesn't live long enough
+        let inner = "Inner scope"
+        println("In inner scope: " + inner)
+        println("Can access outer: " + outer)
     }
     
-    println!("Container items: {:?}", container.get_items());
+    println("Back in outer scope: " + outer)
+    // inner is no longer accessible here
 }
 
-lifetime_variance_example();
+demonstrate_scope()
 
-// Anonymous lifetimes
-fn process_str(_: &str) -> usize {
-    // Anonymous lifetime: fn process_str<'_>(_: &'_ str) -> usize
-    42
-}
-
-// Self-referential struct (not directly possible, needs workarounds)
-// This shows why self-referential structs are tricky
-#[derive(Debug)]
-struct SelfRef<'a> {
-    text: String,
-    text_ref: Option<&'a str>,
-}
-
-impl<'a> SelfRef<'a> {
-    fn new(text: String) -> Self {
-        SelfRef {
-            text,
-            text_ref: None,
-        }
-    }
-    
-    // This method shows the limitation - we can't easily make a self-reference
-    fn try_self_reference(&'a mut self) {
-        // self.text_ref = Some(&self.text); // This doesn't work easily
-        // Would need Pin, unsafe, or external crates like ouroboros
+// Closure capturing values
+fun create_counter() {
+    let count = 0
+    || {
+        count = count + 1
+        count
     }
 }
 
-let self_ref = SelfRef::new("Self referential".to_string());
-println!("Self ref: {:?}", self_ref);
+let counter = create_counter()
+println("Count: " + counter())
+println("Count: " + counter())
+println("Count: " + counter())
 
-// Practical lifetime patterns
-fn extract_domain(email: &str) -> Option<&str> {
-    email.find('@').map(|at_pos| &email[at_pos + 1..])
+// Working with collections
+fun process_items(items) {
+    items.map(|item| item.to_uppercase())
 }
 
-let email = "user@example.com";
-if let Some(domain) = extract_domain(email) {
-    println!("Domain from {}: {}", email, domain);
+let words = ["hello", "world", "ruchy"]
+let uppercased = process_items(words)
+println("Uppercased: " + uppercased.join(", "))
+
+// Chaining operations
+fun chain_example(data) {
+    data
+        .filter(|x| x > 0)
+        .map(|x| x * 2)
+        .fold(0, |acc, x| acc + x)
 }
 
-// Function that demonstrates common lifetime errors and solutions
-fn demonstrate_lifetime_errors() {
-    println!("\n--- Common Lifetime Patterns ---");
-    
-    // Pattern 1: Returning references to local data (ERROR)
-    // fn return_local() -> &str {
-    //     let local = "local string";
-    //     &local // ERROR: returns reference to local data
-    // }
-    
-    // Solution: Return owned data
-    fn return_owned() -> String {
-        let local = "local string";
-        local.to_string() // OK: returns owned data
-    }
-    
-    println!("Owned string: {}", return_owned());
-    
-    // Pattern 2: Multiple references with different lifetimes
-    fn get_first_or_default<'a>(slice: &'a [&str], default: &'a str) -> &'a str {
-        slice.first().unwrap_or(&default)
-    }
-    
-    let items = ["first", "second"];
-    let default = "default";
-    let result = get_first_or_default(&items, default);
-    println!("First or default: {}", result);
+let numbers = [-5, -2, 0, 3, 7, 10]
+let result = chain_example(numbers)
+println("Chain result: " + result)
+
+// Higher-order functions with closures
+fun apply_operation(items, op) {
+    items.map(op)
 }
 
-demonstrate_lifetime_errors()
+let nums = [1, 2, 3, 4, 5]
+let doubled = apply_operation(nums, |x| x * 2)
+let squared = apply_operation(nums, |x| x * x)
+
+println("Doubled: " + doubled.join(", "))
+println("Squared: " + squared.join(", "))

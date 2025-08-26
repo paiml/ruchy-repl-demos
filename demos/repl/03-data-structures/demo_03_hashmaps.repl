@@ -1,5 +1,5 @@
 // Working with hashmaps in Ruchy
-let mut map = HashMap::new()
+let mut map = new()
 map.insert("name", "Alice")
 map.insert("age", "30")
 map.insert("city", "New York")

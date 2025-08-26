@@ -1,26 +1,26 @@
 // Higher-order functions in Ruchy
 
 // Functions that take functions as parameters
-fn apply_twice<T, F>(f: F, x: T) -> T
+fun apply_twice(f, x) -> T
 where
-    F: Fn(T) -> T,
+    F(T) -> T,
 {
     f(f(x))
 }
 
-fn increment(x: i32) -> i32 { x + 1 }
-fn double(x: i32) -> i32 { x * 2 }
+fun increment(x) { x + 1 }
+fun double(x) { x * 2 }
 
 println("Apply increment twice to 5: {}", apply_twice(increment, 5));
 println("Apply double twice to 3: {}", apply_twice(double, 3));
 
 // Functions that return functions
-fn make_adder(n: i32) -> impl Fn(i32) -> i32 {
-    move |x: i32| x + n
+fun make_adder(n) ) {
+    move |x| x + n
 }
 
-fn make_multiplier(n: i32) -> impl Fn(i32) -> i32 {
-    move |x: i32| x * n
+fun make_multiplier(n) ) {
+    move |x| x * n
 }
 
 let add_10 = make_adder(10);
@@ -30,9 +30,9 @@ println("Add 10 to 7: {}", add_10(7));
 println("Multiply 4 by 5: {}", multiply_by_5(4));
 
 // Generic higher-order function
-fn transform_list<T, U, F>(list: Vec<T>, f: F) -> Vec<U>
+fun transform_list(list, f)
 where
-    F: Fn(T) -> U,
+    F(T) -> U,
 {
     list.into_iter().map(f).collect()
 }
@@ -45,25 +45,25 @@ println("Doubled: {:?}", doubled);
 println("As strings: {:?}", as_strings);
 
 // Function that takes multiple functions
-fn combine_functions<T, F, G, H>(f: F, g: G) -> H
+fun combine_functions<T, F, G, H>(f, g) -> H
 where
-    F: Fn(T) -> T,
-    G: Fn(T) -> T,
-    H: Fn(T) -> T,
-    T: Clone,
+    F(T) -> T,
+    G(T) -> T,
+    H(T) -> T,
+    T,
 {
-    move |x: T| g(f(x))
+    move |x| g(f(x))
 }
 
 let add_5_then_double = combine_functions(make_adder(5), make_multiplier(2));
 println("Add 5 then double 10: {}", add_5_then_double(10));
 
 // Conditional function application
-fn apply_if<T, F, P>(predicate: P, f: F, x: T) -> T
+fun apply_if(predicate, f, x) -> T
 where
-    P: Fn(&T) -> bool,
-    F: Fn(T) -> T,
-    T: Clone,
+    P(&T),
+    F(T) -> T,
+    T,
 {
     if predicate(&x) {
         f(x)
@@ -72,17 +72,17 @@ where
     }
 }
 
-let double_if_even = |x: i32| apply_if(|n| n % 2 == 0, |n| n * 2, x);
+let double_if_even = |x| apply_if(|n| n % 2 == 0, |n| n * 2, x);
 
 println("Double if even (4): {}", double_if_even(4));
 println("Double if even (5): {}", double_if_even(5));
 
 // Function factory
-fn make_validator<T, F>(predicate: F) -> impl Fn(T) -> Option<T>
+fun make_validator(predicate) -> Fn(T)
 where
-    F: Fn(&T) -> bool,
+    F(&T),
 {
-    move |value: T| {
+    move |value| {
         if predicate(&value) {
             Some(value)
         } else {
@@ -91,8 +91,8 @@ where
     }
 }
 
-let validate_positive = make_validator(|x: &i32| *x > 0);
-let validate_length = make_validator(|s: &String| s.len() >= 3);
+let validate_positive = make_validator(|x| *x > 0);
+let validate_length = make_validator(|s| s.len() >= 3);
 
 println("Validate positive (5): {:?}", validate_positive(5));
 println("Validate positive (-2): {:?}", validate_positive(-2));
@@ -102,15 +102,15 @@ println("Validate length ('hi'): {:?}", validate_length("hi".to_string()));
 // Memoization higher-order function
 use std::collections::HashMap;
 
-fn memoize<Args, Return, F>(mut f: F) -> impl FnMut(Args) -> Return
+fun memoize<Args, Return, F>(f) -> FnMut(Args) -> Return
 where
-    Args: Clone + Eq + std::hash::Hash,
-    Return: Clone,
-    F: FnMut(Args) -> Return,
+    Args + Eq + std::hash::Hash,
+    Return,
+    F(Args) -> Return,
 {
-    let mut cache = HashMap::new();
+    let cache = new();
     
-    move |args: Args| {
+    move |args| {
         if let Some(cached) = cache.get(&args) {
             cached.clone()
         } else {
@@ -122,12 +122,12 @@ where
 }
 
 // Example usage of memoization
-fn expensive_calculation(n: i32) -> i32 {
+fun expensive_calculation(n) {
     println!("Computing for {}", n);
     n * n + n
 }
 
-let mut memoized_calc = memoize(expensive_calculation);
+let memoized_calc = memoize(expensive_calculation);
 
 println("First call: {}", memoized_calc(5));
 println("Second call: {}", memoized_calc(5)); // Should use cache

@@ -3,14 +3,14 @@ let numbers = [1, 2, 3, 4, 5]
 
 // Left fold (fold_left) - processes from left to right
 let sum_left = numbers.iter().fold(0, |acc, x| {
-    println!("Processing: acc={}, x={}", acc, x);
+    println!("Processing={}, x={}", acc, x);
     acc + x
 })
 println("Sum (left fold): {}", sum_left)
 
 // Right fold - processes from right to left
 let sum_right = numbers.iter().rev().fold(0, |acc, x| {
-    println!("Processing: acc={}, x={}", acc, x);
+    println!("Processing={}, x={}", acc, x);
     acc + x
 })
 println("Sum (right fold): {}", sum_right)
@@ -23,16 +23,16 @@ let parsed_sum = strings.iter().fold(0, |acc, s| {
 println("Parsed and summed: {}", parsed_sum)
 
 // Building a data structure with fold
-struct Stats {
-    sum: i32,
-    count: usize,
-    max: i32,
-    min: i32
+Stats {
+    sum,
+    count,
+    max,
+    min
 }
 
 let stats = numbers.iter().fold(
-    Stats { sum: 0, count: 0, max: i32::MIN, min: i32::MAX },
-    |mut acc, &x| {
+    Stats { sum: 0, count: 0, max::MIN, min::MAX },
+    |acc, &x| {
         acc.sum += x;
         acc.count += 1;
         acc.max = acc.max.max(x);

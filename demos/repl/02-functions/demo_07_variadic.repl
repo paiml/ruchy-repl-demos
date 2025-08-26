@@ -1,13 +1,13 @@
 // Functions with variable arguments
-fn sum(nums: &[i32]) -> i32 {
+fun sum(nums) {
     nums.iter().sum()
 }
-sum(&[1, 2, 3, 4, 5])
-sum(&[10, 20])
+sum([1, 2, 3, 4, 5])
+sum([10, 20])
 
-fn print_all(items: &[&str]) {
+fun print_all(items) {
     for item in items {
         println!("{}", item);
     }
 }
-print_all(&["hello", "world", "!"])
+print_all(["hello", "world", "!"])

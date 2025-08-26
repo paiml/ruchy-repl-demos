@@ -2,7 +2,7 @@
 
 // Option monad-like operations
 let some_value = Some(42);
-let none_value: Option<i32> = None;
+let none_value = None;
 
 // Functor mapping
 let doubled_some = some_value.map(|x| x * 2);
@@ -12,7 +12,7 @@ println("Some(42) doubled: {:?}", doubled_some);
 println("None doubled: {:?}", doubled_none);
 
 // Monadic bind (and_then)
-fn safe_divide(x: i32, y: i32) -> Option<i32> {
+fun safe_divide(x, y) {
     if y != 0 {
         Some(x / y)
     } else {
@@ -35,12 +35,12 @@ println("Failed chain (100/0/5): {:?}", failed_chain);
 
 // Result monad-like operations
 #[derive(Debug)]
-enum MathError {
+MathError {
     DivisionByZero,
     NegativeSquareRoot,
 }
 
-fn safe_divide_result(x: f64, y: f64) -> Result<f64, MathError> {
+fun safe_divide_result(x, y) {
     if y == 0.0 {
         Err(MathError::DivisionByZero)
     } else {
@@ -48,7 +48,7 @@ fn safe_divide_result(x: f64, y: f64) -> Result<f64, MathError> {
     }
 }
 
-fn safe_sqrt(x: f64) -> Result<f64, MathError> {
+fun safe_sqrt(x) {
     if x < 0.0 {
         Err(MathError::NegativeSquareRoot)
     } else {
@@ -70,15 +70,15 @@ println("Error chain (sqrt(100/0)): {:?}", error_chain);
 
 // Custom Maybe-like monad
 #[derive(Debug, Clone)]
-enum Maybe<T> {
+Maybe {
     Just(T),
     Nothing,
 }
 
-impl<T> Maybe<T> {
-    fn map<U, F>(self, f: F) -> Maybe<U>
+Maybe {
+    fun map(self, f) -> Maybe
     where
-        F: FnOnce(T) -> U,
+        F(T) -> U,
     {
         match self {
             Maybe::Just(value) => Maybe::Just(f(value)),
@@ -86,9 +86,9 @@ impl<T> Maybe<T> {
         }
     }
     
-    fn and_then<U, F>(self, f: F) -> Maybe<U>
+    fun and_then(self, f) -> Maybe
     where
-        F: FnOnce(T) -> Maybe<U>,
+        F(T) -> Maybe,
     {
         match self {
             Maybe::Just(value) => f(value),
@@ -96,9 +96,9 @@ impl<T> Maybe<T> {
         }
     }
     
-    fn or_else<F>(self, f: F) -> Maybe<T>
+    fun or_else(self, f) -> Maybe
     where
-        F: FnOnce() -> Maybe<T>,
+        F() -> Maybe,
     {
         match self {
             Maybe::Nothing => f(),
@@ -107,14 +107,14 @@ impl<T> Maybe<T> {
     }
 }
 
-fn parse_int(s: &str) -> Maybe<i32> {
+fun parse_int(s) > {
     match s.parse() {
         Ok(n) => Maybe::Just(n),
         Err(_) => Maybe::Nothing,
     }
 }
 
-fn validate_positive(n: i32) -> Maybe<i32> {
+fun validate_positive(n) > {
     if n > 0 {
         Maybe::Just(n)
     } else {
@@ -136,11 +136,11 @@ let maybe_error = parse_int("invalid")
 println("Maybe error ('invalid'): {:?}", maybe_error);
 
 // List monad-like operations (Vec as monad)
-fn double_and_triple(x: i32) -> Vec<i32> {
+fun double_and_triple(x) {
     vec![x * 2, x * 3]
 }
 
-let list_monad: Vec<i32> = vec![1, 2, 3]
+let list_monad = vec![1, 2, 3]
     .into_iter()
     .flat_map(double_and_triple)
     .collect();
@@ -148,7 +148,7 @@ let list_monad: Vec<i32> = vec![1, 2, 3]
 println("List monad (double and triple each): {:?}", list_monad);
 
 // Combining multiple Maybe values
-fn add_maybes(a: Maybe<i32>, b: Maybe<i32>) -> Maybe<i32> {
+fun add_maybes(a<i32>, b<i32>) > {
     a.and_then(|x| b.map(|y| x + y))
 }
 

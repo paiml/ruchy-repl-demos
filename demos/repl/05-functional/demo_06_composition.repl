@@ -1,19 +1,19 @@
 // Function composition examples in Ruchy
 
 // Define simple functions
-fn add_five(x: i32) -> i32 { x + 5 }
-fn multiply_by_two(x: i32) -> i32 { x * 2 }
-fn square(x: i32) -> i32 { x * x }
+fun add_five(x) { x + 5 }
+fun multiply_by_two(x) { x * 2 }
+fun square(x) { x * x }
 
 // Manual composition
-let compose_manually = |x: i32| multiply_by_two(add_five(x));
+let compose_manually = |x| multiply_by_two(add_five(x));
 println("Manual composition (5 + 2 * x) with x=3: {}", compose_manually(3));
 
 // Compose function helper
-fn compose<A, B, C, F, G>(f: F, g: G) -> impl Fn(A) -> C
+fun compose<A, B, C, F, G>(f, g) -> Fn(A) -> C
 where
-    F: Fn(A) -> B,
-    G: Fn(B) -> C,
+    F(A) -> B,
+    G(B) -> C,
 {
     move |x| g(f(x))
 }
@@ -22,11 +22,11 @@ let composed_fn = compose(add_five, multiply_by_two);
 println("Composed function with x=3: {}", composed_fn(3));
 
 // Triple composition
-fn compose3<A, B, C, D, F, G, H>(f: F, g: G, h: H) -> impl Fn(A) -> D
+fun compose3<A, B, C, D, F, G, H>(f, g, h) -> Fn(A) -> D
 where
-    F: Fn(A) -> B,
-    G: Fn(B) -> C,
-    H: Fn(C) -> D,
+    F(A) -> B,
+    G(B) -> C,
+    H(C) -> D,
 {
     move |x| h(g(f(x)))
 }
@@ -35,43 +35,43 @@ let triple_composed = compose3(add_five, multiply_by_two, square);
 println("Triple composition ((x + 5) * 2)^2 with x=3: {}", triple_composed(3));
 
 // Function composition with closures
-let add = |n: i32| move |x: i32| x + n;
-let multiply = |n: i32| move |x: i32| x * n;
+let add = |n| move |x| x + n;
+let multiply = |n| move |x| x * n;
 
 let add_three = add(3);
 let multiply_by_four = multiply(4);
 
-let composed_closure = |x: i32| multiply_by_four(add_three(x));
+let composed_closure = |x| multiply_by_four(add_three(x));
 println("Closure composition (x + 3) * 4 with x=5: {}", composed_closure(5));
 
 // String processing composition
-fn to_uppercase(s: String) -> String { s.to_uppercase() }
-fn add_brackets(s: String) -> String { format!("[{}]", s) }
-fn add_prefix(s: String) -> String { format!("PREFIX: {}", s) }
+fun to_uppercase(s) { s.to_uppercase() }
+fun add_brackets(s) { format!("[{}]", s) }
+fun add_prefix(s) { format!("PREFIX: {}", s) }
 
 let string_composer = compose3(to_uppercase, add_brackets, add_prefix);
 let result = string_composer("hello world".to_string());
 println("String composition result: {}", result);
 
-// Practical example: data validation pipeline
-fn validate_not_empty(s: String) -> Option<String> {
+// Practical example validation pipeline
+fun validate_not_empty(s) {
     if s.is_empty() { None } else { Some(s) }
 }
 
-fn validate_length(min: usize) -> impl Fn(String) -> Option<String> {
-    move |s: String| {
+fun validate_length(min) -> Fn(String) {
+    move |s| {
         if s.len() >= min { Some(s) } else { None }
     }
 }
 
-fn validate_contains_char(ch: char) -> impl Fn(String) -> Option<String> {
-    move |s: String| {
+fun validate_contains_char(ch) -> Fn(String) {
+    move |s| {
         if s.contains(ch) { Some(s) } else { None }
     }
 }
 
 // Chain validations
-let validation_chain = |input: String| -> Option<String> {
+let validation_chain = |input| {
     validate_not_empty(input)
         .and_then(validate_length(3))
         .and_then(validate_contains_char('a'))

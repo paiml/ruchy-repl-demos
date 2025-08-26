@@ -1,5 +1,5 @@
 // Working with Result types for error handling
-fn divide(a: f64, b: f64) -> Result<f64, String> {
+fun divide(a, b) {
     if b == 0.0 {
         Err("Division by zero")
     } else {

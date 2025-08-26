@@ -1,7 +1,7 @@
 // Function chaining and pipelines
-fn add_one(x: i32) -> i32 { x + 1 }
-fn double(x: i32) -> i32 { x * 2 }
-fn square(x: i32) -> i32 { x * x }
+fun add_one(x) { x + 1 }
+fun double(x) { x * 2 }
+fun square(x) { x * x }
 
 // Chain functions
 let result = square(double(add_one(3)))

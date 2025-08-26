@@ -2,7 +2,7 @@
 use std::time::Duration;
 
 // Basic async function
-async fn simple_async_task() -> String {
+async fun simple_async_task() {
     println!("Starting async task...");
     // Simulate async work
     tokio::time::sleep(Duration::from_millis(100)).await;
@@ -11,7 +11,7 @@ async fn simple_async_task() -> String {
 }
 
 // Async function that returns a Result
-async fn fallible_async_task(should_fail: bool) -> Result<i32, String> {
+async fun fallible_async_task(should_fail) {
     println!("Starting fallible async task...");
     tokio::time::sleep(Duration::from_millis(50)).await;
     
@@ -23,7 +23,7 @@ async fn fallible_async_task(should_fail: bool) -> Result<i32, String> {
 }
 
 // Multiple async operations
-async fn fetch_data(id: u32) -> Result<String, String> {
+async fun fetch_data(id: u32) {
     println!("Fetching data for ID: {}", id);
     
     if id == 0 {
@@ -35,7 +35,7 @@ async fn fetch_data(id: u32) -> Result<String, String> {
 }
 
 // Sequential async execution
-async fn sequential_execution() {
+async fun sequential_execution() {
     println!("\n--- Sequential Execution ---");
     
     let start = std::time::Instant::now();
@@ -52,7 +52,7 @@ async fn sequential_execution() {
 }
 
 // Concurrent async execution
-async fn concurrent_execution() {
+async fun concurrent_execution() {
     println!("\n--- Concurrent Execution ---");
     
     let start = std::time::Instant::now();
@@ -71,7 +71,7 @@ async fn concurrent_execution() {
 }
 
 // Error handling with async
-async fn async_with_error_handling() {
+async fun async_with_error_handling() {
     println!("\n--- Async Error Handling ---");
     
     let tasks = vec![
@@ -91,7 +91,7 @@ async fn async_with_error_handling() {
 // Async stream processing
 use tokio_stream::{self as stream, StreamExt};
 
-async fn process_async_stream() {
+async fun process_async_stream() {
     println!("\n--- Async Stream Processing ---");
     
     let numbers = stream::iter(1..=10);
@@ -112,7 +112,7 @@ async fn process_async_stream() {
 }
 
 // Async with timeout
-async fn async_with_timeout() {
+async fun async_with_timeout() {
     println!("\n--- Async with Timeout ---");
     
     let quick_task = async {
@@ -139,15 +139,15 @@ async fn async_with_timeout() {
 }
 
 // Async closure and higher-order functions
-async fn async_higher_order() {
+async fun async_higher_order() {
     println!("\n--- Async Higher-Order Functions ---");
     
-    async fn process_with_async_closure<F, Fut>(items: Vec<i32>, f: F) -> Vec<String>
+    async fun process_with_async_closure<F, Fut>(items, f: F)
     where
         F: Fn(i32) -> Fut,
         Fut: std::future::Future<Output = String>,
     {
-        let mut results = Vec::new();
+        let mut results = new();
         for item in items {
             let result = f(item).await;
             results.push(result);
@@ -157,7 +157,7 @@ async fn async_higher_order() {
     
     let items = vec![1, 2, 3, 4, 5];
     
-    let async_processor = |x: i32| async move {
+    let async_processor = |x| async move {
         tokio::time::sleep(Duration::from_millis(10)).await;
         format!("Processed: {}", x * 2)
     };
@@ -170,7 +170,7 @@ async fn async_higher_order() {
 }
 
 // Async recursion
-async fn async_factorial(n: u64) -> u64 {
+async fun async_factorial(n: u64) -> u64 {
     if n <= 1 {
         1
     } else {
@@ -179,7 +179,7 @@ async fn async_factorial(n: u64) -> u64 {
     }
 }
 
-async fn test_async_recursion() {
+async fun test_async_recursion() {
     println!("\n--- Async Recursion ---");
     
     let result = async_factorial(5).await;
@@ -188,7 +188,7 @@ async fn test_async_recursion() {
 
 // Main async function to run all examples
 #[tokio::main]
-async fn main() {
+async fun main() {
     println!("=== Async/Await Examples ===");
     
     // Basic async task

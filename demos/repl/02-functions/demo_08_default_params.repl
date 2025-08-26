@@ -1,12 +1,12 @@
 // Functions with default parameters
-fn greet(name: &str, greeting: Option<&str>) -> String {
+fun greet(name, greeting) {
     let g = greeting.unwrap_or("Hello");
     format!("{}, {}!", g, name)
 }
 greet("Alice", None)
 greet("Bob", Some("Hi"))
 
-fn power(base: i32, exp: Option<i32>) -> i32 {
+fun power(base, exp) {
     base.pow(exp.unwrap_or(2) as u32)
 }
 power(3, None)

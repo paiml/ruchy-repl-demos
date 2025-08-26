@@ -1,31 +1,31 @@
 // Lens pattern for functional updates
-struct Lens<S, A> {
-    get: Box<dyn Fn(&S) -> A>,
-    set: Box<dyn Fn(S, A) -> S>,
+Lens {
+    get<dyn Fn(&S) -> A>,
+    set<dyn Fn(S, A) -> S>,
 }
 
-impl<S: Clone, A: Clone> Lens<S, A> {
-    fn new<G, T>(get: G, set: T) -> Self
+impl<S, A> Lens {
+    fun new(get, set) -> Self
     where
-        G: Fn(&S) -> A + 'static,
-        T: Fn(S, A) -> S + 'static,
+        G(&S) -> A + 'static,
+        T(S, A) -> S + 'static,
     {
         Lens {
-            get: Box::new(get),
-            set: Box::new(set),
+            get::new(get),
+            set::new(set),
         }
     }
     
-    fn view(&self, s: &S) -> A {
+    fun view(&self, s) -> A {
         (self.get)(s)
     }
     
-    fn update(&self, s: S, a: A) -> S {
+    fun update(&self, s, a) -> S {
         (self.set)(s, a)
     }
     
-    fn modify<F>(&self, s: S, f: F) -> S
-    where F: FnOnce(A) -> A {
+    fun modify(&self, s, f) -> S
+    where F(A) -> A {
         let current = self.view(&s);
         self.update(s, f(current))
     }
@@ -33,37 +33,37 @@ impl<S: Clone, A: Clone> Lens<S, A> {
 
 // Example with nested structures
 #[derive(Clone, Debug)]
-struct Address {
-    street: String,
-    city: String,
+Address {
+    street,
+    city,
 }
 
 #[derive(Clone, Debug)]
-struct Person {
-    name: String,
-    address: Address,
+Person {
+    name,
+    address,
 }
 
 // Create lenses
 let address_lens = Lens::new(
-    |p: &Person| p.address.clone(),
-    |mut p: Person, a: Address| { p.address = a; p }
+    |p| p.address.clone(),
+    |p, a| { p.address = a; p }
 );
 
 let city_lens = Lens::new(
-    |a: &Address| a.city.clone(),
-    |mut a: Address, c: String| { a.city = c; a }
+    |a| a.city.clone(),
+    |a, c| { a.city = c; a }
 );
 
 let person = Person {
     name: "Alice".to_string(),
-    address: Address {
+    address {
         street: "123 Main St".to_string(),
         city: "Boston".to_string(),
     }
 };
 
-let updated = address_lens.modify(person, |mut addr| {
+let updated = address_lens.modify(person, |addr| {
     addr.city = "New York".to_string();
     addr
 });

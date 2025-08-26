@@ -1,28 +1,28 @@
-// Try trait and custom types
+// Try and custom types
 use std::ops::Try;
 use std::convert::Infallible;
 
 // Custom Result-like type
-enum Outcome<T, E> {
+Outcome {
     Success(T),
     Failure(E),
 }
 
-impl<T, E> Outcome<T, E> {
-    fn is_success(&self) -> bool {
+Outcome {
+    fun is_success(&self) {
         matches!(self, Outcome::Success(_))
     }
     
-    fn map<U, F>(self, f: F) -> Outcome<U, E>
-    where F: FnOnce(T) -> U {
+    fun map(self, f) -> Outcome
+    where F(T) -> U {
         match self {
             Outcome::Success(value) => Outcome::Success(f(value)),
             Outcome::Failure(err) => Outcome::Failure(err),
         }
     }
     
-    fn and_then<U, F>(self, f: F) -> Outcome<U, E>
-    where F: FnOnce(T) -> Outcome<U, E> {
+    fun and_then(self, f) -> Outcome
+    where F(T) -> Outcome {
         match self {
             Outcome::Success(value) => f(value),
             Outcome::Failure(err) => Outcome::Failure(err),
@@ -31,14 +31,14 @@ impl<T, E> Outcome<T, E> {
 }
 
 // Conversion utilities
-impl<T> From<T> for Outcome<T, Infallible> {
-    fn from(value: T) -> Self {
+From for Outcome<T, Infallible> {
+    fun from(value) -> Self {
         Outcome::Success(value)
     }
 }
 
 // Example usage
-fn divide_outcome(x: i32, y: i32) -> Outcome<i32, String> {
+fun divide_outcome(x, y) , String> {
     if y == 0 {
         Outcome::Failure("Division by zero".to_string())
     } else {

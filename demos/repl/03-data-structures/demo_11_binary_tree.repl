@@ -1,11 +1,11 @@
 // Binary tree implementation
-enum Tree<T> {
+Tree {
     Empty,
-    Node(T, Box<Tree<T>>, Box<Tree<T>>),
+    Node(T, Box<Tree>, Box<Tree>),
 }
 
-impl<T> Tree<T> {
-    fn leaf(value: T) -> Self {
+Tree {
+    fun leaf(value) -> Self {
         Tree::Node(value, Box::new(Tree::Empty), Box::new(Tree::Empty))
     }
 }
@@ -17,7 +17,7 @@ let tree = Tree::Node(
 )
 
 // Tree traversal
-fn inorder<T: std::fmt::Display>(tree: &Tree<T>) {
+fun inorder<T::fmt::Display>(tree) {
     match tree {
         Tree::Empty => {},
         Tree::Node(val, left, right) => {

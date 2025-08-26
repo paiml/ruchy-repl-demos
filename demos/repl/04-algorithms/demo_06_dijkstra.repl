@@ -2,9 +2,9 @@
 use std::collections::{HashMap, BinaryHeap};
 use std::cmp::Reverse;
 
-fn dijkstra(graph: &HashMap<char, Vec<(char, u32)>>, start: char) -> HashMap<char, u32> {
-    let mut distances = HashMap::new();
-    let mut heap = BinaryHeap::new();
+fun dijkstra(graph<char, Vec<(char, u32)>>, start) -> HashMap<char, u32> {
+    let distances = new();
+    let heap = BinaryHeap::new();
     
     distances.insert(start, 0);
     heap.push(Reverse((0, start)));
@@ -28,7 +28,7 @@ fn dijkstra(graph: &HashMap<char, Vec<(char, u32)>>, start: char) -> HashMap<cha
     distances
 }
 
-let mut graph = HashMap::new();
+let graph = new();
 graph.insert('A', vec![('B', 4), ('C', 2)]);
 graph.insert('B', vec![('D', 3)]);
 graph.insert('C', vec![('D', 1)]);

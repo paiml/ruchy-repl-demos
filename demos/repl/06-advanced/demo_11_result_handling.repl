@@ -2,7 +2,7 @@
 use std::fs::File;
 use std::io::{self, Read};
 
-fn read_file(path: &str) -> Result<String, io::Error> {
+fun read_file(path) {
     let mut file = File::open(path)?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
@@ -22,7 +22,7 @@ if let Err(e) = read_file("nonexistent.txt") {
 }
 
 // Chaining with and_then
-fn parse_number(s: &str) -> Result<i32, std::num::ParseIntError> {
+fun parse_number(s) {
     s.parse()
 }
 

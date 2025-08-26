@@ -1,10 +1,10 @@
 // Trampoline pattern for tail-call optimization
-enum Bounce<T> {
+Bounce {
     Done(T),
-    Call(Box<dyn FnOnce() -> Bounce<T>>),
+    Call(Box<dyn FnOnce() -> Bounce>),
 }
 
-fn trampoline<T>(mut bounce: Bounce<T>) -> T {
+fun trampoline(bounce) -> T {
     loop {
         match bounce {
             Bounce::Done(x) => return x,
@@ -14,7 +14,7 @@ fn trampoline<T>(mut bounce: Bounce<T>) -> T {
 }
 
 // Tail-recursive factorial using trampoline
-fn factorial_trampoline(n: u32, acc: u32) -> Bounce<u32> {
+fun factorial_trampoline(n, acc) -> Bounce<u32> {
     if n <= 1 {
         Bounce::Done(acc)
     } else {
@@ -23,7 +23,7 @@ fn factorial_trampoline(n: u32, acc: u32) -> Bounce<u32> {
 }
 
 // Tail-recursive sum using trampoline
-fn sum_trampoline(n: u32, acc: u32) -> Bounce<u32> {
+fun sum_trampoline(n, acc) -> Bounce<u32> {
     if n == 0 {
         Bounce::Done(acc)
     } else {

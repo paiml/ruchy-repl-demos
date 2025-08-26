@@ -1,18 +1,18 @@
 // Applicative functor pattern
-trait Applicative<A>: Functor<A> {
-    fn pure(value: A) -> Self;
-    fn apply<B, F>(self, f: Self::Wrapped<F>) -> Self::Wrapped<B>
-    where F: FnOnce(A) -> B;
+Applicative {
+    fun pure(value) -> Self;
+    fun apply(self, f::Wrapped) -> Self::Wrapped
+    where F(A) -> B;
 }
 
 // Option as Applicative
-impl<A> Applicative<A> for Option<A> {
-    fn pure(value: A) -> Self {
+Applicative for Option {
+    fun pure(value) -> Self {
         Some(value)
     }
     
-    fn apply<B, F>(self, f: Option<F>) -> Option<B>
-    where F: FnOnce(A) -> B {
+    fun apply(self, f)
+    where F(A) -> B {
         match (self, f) {
             (Some(val), Some(func)) => Some(func(val)),
             _ => None
@@ -21,13 +21,13 @@ impl<A> Applicative<A> for Option<A> {
 }
 
 // Using applicative
-let value = Option::pure(10);
-let func = Some(|x: i32| x * 2);
+let value = pure(10);
+let func = Some(|x| x * 2);
 let result = value.apply(func);
 println!("Applicative result: {:?}", result);
 
 // Lifting a function
-fn add(x: i32) -> impl Fn(i32) -> i32 {
+fun add(x) ) {
     move |y| x + y
 }
 

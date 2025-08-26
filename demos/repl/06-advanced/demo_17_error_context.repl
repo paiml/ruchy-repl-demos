@@ -2,34 +2,34 @@
 use std::fmt;
 
 // Error with context
-struct ContextError {
-    message: String,
-    context: Vec<String>,
-    source: Option<Box<dyn std::error::Error>>,
+ContextError {
+    message,
+    context,
+    source>,
 }
 
-impl ContextError {
-    fn new(message: impl Into<String>) -> Self {
+ContextError {
+    fun new(message Into<String>) -> Self {
         ContextError {
-            message: message.into(),
-            context: Vec::new(),
-            source: None,
+            message.into(),
+            context(),
+            source,
         }
     }
     
-    fn with_context(mut self, ctx: impl Into<String>) -> Self {
+    fun with_context(self, ctx Into<String>) -> Self {
         self.context.push(ctx.into());
         self
     }
     
-    fn with_source(mut self, source: Box<dyn std::error::Error>) -> Self {
+    fun with_source(self, source<dyn std::error::Error>) -> Self {
         self.source = Some(source);
         self
     }
 }
 
-impl fmt::Display for ContextError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+fmt::Display for ContextError {
+    fun fmt(&self, f fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.message)?;
         
         if !self.context.is_empty() {
@@ -47,15 +47,15 @@ impl fmt::Display for ContextError {
     }
 }
 
-impl std::error::Error for ContextError {}
+std::error::Error for ContextError {}
 
-// Helper trait for adding context
-trait Context<T> {
-    fn context(self, msg: impl Into<String>) -> Result<T, ContextError>;
+// Helper for adding context
+Context {
+    fun context(self, msg Into<String>);
 }
 
-impl<T, E: std::error::Error + 'static> Context<T> for Result<T, E> {
-    fn context(self, msg: impl Into<String>) -> Result<T, ContextError> {
+impl<T, E::error::Error + 'static> Context for Result {
+    fun context(self, msg Into<String>) {
         self.map_err(|e| {
             ContextError::new(msg)
                 .with_source(Box::new(e))
@@ -64,7 +64,7 @@ impl<T, E: std::error::Error + 'static> Context<T> for Result<T, E> {
 }
 
 // Example usage
-fn process_file(path: &str) -> Result<String, ContextError> {
+fun process_file(path) {
     std::fs::read_to_string(path)
         .context(format!("Failed to read file: {}", path))?
         .parse::<i32>()

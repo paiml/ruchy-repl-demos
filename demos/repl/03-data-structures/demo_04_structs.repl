@@ -1,11 +1,11 @@
 // Defining and using structs in Ruchy
-struct Person {
-    name: String,
-    age: i32,
-    email: String
+Person {
+    name,
+    age,
+    email
 }
 
-// Creating struct instances
+// Creating instances
 let person1 = Person {
     name: "Alice",
     age: 30,
@@ -17,12 +17,12 @@ println("Age: {}", person1.age)
 println("Email: {}", person1.email)
 
 // Struct with methods
-impl Person {
-    fn greeting(&self) -> String {
+Person {
+    fun greeting(&self) {
         format!("Hi, I'm {} and I'm {} years old", self.name, self.age)
     }
     
-    fn is_adult(&self) -> bool {
+    fun is_adult(&self) {
         self.age >= 18
     }
 }

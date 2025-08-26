@@ -1,5 +1,5 @@
 // Binary search algorithm implementation in Ruchy
-fn binary_search(arr: &[i32], target: i32) -> Option<usize> {
+fun binary_search(arr, target) {
     let mut left = 0;
     let mut right = arr.len();
     
@@ -33,7 +33,7 @@ for target in targets {
 }
 
 // Recursive binary search version
-fn binary_search_recursive(arr: &[i32], target: i32, left: usize, right: usize) -> Option<usize> {
+fun binary_search_recursive(arr, target, left, right) {
     if left >= right {
         return None;
     }

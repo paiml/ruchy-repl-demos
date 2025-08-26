@@ -1,8 +1,8 @@
 // Memoization example
 use std::collections::HashMap;
 
-fn memoize_fib() -> impl FnMut(u32) -> u32 {
-    let mut cache = HashMap::new();
+fun memoize_fib() -> FnMut(u32) -> u32 {
+    let cache = new();
     move |n| {
         if let Some(&result) = cache.get(&n) {
             return result;
@@ -17,6 +17,6 @@ fn memoize_fib() -> impl FnMut(u32) -> u32 {
     }
 }
 
-let mut fib = memoize_fib();
+let fib = memoize_fib();
 fib(10)
 fib(20)

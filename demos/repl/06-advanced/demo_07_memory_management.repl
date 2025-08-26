@@ -4,20 +4,20 @@
 use std::rc::Rc;
 
 #[derive(Debug)]
-struct Node {
-    data: i32,
-    children: Vec<Rc<Node>>,
+Node {
+    data,
+    children>,
 }
 
-fn create_shared_tree() {
-    let leaf1 = Rc::new(Node { data: 1, children: vec![] });
-    let leaf2 = Rc::new(Node { data: 2, children: vec![] });
+fun create_shared_tree() {
+    let leaf1 = Rc::new(Node { data: 1, children![] });
+    let leaf2 = Rc::new(Node { data: 2, children![] });
     
     println!("leaf1 reference count: {}", Rc::strong_count(&leaf1));
     
     let branch = Rc::new(Node {
         data: 10,
-        children: vec![leaf1.clone(), leaf2.clone()],
+        children![leaf1.clone(), leaf2.clone()],
     });
     
     println!("leaf1 reference count after branch: {}", Rc::strong_count(&leaf1));
@@ -25,7 +25,7 @@ fn create_shared_tree() {
     
     let root = Rc::new(Node {
         data: 100,
-        children: vec![branch.clone(), leaf1.clone()],
+        children![branch.clone(), leaf1.clone()],
     });
     
     println!("Final reference counts:");
@@ -44,30 +44,30 @@ use std::rc::Weak;
 use std::cell::RefCell;
 
 #[derive(Debug)]
-struct Parent {
-    children: RefCell<Vec<Rc<Child>>>,
+Parent {
+    children<Vec<Rc<Child>>>,
 }
 
 #[derive(Debug)]
-struct Child {
-    parent: RefCell<Weak<Parent>>,
-    name: String,
+Child {
+    parent<Weak<Parent>>,
+    name,
 }
 
-fn demonstrate_weak_references() {
+fun demonstrate_weak_references() {
     println!("\n--- Weak References ---");
     
     let parent = Rc::new(Parent {
-        children: RefCell::new(vec![]),
+        children::new(vec![]),
     });
     
     let child1 = Rc::new(Child {
-        parent: RefCell::new(Rc::downgrade(&parent)),
+        parent::new(Rc::downgrade(&parent)),
         name: "Child 1".to_string(),
     });
     
     let child2 = Rc::new(Child {
-        parent: RefCell::new(Rc::downgrade(&parent)),
+        parent::new(Rc::downgrade(&parent)),
         name: "Child 2".to_string(),
     });
     
@@ -86,11 +86,11 @@ fn demonstrate_weak_references() {
     // Demonstrate weak reference becomes None when parent is dropped
     {
         let temp_parent = Rc::new(Parent {
-            children: RefCell::new(vec![]),
+            children::new(vec![]),
         });
         
         let temp_child = Child {
-            parent: RefCell::new(Rc::downgrade(&temp_parent)),
+            parent::new(Rc::downgrade(&temp_parent)),
             name: "Temp Child".to_string(),
         };
         
@@ -105,11 +105,11 @@ demonstrate_weak_references();
 use std::sync::Arc;
 use std::thread;
 
-fn demonstrate_arc() {
+fun demonstrate_arc() {
     println!("\n--- Arc (Atomic Reference Counting) ---");
     
     let shared_data = Arc::new(vec![1, 2, 3, 4, 5]);
-    let mut handles = vec![];
+    let handles = vec![];
     
     for i in 0..3 {
         let data = Arc::clone(&shared_data);
@@ -121,7 +121,7 @@ fn demonstrate_arc() {
         handles.push(handle);
     }
     
-    let results: Vec<i32> = handles.into_iter().map(|h| h.join().unwrap()).collect();
+    let results = handles.into_iter().map(|h| h.join().unwrap()).collect();
     println!("Thread results: {:?}", results);
     
     println!("Original data reference count: {}", Arc::strong_count(&shared_data));
@@ -130,7 +130,7 @@ fn demonstrate_arc() {
 demonstrate_arc();
 
 // Box for heap allocation
-fn demonstrate_box() {
+fun demonstrate_box() {
     println!("\n--- Box (Heap Allocation) ---");
     
     // Large data on heap
@@ -139,8 +139,8 @@ fn demonstrate_box() {
     
     // Recursive data structure
     #[derive(Debug)]
-    enum List<T> {
-        Cons(T, Box<List<T>>),
+    List {
+        Cons(T, Box<List>),
         Nil,
     }
     
@@ -163,7 +163,7 @@ demonstrate_box();
 // Interior mutability with RefCell
 use std::cell::Cell;
 
-fn demonstrate_interior_mutability() {
+fun demonstrate_interior_mutability() {
     println!("\n--- Interior Mutability ---");
     
     // Cell for Copy types
@@ -183,7 +183,7 @@ fn demonstrate_interior_mutability() {
     
     // Borrow mutably
     {
-        let mut borrowed = ref_cell_vec.borrow_mut();
+        let borrowed = ref_cell_vec.borrow_mut();
         borrowed.push(4);
         borrowed.push(5);
     }
@@ -193,7 +193,7 @@ fn demonstrate_interior_mutability() {
     // Multiple immutable borrows are allowed
     let borrow1 = ref_cell_vec.borrow();
     let borrow2 = ref_cell_vec.borrow();
-    println!("Multiple borrows: len={}, first={}", borrow1.len(), borrow2[0]);
+    println!("Multiple borrows={}, first={}", borrow1.len(), borrow2[0]);
 }
 
 demonstrate_interior_mutability();
@@ -201,7 +201,7 @@ demonstrate_interior_mutability();
 // Cow (Clone on Write)
 use std::borrow::Cow;
 
-fn process_string(input: Cow<str>) -> Cow<str> {
+fun process_string(input<str>) -> Cow<str> {
     if input.contains("modify") {
         Cow::Owned(input.replace("modify", "MODIFIED").to_uppercase())
     } else {
@@ -209,7 +209,7 @@ fn process_string(input: Cow<str>) -> Cow<str> {
     }
 }
 
-fn demonstrate_cow() {
+fun demonstrate_cow() {
     println!("\n--- Cow (Clone on Write) ---");
     
     let original = "hello world";
@@ -221,9 +221,9 @@ fn demonstrate_cow() {
     println!("With modification: '{}'", result2);
     
     // Working with Vec
-    fn maybe_modify_vec(input: Cow<[i32]>) -> Cow<[i32]> {
+    fun maybe_modify_vec(input<[]>) -> Cow<[]> {
         if input.len() > 3 {
-            let mut owned = input.into_owned();
+            let owned = input.into_owned();
             owned.truncate(3);
             Cow::Owned(owned)
         } else {
@@ -244,7 +244,7 @@ fn demonstrate_cow() {
 demonstrate_cow();
 
 // Memory layout and size
-fn demonstrate_memory_layout() {
+fun demonstrate_memory_layout() {
     println!("\n--- Memory Layout and Size ---");
     
     println!("Size of different types:");
@@ -272,7 +272,7 @@ fn demonstrate_memory_layout() {
     println!("Heap vec data address: {:p}", heap_vec.as_ptr());
     println!("Boxed array address: {:p}", &*boxed_array);
     
-    println!("Vec struct address: {:p}", &heap_vec);
+    println!("Vec address: {:p}", &heap_vec);
     println!("Vec data address: {:p}", heap_vec.as_ptr());
 }
 

@@ -43,7 +43,7 @@ println!("6 * 7 = {}", calculate!(6 * 7));
 macro_rules! vec_of {
     ($element:expr; $count:expr) => {
         {
-            let mut v = Vec::new();
+            let v = new();
             for _ in 0..$count {
                 v.push($element.clone());
             }
@@ -71,7 +71,7 @@ print_all!(1, 2, 3, 4, 5);
 macro_rules! hashmap {
     ($($key:expr => $value:expr),*) => {
         {
-            let mut map = std::collections::HashMap::new();
+            let map = std::collections::new();
             $(
                 map.insert($key, $value);
             )*
@@ -124,20 +124,20 @@ platform_specific! {
 macro_rules! struct_with_defaults {
     ($name:ident { $($field:ident: $type:ty = $default:expr),* }) => {
         #[derive(Debug)]
-        struct $name {
+        $name {
             $($field: $type),*
         }
         
-        impl Default for $name {
-            fn default() -> Self {
+        Default for $name {
+            fun default() -> Self {
                 Self {
                     $($field: $default),*
                 }
             }
         }
         
-        impl $name {
-            fn new() -> Self {
+        $name {
+            fun new() -> Self {
                 Self::default()
             }
         }
@@ -146,10 +146,10 @@ macro_rules! struct_with_defaults {
 
 struct_with_defaults! {
     Config {
-        host: String = "localhost".to_string(),
-        port: u16 = 8080,
-        timeout: u32 = 30,
-        debug: bool = false
+        host = "localhost".to_string(),
+        port = 8080,
+        timeout = 30,
+        debug = false
     }
 }
 
@@ -159,8 +159,8 @@ println!("Default config: {:?}", config);
 // Macro for implementing traits
 macro_rules! impl_display {
     ($type:ty, $format:expr) => {
-        impl std::fmt::Display for $type {
-            fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        std::fmt::Display for $type {
+            fun fmt(&self, f std::fmt::Formatter) -> std::fmt::Result {
                 write!(f, $format, self)
             }
         }
@@ -168,9 +168,9 @@ macro_rules! impl_display {
 }
 
 #[derive(Debug)]
-struct Point {
-    x: i32,
-    y: i32,
+Point {
+    x,
+    y,
 }
 
 impl_display!(Point, "Point({}, {})");
@@ -179,21 +179,21 @@ let point = Point { x: 3, y: 4 };
 println!("Point display: {}", point);
 
 // Macro for creating enums with string conversion
-macro_rules! string_enum {
+macro_rules! string_{
     ($name:ident { $($variant:ident => $string:expr),* }) => {
         #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-        enum $name {
+        $name {
             $($variant),*
         }
         
-        impl $name {
-            fn as_str(&self) -> &'static str {
+        $name {
+            fun as_str(&self) -> &'static str {
                 match self {
                     $(Self::$variant => $string),*
                 }
             }
             
-            fn from_str(s: &str) -> Option<Self> {
+            fun from_str(s) {
                 match s {
                     $($string => Some(Self::$variant)),*,
                     _ => None
@@ -201,8 +201,8 @@ macro_rules! string_enum {
             }
         }
         
-        impl std::fmt::Display for $name {
-            fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        std::fmt::Display for $name {
+            fun fmt(&self, f std::fmt::Formatter) -> std::fmt::Result {
                 write!(f, "{}", self.as_str())
             }
         }
@@ -250,7 +250,7 @@ log!("debug", "Variable x = 42");
 // Macro for creating test cases
 macro_rules! test_cases {
     ($test_name:ident, $($input:expr => $expected:expr),*) => {
-        fn $test_name() {
+        fun $test_name() {
             $(
                 let result = $input;
                 assert_eq!(result, $expected, "Test failed for input: {}", stringify!($input));

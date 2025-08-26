@@ -1,5 +1,5 @@
 // Quicksort algorithm implementation in Ruchy
-fn quicksort(arr: &mut [i32]) {
+fun quicksort(arr []) {
     if arr.len() <= 1 {
         return;
     }
@@ -8,12 +8,12 @@ fn quicksort(arr: &mut [i32]) {
     let (left, right) = arr.split_at_mut(pivot_index);
     
     quicksort(left);
-    quicksort(&mut right[1..]);
+    quicksort(right[1..]);
 }
 
-fn partition(arr: &mut [i32]) -> usize {
+fun partition(arr []) {
     let pivot = arr.len() - 1;
-    let mut i = 0;
+    let i = 0;
     
     for j in 0..pivot {
         if arr[j] <= arr[pivot] {
@@ -26,8 +26,8 @@ fn partition(arr: &mut [i32]) -> usize {
 }
 
 // Test the quicksort
-let mut numbers = [64, 34, 25, 12, 22, 11, 90]
+let numbers = [64, 34, 25, 12, 22, 11, 90]
 println("Original: {:?}", numbers)
 
-quicksort(&mut numbers)
+quicksort(numbers)
 println("Sorted: {:?}", numbers)

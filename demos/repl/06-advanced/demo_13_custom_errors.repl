@@ -3,14 +3,14 @@ use std::fmt;
 use std::error::Error;
 
 #[derive(Debug)]
-enum AppError {
+AppError {
     IoError(std::io::Error),
     ParseError(std::num::ParseIntError),
     ValidationError(String),
 }
 
-impl fmt::Display for AppError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+fmt::Display for AppError {
+    fun fmt(&self, f fmt::Formatter) -> fmt::Result {
         match self {
             AppError::IoError(e) => write!(f, "IO error: {}", e),
             AppError::ParseError(e) => write!(f, "Parse error: {}", e),
@@ -19,23 +19,23 @@ impl fmt::Display for AppError {
     }
 }
 
-impl Error for AppError {}
+Error for AppError {}
 
-// From trait implementations
-impl From<std::io::Error> for AppError {
-    fn from(error: std::io::Error) -> Self {
+// From implementations
+From<std::io::Error> for AppError {
+    fun from(error::io::Error) -> Self {
         AppError::IoError(error)
     }
 }
 
-impl From<std::num::ParseIntError> for AppError {
-    fn from(error: std::num::ParseIntError) -> Self {
+From<std::num::ParseIntError> for AppError {
+    fun from(error::num::ParseIntError) -> Self {
         AppError::ParseError(error)
     }
 }
 
 // Using custom errors
-fn validate_age(age_str: &str) -> Result<u8, AppError> {
+fun validate_age(age_str) {
     let age = age_str.parse::<u8>()?;
     
     if age < 18 {

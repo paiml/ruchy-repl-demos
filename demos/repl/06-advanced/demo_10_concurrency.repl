@@ -5,10 +5,10 @@ use std::time::Duration;
 use std::sync::mpsc;
 
 // Basic threading
-fn basic_threading() {
+fun basic_threading() {
     println!("=== Basic Threading ===");
     
-    let handles: Vec<_> = (0..5)
+    let handles = (0..5)
         .map(|i| {
             thread::spawn(move || {
                 println!("Thread {} starting", i);
@@ -19,7 +19,7 @@ fn basic_threading() {
         })
         .collect();
     
-    let results: Vec<i32> = handles
+    let results = handles
         .into_iter()
         .map(|h| h.join().unwrap())
         .collect();
@@ -30,16 +30,16 @@ fn basic_threading() {
 basic_threading();
 
 // Shared state with Mutex
-fn shared_state_mutex() {
+fun shared_state_mutex() {
     println!("\n=== Shared State with Mutex ===");
     
     let counter = Arc::new(Mutex::new(0));
-    let mut handles = vec![];
+    let handles = vec![];
     
     for i in 0..10 {
         let counter = Arc::clone(&counter);
         let handle = thread::spawn(move || {
-            let mut num = counter.lock().unwrap();
+            let num = counter.lock().unwrap();
             *num += 1;
             println!("Thread {} incremented counter to {}", i, *num);
         });
@@ -56,11 +56,11 @@ fn shared_state_mutex() {
 shared_state_mutex();
 
 // Reader-Writer lock
-fn reader_writer_lock() {
+fun reader_writer_lock() {
     println!("\n=== Reader-Writer Lock ===");
     
     let data = Arc::new(RwLock::new(vec![1, 2, 3, 4, 5]));
-    let mut handles = vec![];
+    let handles = vec![];
     
     // Spawn reader threads
     for i in 0..5 {
@@ -78,7 +78,7 @@ fn reader_writer_lock() {
         let data = Arc::clone(&data);
         let handle = thread::spawn(move || {
             thread::sleep(Duration::from_millis(50));
-            let mut write_data = data.write().unwrap();
+            let write_data = data.write().unwrap();
             write_data.push(10 + i);
             println!("Writer {} added element", i);
         });
@@ -95,7 +95,7 @@ fn reader_writer_lock() {
 reader_writer_lock();
 
 // Channel communication
-fn channel_communication() {
+fun channel_communication() {
     println!("\n=== Channel Communication ===");
     
     // Single producer, single consumer
@@ -127,7 +127,7 @@ fn channel_communication() {
     
     drop(tx); // Close the original sender
     
-    let mut messages = vec![];
+    let messages = vec![];
     for received in rx {
         messages.push(received);
     }
@@ -139,7 +139,7 @@ fn channel_communication() {
 channel_communication();
 
 // Bounded channels
-fn bounded_channels() {
+fun bounded_channels() {
     println!("\n=== Bounded Channels ===");
     
     let (tx, rx) = mpsc::sync_channel(2); // Buffer size of 2
@@ -168,7 +168,7 @@ fn bounded_channels() {
 bounded_channels();
 
 // Condition variables
-fn condition_variables() {
+fun condition_variables() {
     println!("\n=== Condition Variables ===");
     
     let pair = Arc::new((Mutex::new(false), Condvar::new()));
@@ -177,7 +177,7 @@ fn condition_variables() {
     // Thread that waits for condition
     let waiter = thread::spawn(move || {
         let (lock, cvar) = &*pair2;
-        let mut started = lock.lock().unwrap();
+        let started = lock.lock().unwrap();
         
         while !*started {
             println!("Waiting for condition...");
@@ -192,7 +192,7 @@ fn condition_variables() {
         thread::sleep(Duration::from_millis(500));
         
         let (lock, cvar) = &*pair;
-        let mut started = lock.lock().unwrap();
+        let started = lock.lock().unwrap();
         *started = true;
         cvar.notify_one();
         println!("Signaled condition!");
@@ -205,21 +205,21 @@ fn condition_variables() {
 condition_variables();
 
 // Thread pool pattern
-struct ThreadPool {
-    workers: Vec<Worker>,
-    sender: mpsc::Sender<Job>,
+ThreadPool {
+    workers,
+    sender::Sender<Job>,
 }
 
 type Job = Box<dyn FnOnce() + Send + 'static>;
 
-impl ThreadPool {
-    fn new(size: usize) -> ThreadPool {
+ThreadPool {
+    fun new(size) -> ThreadPool {
         assert!(size > 0);
         
         let (sender, receiver) = mpsc::channel();
         let receiver = Arc::new(Mutex::new(receiver));
         
-        let mut workers = Vec::with_capacity(size);
+        let workers = with_capacity(size);
         
         for id in 0..size {
             workers.push(Worker::new(id, Arc::clone(&receiver)));
@@ -228,22 +228,22 @@ impl ThreadPool {
         ThreadPool { workers, sender }
     }
     
-    fn execute<F>(&self, f: F)
+    fun execute(&self, f)
     where
-        F: FnOnce() + Send + 'static,
+        F() + Send + 'static,
     {
         let job = Box::new(f);
         self.sender.send(job).unwrap();
     }
 }
 
-struct Worker {
-    id: usize,
-    thread: thread::JoinHandle<()>,
+Worker {
+    id,
+    thread::JoinHandle<()>,
 }
 
-impl Worker {
-    fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
+Worker {
+    fun new(id, receiver<Mutex<mpsc::Receiver<Job>>>) -> Worker {
         let thread = thread::spawn(move || loop {
             let job = receiver.lock().unwrap().recv();
             
@@ -263,7 +263,7 @@ impl Worker {
     }
 }
 
-fn thread_pool_example() {
+fun thread_pool_example() {
     println!("\n=== Thread Pool ===");
     
     let pool = ThreadPool::new(4);
@@ -285,11 +285,11 @@ thread_pool_example();
 // Atomic operations
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-fn atomic_operations() {
+fun atomic_operations() {
     println!("\n=== Atomic Operations ===");
     
     let counter = Arc::new(AtomicUsize::new(0));
-    let mut handles = vec![];
+    let handles = vec![];
     
     for _ in 0..10 {
         let counter = Arc::clone(&counter);
@@ -330,11 +330,11 @@ atomic_operations();
 // Barrier synchronization
 use std::sync::Barrier;
 
-fn barrier_synchronization() {
+fun barrier_synchronization() {
     println!("\n=== Barrier Synchronization ===");
     
     let barrier = Arc::new(Barrier::new(5));
-    let mut handles = vec![];
+    let handles = vec![];
     
     for i in 0..5 {
         let barrier = Arc::clone(&barrier);
@@ -360,14 +360,14 @@ fn barrier_synchronization() {
 barrier_synchronization();
 
 // Producer-Consumer pattern
-fn producer_consumer_pattern() {
+fun producer_consumer_pattern() {
     println!("\n=== Producer-Consumer Pattern ===");
     
     let buffer_size = 5;
     let (tx, rx) = mpsc::sync_channel(buffer_size);
     
     // Multiple producers
-    let producers: Vec<_> = (0..3)
+    let producers = (0..3)
         .map(|producer_id| {
             let tx = tx.clone();
             thread::spawn(move || {
@@ -386,7 +386,7 @@ fn producer_consumer_pattern() {
     
     // Single consumer
     let consumer = thread::spawn(move || {
-        let mut consumed = 0;
+        let consumed = 0;
         for item in rx {
             println!("Consumer got: {}", item);
             consumed += 1;
@@ -406,7 +406,7 @@ fn producer_consumer_pattern() {
 producer_consumer_pattern();
 
 // Scoped threads
-fn scoped_threads() {
+fun scoped_threads() {
     println!("\n=== Scoped Threads ===");
     
     let data = vec![1, 2, 3, 4, 5, 6, 7, 8];
@@ -416,13 +416,13 @@ fn scoped_threads() {
         let (left, right) = data.split_at(chunk_size);
         
         let handle1 = s.spawn(|| {
-            let sum: i32 = left.iter().sum();
+            let sum = left.iter().sum();
             println!("Left chunk sum: {}", sum);
             sum
         });
         
         let handle2 = s.spawn(|| {
-            let sum: i32 = right.iter().sum();
+            let sum = right.iter().sum();
             println!("Right chunk sum: {}", sum);
             sum
         });

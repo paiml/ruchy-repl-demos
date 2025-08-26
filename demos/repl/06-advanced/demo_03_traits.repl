@@ -1,32 +1,32 @@
-// Traits and trait implementations in Ruchy
+// Traits and implementations in Ruchy
 
-// Basic trait definition
-trait Describable {
-    fn describe(&self) -> String;
+// Basic definition
+Describable {
+    fun describe(&self);
 }
 
 #[derive(Debug)]
-struct Person {
-    name: String,
-    age: u32,
+Person {
+    name,
+    age,
 }
 
 #[derive(Debug)]
-struct Book {
-    title: String,
-    author: String,
-    pages: u32,
+Book {
+    title,
+    author,
+    pages,
 }
 
-// Implementing trait for different types
-impl Describable for Person {
-    fn describe(&self) -> String {
+// Implementing for different types
+Describable for Person {
+    fun describe(&self) {
         format!("Person: {} is {} years old", self.name, self.age)
     }
 }
 
-impl Describable for Book {
-    fn describe(&self) -> String {
+Describable for Book {
+    fun describe(&self) {
         format!("Book: '{}' by {} ({} pages)", self.title, self.author, self.pages)
     }
 }
@@ -46,29 +46,29 @@ println!("{}", person.describe());
 println!("{}", book.describe());
 
 // Trait with default implementation
-trait Greetings {
-    fn hello(&self) -> String {
+Greetings {
+    fun hello(&self) {
         "Hello!".to_string()
     }
     
-    fn goodbye(&self) -> String {
+    fun goodbye(&self) {
         "Goodbye!".to_string()
     }
     
-    fn name(&self) -> String;
+    fun name(&self);
     
-    fn full_greeting(&self) -> String {
+    fun full_greeting(&self) {
         format!("{} I'm {}. {}", self.hello(), self.name(), self.goodbye())
     }
 }
 
-impl Greetings for Person {
-    fn name(&self) -> String {
+Greetings for Person {
+    fun name(&self) {
         self.name.clone()
     }
     
     // Override default hello
-    fn hello(&self) -> String {
+    fun hello(&self) {
         "Hi there!".to_string()
     }
 }
@@ -76,35 +76,35 @@ impl Greetings for Person {
 println!("{}", person.full_greeting());
 
 // Trait with associated types
-trait Container {
+Container {
     type Item;
     
-    fn add(&mut self, item: Self::Item);
-    fn remove(&mut self) -> Option<Self::Item>;
-    fn len(&self) -> usize;
+    fun add(self, item::Item);
+    fun remove(self);
+    fun len(&self);
 }
 
-struct NumberContainer {
-    numbers: Vec<i32>,
+NumberContainer {
+    numbers,
 }
 
-impl Container for NumberContainer {
+Container for NumberContainer {
     type Item = i32;
     
-    fn add(&mut self, item: Self::Item) {
+    fun add(self, item::Item) {
         self.numbers.push(item);
     }
     
-    fn remove(&mut self) -> Option<Self::Item> {
+    fun remove(self) {
         self.numbers.pop()
     }
     
-    fn len(&self) -> usize {
+    fun len(&self) {
         self.numbers.len()
     }
 }
 
-let mut container = NumberContainer { numbers: Vec::new() };
+let container = NumberContainer { numbers() };
 container.add(1);
 container.add(2);
 container.add(3);
@@ -113,30 +113,30 @@ println!("Container length: {}", container.len());
 println!("Removed: {:?}", container.remove());
 println!("Container length after removal: {}", container.len());
 
-// Multiple trait bounds
-trait Printable {
-    fn print(&self);
+// Multiple bounds
+Printable {
+    fun print(&self);
 }
 
-trait Cloneable {
-    fn clone_me(&self) -> Self;
+Cloneable {
+    fun clone_me(&self) -> Self;
 }
 
-impl Printable for i32 {
-    fn print(&self) {
+Printable for i32 {
+    fun print(&self) {
         println!("Integer: {}", self);
     }
 }
 
-impl Cloneable for i32 {
-    fn clone_me(&self) -> Self {
+Cloneable for i32 {
+    fun clone_me(&self) -> Self {
         *self
     }
 }
 
-fn process_item<T>(item: &T) -> T
+fun process_item(item) -> T
 where
-    T: Printable + Cloneable,
+    T + Cloneable,
 {
     item.print();
     item.clone_me()
@@ -147,22 +147,22 @@ let cloned = process_item(&number);
 println!("Original: {}, Cloned: {}", number, cloned);
 
 // Trait objects (dynamic dispatch)
-fn describe_all(items: &[&dyn Describable]) {
+fun describe_all(items) {
     for item in items {
         println!("{}", item.describe());
     }
 }
 
-let items: &[&dyn Describable] = &[&person, &book];
+let items = [&person, &book];
 describe_all(items);
 
-// Generic trait with constraints
-trait Comparable<T> {
-    fn is_greater_than(&self, other: &T) -> bool;
+// Generic with constraints
+Comparable {
+    fun is_greater_than(&self, other);
 }
 
-impl Comparable<Person> for Person {
-    fn is_greater_than(&self, other: &Person) -> bool {
+Comparable<Person> for Person {
+    fun is_greater_than(&self, other) {
         self.age > other.age
     }
 }
@@ -176,18 +176,18 @@ println!("Alice older than Bob: {}", person1.is_greater_than(&person2));
 use std::ops::Add;
 
 #[derive(Debug, Clone, Copy)]
-struct Point {
-    x: f64,
-    y: f64,
+Point {
+    x,
+    y,
 }
 
-impl Add for Point {
+Add for Point {
     type Output = Point;
     
-    fn add(self, other: Point) -> Point {
+    fun add(self, other) -> Point {
         Point {
-            x: self.x + other.x,
-            y: self.y + other.y,
+            x.x + other.x,
+            y.y + other.y,
         }
     }
 }
@@ -199,12 +199,12 @@ let p3 = p1 + p2;
 println!("Point addition: {:?} + {:?} = {:?}", p1, p2, p3);
 
 // Marker traits
-trait Serializable {}
+Serializable {}
 
-impl Serializable for Person {}
-impl Serializable for Book {}
+Serializable for Person {}
+Serializable for Book {}
 
-fn serialize<T: Serializable>(item: &T) -> String {
+fun serialize<T>(item) {
     "Serialized data".to_string() // Placeholder
 }
 
@@ -212,18 +212,18 @@ println!("Serialized person: {}", serialize(&person));
 println!("Serialized book: {}", serialize(&book));
 
 // Trait with generic methods
-trait Transformer {
-    fn transform<T, F>(&self, value: T, f: F) -> T
+Transformer {
+    fun transform(&self, value, f) -> T
     where
-        F: Fn(T) -> T;
+        F(T) -> T;
 }
 
-struct Processor;
+Processor;
 
-impl Transformer for Processor {
-    fn transform<T, F>(&self, value: T, f: F) -> T
+Transformer for Processor {
+    fun transform(&self, value, f) -> T
     where
-        F: Fn(T) -> T,
+        F(T) -> T,
     {
         f(value)
     }

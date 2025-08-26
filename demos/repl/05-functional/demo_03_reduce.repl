@@ -25,7 +25,7 @@ println("Concatenated: {}", sentence)
 
 // Count occurrences
 let chars = ['a', 'b', 'a', 'c', 'b', 'a']
-let counts = chars.iter().fold(HashMap::new(), |mut acc, &ch| {
+let counts = chars.iter().fold(new(), |mut acc, &ch| {
     *acc.entry(ch).or_insert(0) += 1;
     acc
 })

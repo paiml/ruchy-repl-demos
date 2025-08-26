@@ -1,15 +1,15 @@
 // Advanced pattern matching in Ruchy
 
 #[derive(Debug)]
-enum Color {
+Color {
     Red,
     Green,
     Blue,
     RGB(u8, u8, u8),
-    HSV { h: f32, s: f32, v: f32 },
+    HSV { h, s, v },
 }
 
-// Basic enum pattern matching
+// Basic pattern matching
 let colors = [
     Color::Red,
     Color::RGB(255, 0, 0),
@@ -22,12 +22,12 @@ for color in colors {
         Color::Green => println!("Primary green"),
         Color::Blue => println!("Primary blue"),
         Color::RGB(r, g, b) => println!("RGB color: ({}, {}, {})", r, g, b),
-        Color::HSV { h, s, v } => println!("HSV color: h={}, s={}, v={}", h, s, v),
+        Color::HSV { h, s, v } => println!("HSV color={}, s={}, v={}", h, s, v),
     }
 }
 
 // Pattern matching with guards
-fn classify_number(n: i32) -> String {
+fun classify_number(n) {
     match n {
         x if x < 0 => "Negative".to_string(),
         0 => "Zero".to_string(),
@@ -45,10 +45,10 @@ for num in numbers {
 
 // Destructuring tuples and structs
 #[derive(Debug)]
-struct Point3D {
-    x: f64,
-    y: f64,
-    z: f64,
+Point3D {
+    x,
+    y,
+    z,
 }
 
 let points = [
@@ -68,7 +68,7 @@ for (coord_2d, point_3d) in points {
         ((x, y), Point3D { x: 0.0, y: 0.0, z: 0.0 }) => {
             println!("2D point: ({}, {}), 3D origin", x, y);
         },
-        ((x2d, y2d), Point3D { x: x3d, y: y3d, z: z3d }) => {
+        ((x2d, y2d), Point3D { x, y, z }) => {
             println!("2D: ({}, {}), 3D: ({}, {}, {})", x2d, y2d, x3d, y3d, z3d);
         },
     }
@@ -76,20 +76,20 @@ for (coord_2d, point_3d) in points {
 
 // Nested pattern matching
 #[derive(Debug)]
-enum Shape {
+Shape {
     Circle(f64),
     Rectangle(f64, f64),
     Triangle(f64, f64, f64),
 }
 
 #[derive(Debug)]
-enum Container {
+Container {
     Empty,
     Single(Shape),
     Multiple(Vec<Shape>),
 }
 
-fn analyze_container(container: Container) -> String {
+fun analyze_container(container) {
     match container {
         Container::Empty => "Empty container".to_string(),
         Container::Single(Shape::Circle(r)) if r > 5.0 => {
@@ -126,7 +126,7 @@ for container in containers {
 }
 
 // Pattern matching with Option and Result
-fn process_maybe_number(opt_num: Option<i32>) -> String {
+fun process_maybe_number(opt_num) {
     match opt_num {
         Some(n) if n % 2 == 0 => format!("Even number: {}", n),
         Some(n) if n < 0 => format!("Negative number: {}", n),
@@ -141,7 +141,7 @@ for maybe_num in maybe_numbers {
 }
 
 // Advanced array/slice pattern matching
-fn analyze_sequence(seq: &[i32]) -> String {
+fun analyze_sequence(seq) {
     match seq {
         [] => "Empty sequence".to_string(),
         [x] => format!("Single element: {}", x),
@@ -153,10 +153,10 @@ fn analyze_sequence(seq: &[i32]) -> String {
 }
 
 let sequences = [
-    &[][..],
-    &[42][..],
-    &[1, 2][..],
-    &[1, 2, 3, 4, 5][..],
+    [][..],
+    [42][..],
+    [1, 2][..],
+    [1, 2, 3, 4, 5][..],
 ];
 
 for seq in sequences {

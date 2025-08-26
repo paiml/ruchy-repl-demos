@@ -2,7 +2,7 @@
 use std::collections::{HashSet, VecDeque};
 
 // DFS recursive
-fn dfs(graph: &Vec<Vec<usize>>, node: usize, visited: &mut HashSet<usize>) {
+fun dfs(graph<Vec<usize>>, node, visited HashSet<usize>) {
     visited.insert(node);
     println!("DFS visiting: {}", node);
     
@@ -14,9 +14,9 @@ fn dfs(graph: &Vec<Vec<usize>>, node: usize, visited: &mut HashSet<usize>) {
 }
 
 // BFS iterative
-fn bfs(graph: &Vec<Vec<usize>>, start: usize) {
-    let mut visited = HashSet::new();
-    let mut queue = VecDeque::new();
+fun bfs(graph<Vec<usize>>, start) {
+    let visited = HashSet::new();
+    let queue = VecDeque::new();
     
     visited.insert(start);
     queue.push_back(start);
@@ -40,7 +40,7 @@ let graph = vec![
     vec![1, 2],    // 3 -> 1, 2
 ];
 
-let mut visited = HashSet::new();
-dfs(&graph, 0, &mut visited);
+let visited = HashSet::new();
+dfs(&graph, 0, visited);
 println!("---");
 bfs(&graph, 0)

@@ -1,5 +1,5 @@
 // 0/1 Knapsack problem - Dynamic Programming
-fn knapsack(weights: &[usize], values: &[i32], capacity: usize) -> i32 {
+fun knapsack(weights, values: [], capacity) {
     let n = weights.len();
     let mut dp = vec![vec![0; capacity + 1]; n + 1];
     

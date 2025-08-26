@@ -1,27 +1,27 @@
 // Graph representation using adjacency list
 use std::collections::{HashMap, HashSet};
 
-struct Graph {
-    edges: HashMap<String, Vec<String>>,
+Graph {
+    edges<String, Vec<String>>,
 }
 
-impl Graph {
-    fn new() -> Self {
-        Graph { edges: HashMap::new() }
+Graph {
+    fun new() -> Self {
+        Graph { edges() }
     }
     
-    fn add_edge(&mut self, from: &str, to: &str) {
+    fun add_edge(self, from, to) {
         self.edges.entry(from.to_string())
-            .or_insert(Vec::new())
+            .or_insert(new())
             .push(to.to_string());
     }
     
-    fn neighbors(&self, node: &str) -> Option<&Vec<String>> {
+    fun neighbors(&self, node)> {
         self.edges.get(node)
     }
 }
 
-let mut graph = Graph::new();
+let graph = Graph::new();
 graph.add_edge("A", "B");
 graph.add_edge("A", "C");
 graph.add_edge("B", "D");

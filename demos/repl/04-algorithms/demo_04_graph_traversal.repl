@@ -1,27 +1,27 @@
 // Graph traversal algorithms (BFS and DFS) in Ruchy
 use std::collections::{HashMap, HashSet, VecDeque};
 
-struct Graph {
-    adjacency_list: HashMap<i32, Vec<i32>>
+Graph {
+    adjacency_list<i32, Vec<i32>>
 }
 
-impl Graph {
-    fn new() -> Self {
+Graph {
+    fun new() -> Self {
         Graph {
-            adjacency_list: HashMap::new()
+            adjacency_list()
         }
     }
     
-    fn add_edge(&mut self, from: i32, to: i32) {
-        self.adjacency_list.entry(from).or_insert_with(Vec::new).push(to);
-        self.adjacency_list.entry(to).or_insert_with(Vec::new); // Ensure node exists
+    fun add_edge(self, from, to) {
+        self.adjacency_list.entry(from).or_insert_with(new).push(to);
+        self.adjacency_list.entry(to).or_insert_with(new); // Ensure node exists
     }
     
     // Breadth-First Search
-    fn bfs(&self, start: i32) -> Vec<i32> {
-        let mut visited = HashSet::new();
-        let mut queue = VecDeque::new();
-        let mut result = Vec::new();
+    fun bfs(&self, start) {
+        let visited = HashSet::new();
+        let queue = VecDeque::new();
+        let result = new();
         
         queue.push_back(start);
         visited.insert(start);
@@ -43,14 +43,14 @@ impl Graph {
     }
     
     // Depth-First Search
-    fn dfs(&self, start: i32) -> Vec<i32> {
-        let mut visited = HashSet::new();
-        let mut result = Vec::new();
-        self.dfs_helper(start, &mut visited, &mut result);
+    fun dfs(&self, start) {
+        let visited = HashSet::new();
+        let result = new();
+        self.dfs_helper(start, visited, result);
         result
     }
     
-    fn dfs_helper(&self, node: i32, visited: &mut HashSet<i32>, result: &mut Vec<i32>) {
+    fun dfs_helper(&self, node, visited HashSet<i32>, result Vec<i32>) {
         visited.insert(node);
         result.push(node);
         
@@ -65,7 +65,7 @@ impl Graph {
 }
 
 // Create and test graph
-let mut graph = Graph::new();
+let graph = Graph::new();
 graph.add_edge(0, 1);
 graph.add_edge(0, 2);
 graph.add_edge(1, 3);
