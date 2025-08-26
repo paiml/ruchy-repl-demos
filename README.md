@@ -12,10 +12,10 @@
 ## 🎯 What This Is
 
 A comprehensive suite of **tested and verified** demonstrations for Ruchy:
-- **Test Coverage**: 90%+ with 143 test cases across 46 test suites ✅
+- **Core Test Coverage**: 4 working test files with syntax-validated tests ✅
 - **Complete Dogfooding**: 15 Ruchy tools integrated for self-validation ✅  
-- **Real-World Applications**: Text processing, data analysis, math calculations, algorithms ✅
-- **Quality Guaranteed**: Every example passes TDD verification with zero external deps ✅
+- **Real-World Applications**: Basic arithmetic, functions, arrays, closures ✅
+- **Quality Guaranteed**: Every example passes syntax validation with zero external deps ✅
 
 ## ⚡ Quick Start
 
@@ -41,10 +41,10 @@ make dogfood
 **Test File:** [tests/test_basics.ruchy:6-33](./tests/test_basics.ruchy#L6-L33)
 
 ```ruchy
-# TRY IN REPL - Copy and paste these lines:
-2 + 2        # Returns: 4
-10 * 5       # Returns: 50  
-2 ** 8       # Returns: 256
+// TRY IN REPL - Copy and paste these lines:
+2 + 2        // Returns: 4
+10 * 5       // Returns: 50  
+2 ** 8       // Returns: 256
 ```
 
 **Test Verification:** All values above verified by `assert_equals()` in test suite.
@@ -54,7 +54,7 @@ make dogfood
 **Test File:** [tests/test_functions.ruchy:32-39](./tests/test_functions.ruchy#L32-L39)
 
 ```ruchy
-# TRY IN REPL - Copy and paste these lines:
+// TRY IN REPL - Copy and paste these lines:
 fun factorial(n) {
     if n <= 1 {
         1
@@ -62,8 +62,8 @@ fun factorial(n) {
         n * factorial(n - 1) 
     }
 }
-factorial(5)     # Returns: 120
-factorial(10)    # Returns: 3628800
+factorial(5)     // Returns: 120
+factorial(10)    // Returns: 3628800
 ```
 
 **Test Verification:** Function correctness verified by `assert_equals()` in test suite.
@@ -73,15 +73,15 @@ factorial(10)    # Returns: 3628800
 **Test File:** [tests/test_basics.ruchy:104-122](./tests/test_basics.ruchy#L104-L122)
 
 ```ruchy
-# TRY IN REPL - Array creation and access (VERIFIED):
+// TRY IN REPL - Array creation and access (VERIFIED):
 let arr = [1, 2, 3, 4, 5]
-arr.len()    # Returns: 5
-arr[0]       # Returns: 1
-arr[4]       # Returns: 5
+arr.len()    // Returns: 5
+arr[0]       // Returns: 1
+arr[4]       // Returns: 5
 
-# Array summation (VERIFIED):
+// Array summation (VERIFIED):
 let nums = [1, 2, 3]
-nums.sum()   # Returns: 6
+nums.sum()   // Returns: 6
 ```
 
 **Test Verification:** Basic array operations verified. Advanced methods (push, fold) need further testing.
@@ -91,12 +91,12 @@ nums.sum()   # Returns: 6
 **Test File:** [tests/test_basics.ruchy:120](./tests/test_basics.ruchy#L120)
 
 ```ruchy
-# TRY IN REPL - Simple closures (VERIFIED):
+// TRY IN REPL - Simple closures (VERIFIED):
 let double = |x| x * 2
-double(5)                         # Returns: 10
+double(5)                         // Returns: 10
 
 let add = |x, y| x + y
-add(3, 4)                        # Returns: 7
+add(3, 4)                        // Returns: 7
 ```
 
 **Test Verification:** Basic closure functionality verified. Advanced iterator methods need testing.
@@ -107,12 +107,12 @@ add(3, 4)                        # Returns: 7
 ### Math Calculations ✅  
 **Test Reference:** [Lines 53-54](./tests/test_oneliners.ruchy#L53-L54)
 ```bash
-# TRY THIS - Working factorial one-liner:
+// TRY THIS - Working factorial one-liner:
 ruchy -e 'fun factorial(n) { (1..=n).product() }; factorial(5)'
-# Returns: 120
+// Returns: 120
 
 ruchy -e 'fun factorial(n) { (1..=n).product() }; factorial(10)'  
-# Returns: 3628800
+// Returns: 3628800
 ```
 
 **Test Verification:** Function correctness verified in test suite.
@@ -120,12 +120,12 @@ ruchy -e 'fun factorial(n) { (1..=n).product() }; factorial(10)'
 ### Text Processing ✅  
 **Test Reference:** [Lines 20-31](./tests/test_oneliners.ruchy#L20-L31)
 ```bash
-# TRY IN REPL - String operations:
-"hello".to_uppercase()         # Returns: "HELLO"
-"WORLD".to_lowercase()         # Returns: "world"
-"  hello world  ".trim()       # Returns: "hello world"
+// TRY IN REPL - String operations:
+"hello".to_uppercase()         // Returns: "HELLO"
+"WORLD".to_lowercase()         // Returns: "world"
+"  hello world  ".trim()       // Returns: "hello world"
 
-# One-liner equivalents:
+// One-liner equivalents:
 ruchy -e '"hello".to_uppercase()'
 ruchy -e '"WORLD".to_lowercase()'
 ruchy -e '"  spaced  ".trim()'
@@ -136,13 +136,13 @@ ruchy -e '"  spaced  ".trim()'
 ### Data Analysis ✅  
 **Test Reference:** [Lines 72-100](./tests/test_oneliners.ruchy#L72-L100)
 ```bash
-# TRY IN REPL - Statistical calculations (VERIFIED):
+// TRY IN REPL - Statistical calculations (VERIFIED):
 let nums = [1, 2, 3, 4, 5]
-nums.sum() / nums.len()          # Returns: 3
+nums.sum() / nums.len()          // Returns: 3
 
-# One-liner equivalents:
+// One-liner equivalents:
 ruchy -e 'let nums = [1,2,3,4,5]; nums.sum() / nums.len()'
-# Returns: 3
+// Returns: 3
 ```
 
 **Test Verification:** Basic calculations verified. Float operations need testing.

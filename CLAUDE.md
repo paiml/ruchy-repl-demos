@@ -466,3 +466,4 @@ ${var^^}       # No parameter expansion
 - this project shoudl work with ANY ruchy version, by always testing latest cargo install ruchy
 - this project can ONLY use ruchy tooling for testing and it should attempt to use as many ruchy tools as possible:  ast, provability, lint, format, etc.  Goal is to prove language and dogfood it as well as teach it.
 - all work must be in a roadmap and assigned a ticket and prioritized.  no work can be performed without tickets and updating roadmap after completion.
+- never use comments that are not syntactically correct for ruchy
