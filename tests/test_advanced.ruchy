@@ -1,0 +1,433 @@
+// Test suite for advanced REPL demos
+import { assert, assert_equals, assert_not_equals, assert_gt, assert_lt, describe, it, test_report } from "./test_framework.ruchy"
+
+describe("Pattern Matching", || {
+    it("should handle match expressions", || {
+        fun classify_number(n) {
+            match n {
+                0 => "zero",
+                1 | 2 | 3 => "small",
+                x if x < 10 => "medium",
+                _ => "large"
+            }
+        }
+        
+        assert_equals(classify_number(0), "zero", "Match zero")
+        assert_equals(classify_number(2), "small", "Match small")
+        assert_equals(classify_number(7), "medium", "Match with guard")
+        assert_equals(classify_number(15), "large", "Match wildcard")
+    })
+    
+    it("should destructure tuples in match", || {
+        fun describe_point(point) {
+            match point {
+                (0, 0) => "origin",
+                (x, 0) => "on x-axis",
+                (0, y) => "on y-axis", 
+                (x, y) if x == y => "on diagonal",
+                _ => "general point"
+            }
+        }
+        
+        assert_equals(describe_point((0, 0)), "origin", "Match origin")
+        assert_equals(describe_point((5, 0)), "on x-axis", "X-axis point")
+        assert_equals(describe_point((3, 3)), "on diagonal", "Diagonal point")
+    })
+    
+    it("should match on enum variants", || {
+        // Simulate enum-like structures
+        fun create_result(is_ok, value) {
+            if is_ok {
+                { tag: "Ok", value: value }
+            } else {
+                { tag: "Err", error: value }
+            }
+        }
+        
+        fun handle_result(result) {
+            match result.tag {
+                "Ok" => result.value * 2,
+                "Err" => 0
+            }
+        }
+        
+        let ok_result = create_result(true, 42)
+        let err_result = create_result(false, "error")
+        
+        assert_equals(handle_result(ok_result), 84, "Handle Ok result")
+        assert_equals(handle_result(err_result), 0, "Handle Err result")
+    })
+})
+
+describe("Generics and Type Parameters", || {
+    it("should work with generic functions", || {
+        fun identity<T>(x: T) -> T {
+            x
+        }
+        
+        assert_equals(identity(42), 42, "Generic with int")
+        assert_equals(identity("hello"), "hello", "Generic with string")
+        assert_equals(identity(true), true, "Generic with bool")
+    })
+    
+    it("should handle generic collections", || {
+        fun make_pair<T>(first: T, second: T) -> (T, T) {
+            (first, second)
+        }
+        
+        let int_pair = make_pair(1, 2)
+        let str_pair = make_pair("a", "b")
+        
+        assert_equals(int_pair.0, 1, "Generic tuple first")
+        assert_equals(str_pair.1, "b", "Generic string tuple")
+    })
+    
+    it("should support generic containers", || {
+        fun create_container<T>(value: T) {
+            { data: value, get: || value }
+        }
+        
+        let int_container = create_container(100)
+        let str_container = create_container("test")
+        
+        assert_equals(int_container.data, 100, "Int container")
+        assert_equals(str_container.data, "test", "String container")
+    })
+})
+
+describe("Traits and Interfaces", || {
+    it("should implement trait-like behavior", || {
+        // Simulate trait implementation with function tables
+        fun make_drawable(shape_type, size) {
+            let draw_impl = match shape_type {
+                "circle" => || "Drawing circle of size " + size.to_string(),
+                "square" => || "Drawing square of size " + size.to_string(),
+                _ => || "Unknown shape"
+            }
+            
+            {
+                shape: shape_type,
+                size: size,
+                draw: draw_impl,
+                area: match shape_type {
+                    "circle" => || 3.14159 * size * size,
+                    "square" => || size * size,
+                    _ => || 0.0
+                }
+            }
+        }
+        
+        let circle = make_drawable("circle", 5)
+        let square = make_drawable("square", 4)
+        
+        assert_equals(circle.shape, "circle", "Circle shape")
+        assert_gt(circle.area(), 78.0, "Circle area > 78")
+        assert_equals(square.area(), 16.0, "Square area")
+    })
+    
+    it("should support polymorphism", || {
+        fun make_animal(species, sound) {
+            {
+                species: species,
+                speak: || sound,
+                describe: || species + " says " + sound
+            }
+        }
+        
+        let animals = [
+            make_animal("dog", "woof"),
+            make_animal("cat", "meow"),
+            make_animal("cow", "moo")
+        ]
+        
+        let descriptions = animals.map(|animal| animal.describe()).collect()
+        
+        assert_equals(descriptions.len(), 3, "All animals described")
+        assert_equals(descriptions[0], "dog says woof", "Dog description")
+    })
+})
+
+describe("Advanced Closures", || {
+    it("should capture environment correctly", || {
+        fun make_counter(start) {
+            let mut count = start
+            || {
+                count += 1
+                count
+            }
+        }
+        
+        let counter1 = make_counter(0)
+        let counter2 = make_counter(10)
+        
+        assert_equals(counter1(), 1, "Counter1 first call")
+        assert_equals(counter1(), 2, "Counter1 second call") 
+        assert_equals(counter2(), 11, "Counter2 independent")
+    })
+    
+    it("should handle nested closures", || {
+        fun make_adder(x) {
+            |y| {
+                |z| x + y + z
+            }
+        }
+        
+        let add5 = make_adder(5)
+        let add5and3 = add5(3)
+        let result = add5and3(2)
+        
+        assert_equals(result, 10, "Nested closures: 5+3+2")
+    })
+    
+    it("should support closure composition", || {
+        let add_one = |x| x + 1
+        let double = |x| x * 2
+        let square = |x| x * x
+        
+        // Function composition
+        fun compose(f, g) {
+            |x| f(g(x))
+        }
+        
+        let add_then_double = compose(double, add_one)
+        let square_then_add = compose(add_one, square)
+        
+        assert_equals(add_then_double(3), 8, "Compose: (3+1)*2")
+        assert_equals(square_then_add(3), 10, "Compose: 3²+1")
+    })
+})
+
+describe("Memory Management", || {
+    it("should handle reference counting", || {
+        fun make_shared_data(value) {
+            let mut ref_count = 1
+            {
+                value: value,
+                clone: || {
+                    ref_count += 1
+                    { value: value, refs: ref_count }
+                },
+                get_refs: || ref_count
+            }
+        }
+        
+        let original = make_shared_data("test")
+        let copy1 = original.clone()
+        let copy2 = original.clone()
+        
+        assert_equals(original.get_refs(), 3, "Reference count")
+        assert_equals(copy1.value, "test", "Shared value")
+    })
+    
+    it("should manage borrowed references", || {
+        fun with_borrowed<T>(value: T, f) {
+            // Simulate borrowing by passing reference
+            f(&value)
+        }
+        
+        let data = [1, 2, 3, 4, 5]
+        let sum = with_borrowed(data, |arr| arr.iter().sum())
+        
+        assert_equals(sum, 15, "Borrowed sum")
+        assert_equals(data.len(), 5, "Original unchanged")
+    })
+})
+
+describe("Concurrency Patterns", || {
+    it("should simulate async operations", || {
+        fun make_future(value) {
+            let mut resolved = false
+            let mut result = None
+            
+            {
+                resolve: || {
+                    resolved = true
+                    result = Some(value)
+                },
+                is_ready: || resolved,
+                get: || result.unwrap_or_else(|| panic("Future not ready"))
+            }
+        }
+        
+        let future = make_future(42)
+        assert(!future.is_ready(), "Future initially not ready")
+        
+        future.resolve()
+        assert(future.is_ready(), "Future ready after resolve")
+        assert_equals(future.get(), 42, "Future value")
+    })
+    
+    it("should handle promise-like patterns", || {
+        fun make_promise() {
+            let mut handlers = []
+            let mut resolved = false
+            let mut value = None
+            
+            {
+                then: |handler| {
+                    if resolved {
+                        handler(value.unwrap())
+                    } else {
+                        handlers.push(handler)
+                    }
+                },
+                resolve: |val| {
+                    if !resolved {
+                        resolved = true
+                        value = Some(val)
+                        for handler in handlers {
+                            handler(val)
+                        }
+                        handlers.clear()
+                    }
+                }
+            }
+        }
+        
+        let promise = make_promise()
+        let mut result = None
+        
+        promise.then(|val| { result = Some(val * 2) })
+        promise.resolve(21)
+        
+        assert_equals(result.unwrap(), 42, "Promise resolved")
+    })
+})
+
+describe("Metaprogramming", || {
+    it("should support reflection-like operations", || {
+        fun get_type_info(value) {
+            match value {
+                x if x.is_string() => "string",
+                x if x.is_number() => "number", 
+                x if x.is_boolean() => "boolean",
+                x if x.is_array() => "array",
+                x if x.is_object() => "object",
+                _ => "unknown"
+            }
+        }
+        
+        assert_equals(get_type_info("hello"), "string", "String type")
+        assert_equals(get_type_info(42), "number", "Number type")
+        assert_equals(get_type_info([1, 2]), "array", "Array type")
+    })
+    
+    it("should support code generation", || {
+        fun make_getter(field_name) {
+            // Return a closure that gets the field
+            |obj| obj[field_name]
+        }
+        
+        fun make_setter(field_name) {
+            // Return a closure that sets the field
+            |obj, value| {
+                obj[field_name] = value
+                obj
+            }
+        }
+        
+        let obj = { name: "John", age: 25 }
+        let get_name = make_getter("name")
+        let set_age = make_setter("age")
+        
+        assert_equals(get_name(obj), "John", "Generated getter")
+        
+        let updated = set_age(obj, 26)
+        assert_equals(updated.age, 26, "Generated setter")
+    })
+})
+
+describe("Error Handling", || {
+    it("should handle custom error types", || {
+        fun make_error(type, message) {
+            { 
+                type: type,
+                message: message,
+                is_error: true,
+                to_string: || type + ": " + message
+            }
+        }
+        
+        fun divide_safe(a, b) {
+            if b == 0 {
+                make_error("DivisionByZero", "Cannot divide by zero")
+            } else {
+                a / b
+            }
+        }
+        
+        let result1 = divide_safe(10, 2)
+        let result2 = divide_safe(10, 0)
+        
+        assert_equals(result1, 5, "Valid division")
+        assert(result2.is_error, "Division by zero error")
+        assert_equals(result2.type, "DivisionByZero", "Error type")
+    })
+    
+    it("should chain error handling", || {
+        fun parse_int(s) {
+            // Simplified int parsing
+            if s.chars().all(|c| c.is_digit(10)) {
+                Ok(s.parse())
+            } else {
+                Err("Not a valid integer")
+            }
+        }
+        
+        fun process_number(s) {
+            parse_int(s).map(|n| n * 2)
+        }
+        
+        let result1 = process_number("42")
+        let result2 = process_number("abc")
+        
+        assert(result1.is_ok(), "Valid number processing")
+        assert_equals(result1.unwrap(), 84, "Processed value")
+        assert(result2.is_err(), "Invalid number error")
+    })
+})
+
+describe("Advanced Type System", || {
+    it("should handle phantom types", || {
+        // Phantom types for type safety
+        fun make_typed_id<T>(value: i32) -> TypedId<T> {
+            { id: value, phantom: std::marker::PhantomData }
+        }
+        
+        struct User;
+        struct Product;
+        
+        let user_id = make_typed_id::<User>(123)
+        let product_id = make_typed_id::<Product>(456)
+        
+        assert_equals(user_id.id, 123, "User ID value")
+        assert_equals(product_id.id, 456, "Product ID value")
+        // Type system prevents mixing user_id and product_id
+    })
+    
+    it("should support type erasure", || {
+        fun make_any_container(value) {
+            {
+                value: value,
+                type_name: value.type_name(),
+                get_as: |T| {
+                    if value.type_name() == T::type_name() {
+                        Some(value as T)
+                    } else {
+                        None
+                    }
+                }
+            }
+        }
+        
+        let container = make_any_container(42)
+        assert_equals(container.type_name, "i32", "Stored type")
+        
+        let retrieved = container.get_as::<i32>()
+        assert(retrieved.is_some(), "Type match")
+        assert_equals(retrieved.unwrap(), 42, "Retrieved value")
+    })
+})
+
+// Run the test report
+test_report()

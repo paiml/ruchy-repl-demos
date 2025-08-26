@@ -1,0 +1,4 @@
+=== Quality Score ===
+File: tests/test_functions.ruchy
+Score: 0.85/1.0
+Analysis Depth: standard

@@ -1,0 +1,981 @@
+Expr {
+    kind: Block(
+        [
+            Expr {
+                kind: Import {
+                    path: "",
+                    items: [
+                        Named(
+                            "assert",
+                        ),
+                        Named(
+                            "assert_equals",
+                        ),
+                        Named(
+                            "assert_not_equals",
+                        ),
+                        Named(
+                            "assert_gt",
+                        ),
+                        Named(
+                            "assert_lt",
+                        ),
+                        Named(
+                            "describe",
+                        ),
+                        Named(
+                            "it",
+                        ),
+                        Named(
+                            "test_report",
+                        ),
+                    ],
+                },
+                span: Span {
+                    start: 0,
+                    end: 6,
+                },
+                attributes: [],
+            },
+            Expr {
+                kind: Identifier(
+                    "from",
+                ),
+                span: Span {
+                    start: 101,
+                    end: 105,
+                },
+                attributes: [],
+            },
+            Expr {
+                kind: Literal(
+                    String(
+                        "./test_framework.ruchy",
+                    ),
+                ),
+                span: Span {
+                    start: 106,
+                    end: 130,
+                },
+                attributes: [],
+            },
+            Expr {
+                kind: Call {
+                    func: Expr {
+                        kind: Identifier(
+                            "describe",
+                        ),
+                        span: Span {
+                            start: 132,
+                            end: 140,
+                        },
+                        attributes: [],
+                    },
+                    args: [
+                        Expr {
+                            kind: Literal(
+                                String(
+                                    "Test Framework Self-Test",
+                                ),
+                            ),
+                            span: Span {
+                                start: 141,
+                                end: 167,
+                            },
+                            attributes: [],
+                        },
+                        Expr {
+                            kind: Lambda {
+                                params: [],
+                                body: Expr {
+                                    kind: Block(
+                                        [
+                                            Expr {
+                                                kind: Call {
+                                                    func: Expr {
+                                                        kind: Identifier(
+                                                            "it",
+                                                        ),
+                                                        span: Span {
+                                                            start: 178,
+                                                            end: 180,
+                                                        },
+                                                        attributes: [],
+                                                    },
+                                                    args: [
+                                                        Expr {
+                                                            kind: Literal(
+                                                                String(
+                                                                    "should assert true conditions",
+                                                                ),
+                                                            ),
+                                                            span: Span {
+                                                                start: 181,
+                                                                end: 212,
+                                                            },
+                                                            attributes: [],
+                                                        },
+                                                        Expr {
+                                                            kind: Lambda {
+                                                                params: [],
+                                                                body: Expr {
+                                                                    kind: Block(
+                                                                        [
+                                                                            Expr {
+                                                                                kind: Call {
+                                                                                    func: Expr {
+                                                                                        kind: Identifier(
+                                                                                            "assert",
+                                                                                        ),
+                                                                                        span: Span {
+                                                                                            start: 227,
+                                                                                            end: 233,
+                                                                                        },
+                                                                                        attributes: [],
+                                                                                    },
+                                                                                    args: [
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Bool(
+                                                                                                    true,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 234,
+                                                                                                end: 238,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "True should pass",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 240,
+                                                                                                end: 258,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                                span: Span {
+                                                                                    start: 0,
+                                                                                    end: 0,
+                                                                                },
+                                                                                attributes: [],
+                                                                            },
+                                                                            Expr {
+                                                                                kind: Call {
+                                                                                    func: Expr {
+                                                                                        kind: Identifier(
+                                                                                            "assert",
+                                                                                        ),
+                                                                                        span: Span {
+                                                                                            start: 268,
+                                                                                            end: 274,
+                                                                                        },
+                                                                                        attributes: [],
+                                                                                    },
+                                                                                    args: [
+                                                                                        Expr {
+                                                                                            kind: Binary {
+                                                                                                left: Expr {
+                                                                                                    kind: Literal(
+                                                                                                        Integer(
+                                                                                                            1,
+                                                                                                        ),
+                                                                                                    ),
+                                                                                                    span: Span {
+                                                                                                        start: 275,
+                                                                                                        end: 276,
+                                                                                                    },
+                                                                                                    attributes: [],
+                                                                                                },
+                                                                                                op: Equal,
+                                                                                                right: Expr {
+                                                                                                    kind: Literal(
+                                                                                                        Integer(
+                                                                                                            1,
+                                                                                                        ),
+                                                                                                    ),
+                                                                                                    span: Span {
+                                                                                                        start: 280,
+                                                                                                        end: 281,
+                                                                                                    },
+                                                                                                    attributes: [],
+                                                                                                },
+                                                                                            },
+                                                                                            span: Span {
+                                                                                                start: 0,
+                                                                                                end: 0,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "Equality should pass",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 283,
+                                                                                                end: 305,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                                span: Span {
+                                                                                    start: 0,
+                                                                                    end: 0,
+                                                                                },
+                                                                                attributes: [],
+                                                                            },
+                                                                        ],
+                                                                    ),
+                                                                    span: Span {
+                                                                        start: 217,
+                                                                        end: 218,
+                                                                    },
+                                                                    attributes: [],
+                                                                },
+                                                            },
+                                                            span: Span {
+                                                                start: 214,
+                                                                end: 216,
+                                                            },
+                                                            attributes: [],
+                                                        },
+                                                    ],
+                                                },
+                                                span: Span {
+                                                    start: 0,
+                                                    end: 0,
+                                                },
+                                                attributes: [],
+                                            },
+                                            Expr {
+                                                kind: Call {
+                                                    func: Expr {
+                                                        kind: Identifier(
+                                                            "it",
+                                                        ),
+                                                        span: Span {
+                                                            start: 323,
+                                                            end: 325,
+                                                        },
+                                                        attributes: [],
+                                                    },
+                                                    args: [
+                                                        Expr {
+                                                            kind: Literal(
+                                                                String(
+                                                                    "should assert_equals correctly",
+                                                                ),
+                                                            ),
+                                                            span: Span {
+                                                                start: 326,
+                                                                end: 358,
+                                                            },
+                                                            attributes: [],
+                                                        },
+                                                        Expr {
+                                                            kind: Lambda {
+                                                                params: [],
+                                                                body: Expr {
+                                                                    kind: Block(
+                                                                        [
+                                                                            Expr {
+                                                                                kind: Call {
+                                                                                    func: Expr {
+                                                                                        kind: Identifier(
+                                                                                            "assert_equals",
+                                                                                        ),
+                                                                                        span: Span {
+                                                                                            start: 373,
+                                                                                            end: 386,
+                                                                                        },
+                                                                                        attributes: [],
+                                                                                    },
+                                                                                    args: [
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    5,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 387,
+                                                                                                end: 388,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    5,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 390,
+                                                                                                end: 391,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "5 equals 5",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 393,
+                                                                                                end: 405,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                                span: Span {
+                                                                                    start: 0,
+                                                                                    end: 0,
+                                                                                },
+                                                                                attributes: [],
+                                                                            },
+                                                                            Expr {
+                                                                                kind: Call {
+                                                                                    func: Expr {
+                                                                                        kind: Identifier(
+                                                                                            "assert_equals",
+                                                                                        ),
+                                                                                        span: Span {
+                                                                                            start: 415,
+                                                                                            end: 428,
+                                                                                        },
+                                                                                        attributes: [],
+                                                                                    },
+                                                                                    args: [
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "hello",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 429,
+                                                                                                end: 436,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "hello",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 438,
+                                                                                                end: 445,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "String equality",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 447,
+                                                                                                end: 464,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                                span: Span {
+                                                                                    start: 0,
+                                                                                    end: 0,
+                                                                                },
+                                                                                attributes: [],
+                                                                            },
+                                                                        ],
+                                                                    ),
+                                                                    span: Span {
+                                                                        start: 363,
+                                                                        end: 364,
+                                                                    },
+                                                                    attributes: [],
+                                                                },
+                                                            },
+                                                            span: Span {
+                                                                start: 360,
+                                                                end: 362,
+                                                            },
+                                                            attributes: [],
+                                                        },
+                                                    ],
+                                                },
+                                                span: Span {
+                                                    start: 0,
+                                                    end: 0,
+                                                },
+                                                attributes: [],
+                                            },
+                                            Expr {
+                                                kind: Call {
+                                                    func: Expr {
+                                                        kind: Identifier(
+                                                            "it",
+                                                        ),
+                                                        span: Span {
+                                                            start: 482,
+                                                            end: 484,
+                                                        },
+                                                        attributes: [],
+                                                    },
+                                                    args: [
+                                                        Expr {
+                                                            kind: Literal(
+                                                                String(
+                                                                    "should assert_not_equals correctly",
+                                                                ),
+                                                            ),
+                                                            span: Span {
+                                                                start: 485,
+                                                                end: 521,
+                                                            },
+                                                            attributes: [],
+                                                        },
+                                                        Expr {
+                                                            kind: Lambda {
+                                                                params: [],
+                                                                body: Expr {
+                                                                    kind: Block(
+                                                                        [
+                                                                            Expr {
+                                                                                kind: Call {
+                                                                                    func: Expr {
+                                                                                        kind: Identifier(
+                                                                                            "assert_not_equals",
+                                                                                        ),
+                                                                                        span: Span {
+                                                                                            start: 536,
+                                                                                            end: 553,
+                                                                                        },
+                                                                                        attributes: [],
+                                                                                    },
+                                                                                    args: [
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    5,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 554,
+                                                                                                end: 555,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    10,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 557,
+                                                                                                end: 559,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "5 not equals 10",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 561,
+                                                                                                end: 578,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                                span: Span {
+                                                                                    start: 0,
+                                                                                    end: 0,
+                                                                                },
+                                                                                attributes: [],
+                                                                            },
+                                                                            Expr {
+                                                                                kind: Call {
+                                                                                    func: Expr {
+                                                                                        kind: Identifier(
+                                                                                            "assert_not_equals",
+                                                                                        ),
+                                                                                        span: Span {
+                                                                                            start: 588,
+                                                                                            end: 605,
+                                                                                        },
+                                                                                        attributes: [],
+                                                                                    },
+                                                                                    args: [
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "hello",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 606,
+                                                                                                end: 613,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "world",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 615,
+                                                                                                end: 622,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "String inequality",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 624,
+                                                                                                end: 643,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                                span: Span {
+                                                                                    start: 0,
+                                                                                    end: 0,
+                                                                                },
+                                                                                attributes: [],
+                                                                            },
+                                                                        ],
+                                                                    ),
+                                                                    span: Span {
+                                                                        start: 526,
+                                                                        end: 527,
+                                                                    },
+                                                                    attributes: [],
+                                                                },
+                                                            },
+                                                            span: Span {
+                                                                start: 523,
+                                                                end: 525,
+                                                            },
+                                                            attributes: [],
+                                                        },
+                                                    ],
+                                                },
+                                                span: Span {
+                                                    start: 0,
+                                                    end: 0,
+                                                },
+                                                attributes: [],
+                                            },
+                                            Expr {
+                                                kind: Call {
+                                                    func: Expr {
+                                                        kind: Identifier(
+                                                            "it",
+                                                        ),
+                                                        span: Span {
+                                                            start: 661,
+                                                            end: 663,
+                                                        },
+                                                        attributes: [],
+                                                    },
+                                                    args: [
+                                                        Expr {
+                                                            kind: Literal(
+                                                                String(
+                                                                    "should assert_gt correctly",
+                                                                ),
+                                                            ),
+                                                            span: Span {
+                                                                start: 664,
+                                                                end: 692,
+                                                            },
+                                                            attributes: [],
+                                                        },
+                                                        Expr {
+                                                            kind: Lambda {
+                                                                params: [],
+                                                                body: Expr {
+                                                                    kind: Block(
+                                                                        [
+                                                                            Expr {
+                                                                                kind: Call {
+                                                                                    func: Expr {
+                                                                                        kind: Identifier(
+                                                                                            "assert_gt",
+                                                                                        ),
+                                                                                        span: Span {
+                                                                                            start: 707,
+                                                                                            end: 716,
+                                                                                        },
+                                                                                        attributes: [],
+                                                                                    },
+                                                                                    args: [
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    10,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 717,
+                                                                                                end: 719,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    5,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 721,
+                                                                                                end: 722,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "10 > 5",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 724,
+                                                                                                end: 732,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                                span: Span {
+                                                                                    start: 0,
+                                                                                    end: 0,
+                                                                                },
+                                                                                attributes: [],
+                                                                            },
+                                                                            Expr {
+                                                                                kind: Call {
+                                                                                    func: Expr {
+                                                                                        kind: Identifier(
+                                                                                            "assert_gt",
+                                                                                        ),
+                                                                                        span: Span {
+                                                                                            start: 742,
+                                                                                            end: 751,
+                                                                                        },
+                                                                                        attributes: [],
+                                                                                    },
+                                                                                    args: [
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    100,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 752,
+                                                                                                end: 755,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    99,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 757,
+                                                                                                end: 759,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "100 > 99",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 761,
+                                                                                                end: 771,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                                span: Span {
+                                                                                    start: 0,
+                                                                                    end: 0,
+                                                                                },
+                                                                                attributes: [],
+                                                                            },
+                                                                        ],
+                                                                    ),
+                                                                    span: Span {
+                                                                        start: 697,
+                                                                        end: 698,
+                                                                    },
+                                                                    attributes: [],
+                                                                },
+                                                            },
+                                                            span: Span {
+                                                                start: 694,
+                                                                end: 696,
+                                                            },
+                                                            attributes: [],
+                                                        },
+                                                    ],
+                                                },
+                                                span: Span {
+                                                    start: 0,
+                                                    end: 0,
+                                                },
+                                                attributes: [],
+                                            },
+                                            Expr {
+                                                kind: Call {
+                                                    func: Expr {
+                                                        kind: Identifier(
+                                                            "it",
+                                                        ),
+                                                        span: Span {
+                                                            start: 789,
+                                                            end: 791,
+                                                        },
+                                                        attributes: [],
+                                                    },
+                                                    args: [
+                                                        Expr {
+                                                            kind: Literal(
+                                                                String(
+                                                                    "should assert_lt correctly",
+                                                                ),
+                                                            ),
+                                                            span: Span {
+                                                                start: 792,
+                                                                end: 820,
+                                                            },
+                                                            attributes: [],
+                                                        },
+                                                        Expr {
+                                                            kind: Lambda {
+                                                                params: [],
+                                                                body: Expr {
+                                                                    kind: Block(
+                                                                        [
+                                                                            Expr {
+                                                                                kind: Call {
+                                                                                    func: Expr {
+                                                                                        kind: Identifier(
+                                                                                            "assert_lt",
+                                                                                        ),
+                                                                                        span: Span {
+                                                                                            start: 835,
+                                                                                            end: 844,
+                                                                                        },
+                                                                                        attributes: [],
+                                                                                    },
+                                                                                    args: [
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    5,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 845,
+                                                                                                end: 846,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    10,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 848,
+                                                                                                end: 850,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "5 < 10",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 852,
+                                                                                                end: 860,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                                span: Span {
+                                                                                    start: 0,
+                                                                                    end: 0,
+                                                                                },
+                                                                                attributes: [],
+                                                                            },
+                                                                            Expr {
+                                                                                kind: Call {
+                                                                                    func: Expr {
+                                                                                        kind: Identifier(
+                                                                                            "assert_lt",
+                                                                                        ),
+                                                                                        span: Span {
+                                                                                            start: 870,
+                                                                                            end: 879,
+                                                                                        },
+                                                                                        attributes: [],
+                                                                                    },
+                                                                                    args: [
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    99,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 880,
+                                                                                                end: 882,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                Integer(
+                                                                                                    100,
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 884,
+                                                                                                end: 887,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                        Expr {
+                                                                                            kind: Literal(
+                                                                                                String(
+                                                                                                    "99 < 100",
+                                                                                                ),
+                                                                                            ),
+                                                                                            span: Span {
+                                                                                                start: 889,
+                                                                                                end: 899,
+                                                                                            },
+                                                                                            attributes: [],
+                                                                                        },
+                                                                                    ],
+                                                                                },
+                                                                                span: Span {
+                                                                                    start: 0,
+                                                                                    end: 0,
+                                                                                },
+                                                                                attributes: [],
+                                                                            },
+                                                                        ],
+                                                                    ),
+                                                                    span: Span {
+                                                                        start: 825,
+                                                                        end: 826,
+                                                                    },
+                                                                    attributes: [],
+                                                                },
+                                                            },
+                                                            span: Span {
+                                                                start: 822,
+                                                                end: 824,
+                                                            },
+                                                            attributes: [],
+                                                        },
+                                                    ],
+                                                },
+                                                span: Span {
+                                                    start: 0,
+                                                    end: 0,
+                                                },
+                                                attributes: [],
+                                            },
+                                        ],
+                                    ),
+                                    span: Span {
+                                        start: 172,
+                                        end: 173,
+                                    },
+                                    attributes: [],
+                                },
+                            },
+                            span: Span {
+                                start: 169,
+                                end: 171,
+                            },
+                            attributes: [],
+                        },
+                    ],
+                },
+                span: Span {
+                    start: 0,
+                    end: 0,
+                },
+                attributes: [],
+            },
+            Expr {
+                kind: Call {
+                    func: Expr {
+                        kind: Identifier(
+                            "test_report",
+                        ),
+                        span: Span {
+                            start: 912,
+                            end: 923,
+                        },
+                        attributes: [],
+                    },
+                    args: [],
+                },
+                span: Span {
+                    start: 0,
+                    end: 0,
+                },
+                attributes: [],
+            },
+        ],
+    ),
+    span: Span {
+        start: 0,
+        end: 0,
+    },
+    attributes: [],
+}

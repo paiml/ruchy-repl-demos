@@ -1,0 +1,539 @@
+// Test suite for functional programming REPL demos
+import { assert, assert_equals, assert_gt, describe, it, test_report } from "./test_framework.ruchy"
+
+describe("Higher-Order Functions", || {
+    it("should use map transformation", || {
+        let numbers = [1, 2, 3, 4, 5]
+        let doubled = numbers.map(|x| x * 2)
+        let expected = [2, 4, 6, 8, 10]
+        
+        assert_equals(doubled, expected, "Map doubles numbers")
+        
+        let strings = ["hello", "world", "ruchy"]
+        let lengths = strings.map(|s| s.len())
+        
+        assert_equals(lengths, [5, 5, 5], "Map string lengths")
+    })
+    
+    it("should filter collections", || {
+        let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        let evens = numbers.filter(|x| x % 2 == 0)
+        let odds = numbers.filter(|x| x % 2 == 1)
+        
+        assert_equals(evens, [2, 4, 6, 8, 10], "Filter even numbers")
+        assert_equals(odds, [1, 3, 5, 7, 9], "Filter odd numbers")
+        
+        let words = ["apple", "banana", "cherry", "date"]
+        let long_words = words.filter(|w| w.len() > 5)
+        
+        assert_equals(long_words, ["banana", "cherry"], "Filter long words")
+    })
+    
+    it("should reduce/fold collections", || {
+        let numbers = [1, 2, 3, 4, 5]
+        
+        let sum = numbers.reduce(|acc, x| acc + x).unwrap()
+        assert_equals(sum, 15, "Reduce sum")
+        
+        let product = numbers.fold(1, |acc, x| acc * x)
+        assert_equals(product, 120, "Fold product")
+        
+        let max = numbers.reduce(|acc, x| if x > acc { x } else { acc }).unwrap()
+        assert_equals(max, 5, "Reduce max")
+    })
+    
+    it("should chain multiple operations", || {
+        let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        
+        // Sum of squares of even numbers
+        let result = numbers
+            .filter(|x| x % 2 == 0)
+            .map(|x| x * x)
+            .fold(0, |acc, x| acc + x)
+        
+        // Evens: [2, 4, 6, 8, 10]
+        // Squares: [4, 16, 36, 64, 100]
+        // Sum: 220
+        assert_equals(result, 220, "Chained operations")
+    })
+})
+
+describe("Function Composition", || {
+    it("should compose functions", || {
+        let add_one = |x| x + 1
+        let double = |x| x * 2
+        let square = |x| x * x
+        
+        // Manual composition
+        let add_then_double = |x| double(add_one(x))
+        assert_equals(add_then_double(3), 8, "Manual composition")
+        
+        // Generic composition function
+        fun compose<A, B, C>(f: B -> C, g: A -> B) -> A -> C {
+            |x| f(g(x))
+        }
+        
+        let double_then_square = compose(square, double)
+        assert_equals(double_then_square(3), 36, "Composed: (3*2)² = 36")
+    })
+    
+    it("should create pipelines", || {
+        // Pipe operator simulation
+        fun pipe<A, B>(value: A, f: A -> B) -> B {
+            f(value)
+        }
+        
+        let result = pipe(5, |x| x + 1)
+            |> pipe(|x| x * 2)
+            |> pipe(|x| x * x)
+        
+        // 5 -> 6 -> 12 -> 144
+        assert_equals(result, 144, "Pipeline transformation")
+        
+        // String processing pipeline
+        let text = "  Hello World  "
+        let processed = text
+            .trim()
+            .to_lowercase()
+            .replace(" ", "_")
+        
+        assert_equals(processed, "hello_world", "String pipeline")
+    })
+    
+    it("should curry functions", || {
+        fun add(x, y) { x + y }
+        
+        // Manual currying
+        fun curry_add(x) {
+            |y| add(x, y)
+        }
+        
+        let add5 = curry_add(5)
+        assert_equals(add5(10), 15, "Curried addition")
+        
+        // Generic curry for 2-arg functions
+        fun curry2<A, B, C>(f: (A, B) -> C) -> A -> B -> C {
+            |x| |y| f(x, y)
+        }
+        
+        let curried_mul = curry2(|x, y| x * y)
+        let times3 = curried_mul(3)
+        assert_equals(times3(7), 21, "Generic curry")
+    })
+    
+    it("should partial application", || {
+        fun multiply(x, y, z) { x * y * z }
+        
+        // Partial application
+        fun partial3_1<A, B, C, D>(f: (A, B, C) -> D, arg1: A) -> (B, C) -> D {
+            |b, c| f(arg1, b, c)
+        }
+        
+        let mul_by_2 = partial3_1(multiply, 2)
+        assert_equals(mul_by_2(3, 4), 24, "Partial application: 2*3*4")
+        
+        // Another partial
+        fun partial3_2<A, B, C, D>(f: (A, B, C) -> D, arg1: A, arg2: B) -> C -> D {
+            |c| f(arg1, arg2, c)
+        }
+        
+        let mul_2_by_5 = partial3_2(multiply, 2, 5)
+        assert_equals(mul_2_by_5(3), 30, "Two-arg partial: 2*5*3")
+    })
+})
+
+describe("Monads and Functors", || {
+    it("should implement Maybe/Option monad", || {
+        // Maybe monad implementation
+        fun make_maybe(value) {
+            {
+                value: value,
+                is_some: || value != None,
+                is_none: || value == None,
+                
+                map: |f| {
+                    if value != None { make_maybe(f(value)) }
+                    else { make_maybe(None) }
+                },
+                
+                flat_map: |f| {
+                    if value != None { f(value) }
+                    else { make_maybe(None) }
+                },
+                
+                unwrap_or: |default| {
+                    if value != None { value } else { default }
+                }
+            }
+        }
+        
+        let some_val = make_maybe(42)
+        let none_val = make_maybe(None)
+        
+        let doubled = some_val.map(|x| x * 2)
+        assert_equals(doubled.value, 84, "Maybe map some")
+        
+        let none_doubled = none_val.map(|x| x * 2)
+        assert(none_doubled.is_none(), "Maybe map none")
+        
+        assert_equals(some_val.unwrap_or(0), 42, "Unwrap some")
+        assert_equals(none_val.unwrap_or(0), 0, "Unwrap none")
+    })
+    
+    it("should chain Maybe operations", || {
+        fun safe_divide(x, y) {
+            if y == 0 { make_maybe(None) }
+            else { make_maybe(x / y) }
+        }
+        
+        fun safe_sqrt(x) {
+            if x < 0 { make_maybe(None) }
+            else { make_maybe(x.sqrt()) }
+        }
+        
+        let result1 = make_maybe(16)
+            .flat_map(|x| safe_divide(x, 4))
+            .flat_map(|x| safe_sqrt(x))
+        
+        assert(result1.is_some(), "Successful chain")
+        assert_equals(result1.value, 2.0, "Chain result: sqrt(16/4) = 2")
+        
+        let result2 = make_maybe(16)
+            .flat_map(|x| safe_divide(x, 0))  // Fails here
+            .flat_map(|x| safe_sqrt(x))
+        
+        assert(result2.is_none(), "Failed chain")
+    })
+    
+    it("should implement List functor", || {
+        // List functor operations
+        fun list_map(list, f) {
+            list.map(f).collect()
+        }
+        
+        fun list_flat_map(list, f) {
+            list.map(f).flatten().collect()
+        }
+        
+        let numbers = [1, 2, 3, 4]
+        
+        // Map over list
+        let doubled = list_map(numbers, |x| x * 2)
+        assert_equals(doubled, [2, 4, 6, 8], "List map")
+        
+        // Flat map
+        let pairs = list_flat_map(numbers, |x| [x, -x])
+        assert_equals(pairs, [1, -1, 2, -2, 3, -3, 4, -4], "List flat map")
+    })
+})
+
+describe("Lazy Evaluation", || {
+    it("should implement lazy sequences", || {
+        fun make_lazy_range(start, end) {
+            let mut current = start
+            {
+                next: || {
+                    if current <= end {
+                        let value = current
+                        current += 1
+                        Some(value)
+                    } else {
+                        None
+                    }
+                },
+                
+                map: |f| make_lazy_map(self, f),
+                
+                filter: |predicate| make_lazy_filter(self, predicate),
+                
+                take: |n| make_lazy_take(self, n),
+                
+                collect: || {
+                    let mut result = []
+                    while let Some(value) = self.next() {
+                        result.push(value)
+                    }
+                    result
+                }
+            }
+        }
+        
+        let lazy_range = make_lazy_range(1, 5)
+        let collected = lazy_range.collect()
+        
+        assert_equals(collected, [1, 2, 3, 4, 5], "Lazy range")
+    })
+    
+    it("should chain lazy operations", || {
+        fun fibonacci_lazy() {
+            let mut a = 0
+            let mut b = 1
+            
+            {
+                next: || {
+                    let current = a
+                    let next_a = b
+                    let next_b = a + b
+                    a = next_a
+                    b = next_b
+                    Some(current)
+                },
+                
+                take: |n| {
+                    let mut count = 0
+                    {
+                        next: || {
+                            if count < n {
+                                count += 1
+                                self.next()
+                            } else {
+                                None
+                            }
+                        }
+                    }
+                },
+                
+                collect: || {
+                    let mut result = []
+                    while let Some(value) = self.next() {
+                        result.push(value)
+                    }
+                    result
+                }
+            }
+        }
+        
+        let fib_10 = fibonacci_lazy().take(10).collect()
+        let expected = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+        
+        assert_equals(fib_10, expected, "Lazy fibonacci")
+    })
+})
+
+describe("Immutable Data Structures", || {
+    it("should implement persistent list", || {
+        // Simple persistent list (cons list)
+        fun cons(head, tail) {
+            { head: head, tail: tail, is_cons: true }
+        }
+        
+        let empty_list = None
+        
+        fun list_prepend(list, item) {
+            cons(item, list)
+        }
+        
+        fun list_length(list) {
+            if list == None { 0 }
+            else { 1 + list_length(list.tail) }
+        }
+        
+        fun list_map(list, f) {
+            if list == None { None }
+            else { cons(f(list.head), list_map(list.tail, f)) }
+        }
+        
+        let list1 = list_prepend(empty_list, 1)
+        let list2 = list_prepend(list1, 2)
+        let list3 = list_prepend(list2, 3)
+        
+        assert_equals(list_length(list3), 3, "Persistent list length")
+        
+        let doubled_list = list_map(list3, |x| x * 2)
+        assert_equals(doubled_list.head, 6, "Persistent list map")
+        
+        // Original list unchanged
+        assert_equals(list3.head, 3, "Original unchanged")
+    })
+    
+    it("should implement immutable updates", || {
+        fun update_field(obj, field, value) {
+            let mut new_obj = obj.clone()
+            new_obj[field] = value
+            new_obj
+        }
+        
+        let person = { name: "Alice", age: 30, city: "NYC" }
+        let older_person = update_field(person, "age", 31)
+        let moved_person = update_field(older_person, "city", "LA")
+        
+        assert_equals(person.age, 30, "Original unchanged")
+        assert_equals(older_person.age, 31, "Age updated")
+        assert_equals(moved_person.city, "LA", "City updated")
+        assert_equals(moved_person.age, 31, "Age preserved")
+    })
+})
+
+describe("Functional Error Handling", || {
+    it("should use Result type for error handling", || {
+        fun make_result(is_ok, value) {
+            if is_ok {
+                {
+                    is_ok: true,
+                    is_err: false,
+                    value: value,
+                    
+                    map: |f| make_result(true, f(value)),
+                    
+                    flat_map: |f| f(value),
+                    
+                    unwrap_or: |default| value
+                }
+            } else {
+                {
+                    is_ok: false,
+                    is_err: true,
+                    error: value,
+                    
+                    map: |f| self,  // Short-circuit on error
+                    
+                    flat_map: |f| self,
+                    
+                    unwrap_or: |default| default
+                }
+            }
+        }
+        
+        let ok_result = make_result(true, 42)
+        let err_result = make_result(false, "error")
+        
+        let doubled = ok_result.map(|x| x * 2)
+        assert_equals(doubled.value, 84, "Result map success")
+        
+        let err_doubled = err_result.map(|x| x * 2)
+        assert(err_doubled.is_err, "Result map error unchanged")
+    })
+    
+    it("should chain Result operations", || {
+        fun safe_parse_int(s) {
+            // Simplified parsing
+            if s == "42" { make_result(true, 42) }
+            else if s == "0" { make_result(true, 0) }
+            else { make_result(false, "Parse error") }
+        }
+        
+        fun safe_divide_by_2(n) {
+            if n % 2 == 0 { make_result(true, n / 2) }
+            else { make_result(false, "Not divisible by 2") }
+        }
+        
+        let result1 = safe_parse_int("42")
+            .flat_map(|n| safe_divide_by_2(n))
+        
+        assert(result1.is_ok, "Successful chain")
+        assert_equals(result1.value, 21, "Chain result: 42/2 = 21")
+        
+        let result2 = safe_parse_int("abc")
+            .flat_map(|n| safe_divide_by_2(n))
+        
+        assert(result2.is_err, "Failed chain")
+        assert_equals(result2.error, "Parse error", "Error preserved")
+    })
+})
+
+describe("Function Memoization", || {
+    it("should memoize expensive functions", || {
+        fun make_memoized(f) {
+            let mut cache = HashMap::new()
+            
+            |x| {
+                if cache.contains_key(x) {
+                    cache[x]
+                } else {
+                    let result = f(x)
+                    cache.insert(x, result)
+                    result
+                }
+            }
+        }
+        
+        let mut call_count = 0
+        let expensive_fn = |x| {
+            call_count += 1
+            x * x
+        }
+        
+        let memoized = make_memoized(expensive_fn)
+        
+        assert_equals(memoized(5), 25, "First call")
+        assert_equals(call_count, 1, "Function called once")
+        
+        assert_equals(memoized(5), 25, "Second call")
+        assert_equals(call_count, 1, "Function not called again")
+        
+        assert_equals(memoized(3), 9, "Different input")
+        assert_equals(call_count, 2, "Function called for new input")
+    })
+    
+    it("should memoize recursive functions", || {
+        fun make_memoized_fib() {
+            let mut cache = HashMap::new()
+            
+            fun fib_inner(n) {
+                if cache.contains_key(n) {
+                    return cache[n]
+                }
+                
+                let result = if n <= 1 { n }
+                else { fib_inner(n - 1) + fib_inner(n - 2) }
+                
+                cache.insert(n, result)
+                result
+            }
+            
+            fib_inner
+        }
+        
+        let memo_fib = make_memoized_fib()
+        
+        assert_equals(memo_fib(10), 55, "10th fibonacci")
+        assert_equals(memo_fib(15), 610, "15th fibonacci")
+        
+        // Should be fast for previously computed values
+        assert_equals(memo_fib(10), 55, "Cached result")
+    })
+})
+
+describe("Transducers", || {
+    it("should implement transducers pattern", || {
+        // Transducer: a composable transformation
+        fun map_transducer(f) {
+            |reducing_fn| {
+                |acc, input| reducing_fn(acc, f(input))
+            }
+        }
+        
+        fun filter_transducer(predicate) {
+            |reducing_fn| {
+                |acc, input| {
+                    if predicate(input) {
+                        reducing_fn(acc, input)
+                    } else {
+                        acc
+                    }
+                }
+            }
+        }
+        
+        fun compose_transducers(t1, t2) {
+            |reducing_fn| t1(t2(reducing_fn))
+        }
+        
+        // Use transducers
+        let double_evens = compose_transducers(
+            filter_transducer(|x| x % 2 == 0),
+            map_transducer(|x| x * 2)
+        )
+        
+        let push_reducer = |acc, x| { acc.push(x); acc }
+        let transform = double_evens(push_reducer)
+        
+        let input = [1, 2, 3, 4, 5, 6]
+        let result = input.reduce(transform, [])
+        
+        assert_equals(result, [4, 8, 12], "Transducer composition")
+    })
+})
+
+// Run the test report
+test_report()
