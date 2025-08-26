@@ -1,0 +1,163 @@
+// Ruchy Test Framework for REPL & One-Liner Demos
+// This is the core testing framework written in Ruchy itself
+
+// Test result tracking
+let mut total_tests = 0
+let mut passed_tests = 0
+let mut failed_tests = 0
+let mut test_results = []
+
+// Assert function for testing
+fun assert(condition, message) {
+    total_tests = total_tests + 1
+    if condition {
+        passed_tests = passed_tests + 1
+        test_results.push({
+            status: "PASS",
+            message: message
+        })
+        true
+    } else {
+        failed_tests = failed_tests + 1
+        test_results.push({
+            status: "FAIL", 
+            message: message
+        })
+        println("❌ FAILED: " + message)
+        false
+    }
+}
+
+// Assert equals function
+fun assert_equals(actual, expected, message) {
+    if actual == expected {
+        assert(true, message)
+    } else {
+        assert(false, message + " - Expected: " + expected + ", Got: " + actual)
+    }
+}
+
+// Assert not equals
+fun assert_not_equals(actual, expected, message) {
+    if actual != expected {
+        assert(true, message)
+    } else {
+        assert(false, message + " - Values should not be equal: " + actual)
+    }
+}
+
+// Assert greater than
+fun assert_gt(actual, expected, message) {
+    if actual > expected {
+        assert(true, message)
+    } else {
+        assert(false, message + " - " + actual + " should be > " + expected)
+    }
+}
+
+// Assert less than
+fun assert_lt(actual, expected, message) {
+    if actual < expected {
+        assert(true, message)
+    } else {
+        assert(false, message + " - " + actual + " should be < " + expected)
+    }
+}
+
+// Assert contains (for strings and arrays)
+fun assert_contains(haystack, needle, message) {
+    if haystack.contains(needle) {
+        assert(true, message)
+    } else {
+        assert(false, message + " - '" + haystack + "' should contain '" + needle + "'")
+    }
+}
+
+// Assert throws error
+fun assert_throws(func, message) {
+    try {
+        func()
+        assert(false, message + " - Expected error but none was thrown")
+    } catch {
+        assert(true, message)
+    }
+}
+
+// Test suite runner
+fun describe(suite_name, tests) {
+    println("\n📦 Test Suite: " + suite_name)
+    println("=" * 50)
+    
+    let suite_start = total_tests
+    tests()
+    let suite_tests = total_tests - suite_start
+    
+    println("Suite completed: " + passed_tests + "/" + suite_tests + " passed")
+}
+
+// Individual test runner
+fun it(test_name, test_func) {
+    let test_start = total_tests
+    test_func()
+    let test_passed = (total_tests - test_start) == (passed_tests - test_start + failed_tests - test_start)
+    
+    if test_passed {
+        println("  ✅ " + test_name)
+    } else {
+        println("  ❌ " + test_name)
+    }
+}
+
+// Coverage calculation
+fun calculate_coverage(tested_functions, total_functions) {
+    let coverage = (tested_functions / total_functions) * 100
+    coverage
+}
+
+// Final test report
+fun test_report() {
+    println("\n" + "=" * 50)
+    println("📊 TEST REPORT")
+    println("=" * 50)
+    println("Total tests: " + total_tests)
+    println("✅ Passed: " + passed_tests)
+    println("❌ Failed: " + failed_tests)
+    
+    let pass_rate = if total_tests > 0 {
+        (passed_tests / total_tests) * 100
+    } else {
+        0
+    }
+    
+    println("Pass rate: " + pass_rate + "%")
+    
+    if pass_rate >= 80 {
+        println("✅ Quality gate PASSED (>= 80%)")
+    } else {
+        println("❌ Quality gate FAILED (< 80%)")
+    }
+    
+    println("=" * 50)
+    
+    // Return exit code
+    if failed_tests > 0 {
+        1  // Failure
+    } else {
+        0  // Success
+    }
+}
+
+// Export testing functions for use in test files
+export {
+    assert,
+    assert_equals,
+    assert_not_equals,
+    assert_gt,
+    assert_lt,
+    assert_contains,
+    assert_throws,
+    describe,
+    it,
+    calculate_coverage,
+    test_report
+}

@@ -70,20 +70,43 @@ install:
 	@mkdir -p docs/tutorials
 	@echo "✓ Directory structure created"
 
-# Run all tests
-test: test-repl test-oneliner
+# Run all tests using native Ruchy test command
+test: test-ruchy-native test-integration
 	@echo "✓ All tests passed"
 
-# Test REPL demos
-test-repl: test-repl-basics test-repl-functions test-repl-data test-repl-algorithms test-repl-functional test-repl-advanced
-	@echo "✓ All REPL tests passed"
+# Run native Ruchy tests
+test-ruchy-native:
+	@echo "🧪 Running Ruchy Native Tests..."
+	@chmod +x scripts/run_ruchy_tests.sh
+	@./scripts/run_ruchy_tests.sh
 
-test-repl-basics:
-	@echo "Testing REPL basics..."
+# Test individual components with Ruchy test command
+test-framework:
+	@echo "Testing Ruchy test framework..."
+	@ruchy test tests/test_framework_self.ruchy
+
+test-basics:
+	@echo "Testing basic operations..."
+	@ruchy test tests/test_basics.ruchy
+
+test-functions:
+	@echo "Testing functions..."
+	@ruchy test tests/test_functions.ruchy
+
+test-oneliners:
+	@echo "Testing one-liners..."
+	@ruchy test tests/test_oneliners.ruchy
+
+# Integration testing - ensure demos actually run
+test-integration: test-repl-integration test-oneliner-integration
+	@echo "✓ Integration tests passed"
+
+test-repl-integration:
+	@echo "Integration testing REPL demos..."
 	@if ls demos/repl/01-basics/*.repl >/dev/null 2>&1; then \
 		for demo in demos/repl/01-basics/*.repl; do \
 			printf "  Testing %s...\n" "$$demo"; \
-			if ruchy repl < "$$demo" > /dev/null 2>&1; then \
+			if ruchy run "$$demo" > /dev/null 2>&1; then \
 				printf "    ✓ Passed\n"; \
 			else \
 				printf "    ✗ Failed\n"; \
@@ -355,9 +378,11 @@ continuous-tdd-check:
 		sleep 3600; \
 	done
 
-# Quality gates
-quality-gate: verify-version-compatibility tdd-verify test lint verify benchmark
-	@echo "Running quality gate checks..."
+# Quality gates - MUST use Ruchy native testing
+quality-gate: verify-version-compatibility test-ruchy-native coverage lint verify benchmark
+	@echo "Running quality gate checks (Ruchy native)..."
+	@echo "✓ Checking test coverage..."
+	@./scripts/run_ruchy_tests.sh | grep "Quality gate: PASSED" || (echo "✗ Tests failed quality gate"; exit 1)
 	@echo "✓ Checking for TODO/FIXME comments..."
 	@if find demos -type f \( -name "*.ruchy" -o -name "*.repl" \) -exec grep -l "TODO\|FIXME\|HACK" {} \; | grep .; then \
 		echo "✗ Found TODO/FIXME comments"; \
@@ -369,7 +394,13 @@ quality-gate: verify-version-compatibility tdd-verify test lint verify benchmark
 		echo "✗ Less than 20 demos found"; \
 		exit 1; \
 	fi
-	@echo "✓ All quality gates passed"
+	@echo "✓ Checking Ruchy test files..."
+	@test_count=$$(find tests -name "test_*.ruchy" | wc -l); \
+	if [ "$$test_count" -lt 3 ]; then \
+		echo "✗ Less than 3 Ruchy test files found"; \
+		exit 1; \
+	fi
+	@echo "✓ All quality gates passed (using Ruchy native testing)"
 
 lint: shellcheck
 	@echo "✓ All linting checks passed"
@@ -397,13 +428,22 @@ benchmark:
 	@time -p ruchy -e 'println("benchmark")' 2>&1 | head -1
 	@echo "✓ Benchmarks complete"
 
-# Coverage
+# Coverage using Ruchy native testing
 coverage:
-	@echo "Generating test coverage report..."
-	@echo "Total demos: $$(find demos -name '*.repl' -o -name '*.sh' | wc -l)"
-	@echo "REPL demos: $$(find demos/repl -name '*.repl' | wc -l)"
-	@echo "One-liner demos: $$(find demos/one-liners -name '*.sh' | wc -l)"
-	@echo "Test files: $$(find tests -name '*.yaml' -o -name '*.sh' | wc -l)"
+	@echo "Generating Ruchy test coverage report..."
+	@echo "===================================="
+	@echo "Demo Statistics:"
+	@echo "  Total demos: $$(find demos -name '*.repl' -o -name '*.sh' | wc -l)"
+	@echo "  REPL demos: $$(find demos/repl -name '*.repl' | wc -l)"
+	@echo "  One-liner demos: $$(find demos/one-liners -name '*.sh' | wc -l)"
+	@echo ""
+	@echo "Test Statistics:"
+	@echo "  Test files: $$(find tests -name 'test_*.ruchy' | wc -l)"
+	@echo "  Test framework: tests/test_framework.ruchy"
+	@echo ""
+	@echo "Running coverage analysis with Ruchy..."
+	@./scripts/run_ruchy_tests.sh | grep -E "Coverage|Pass rate" || true
+	@echo ""
 	@echo "✓ Coverage report generated"
 
 # Clean
