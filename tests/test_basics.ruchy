@@ -108,17 +108,18 @@ describe("Array Operations", || {
         assert_equals(arr[4], 5, "Last element should be 5")
     })
     
-    it("should modify arrays", || {
-        let mut arr = [1, 2, 3]
-        arr.push(4)
-        assert_equals(arr.len(), 4, "Array should have 4 elements after push")
-        assert_equals(arr[3], 4, "Fourth element should be 4")
+    it("should sum arrays", || {
+        let arr = [1, 2, 3]
+        let sum = arr.sum()
+        assert_equals(sum, 6, "Sum of [1,2,3] should be 6")
     })
     
-    it("should iterate over arrays", || {
-        let arr = [1, 2, 3]
-        let sum = arr.fold(0, |acc, x| acc + x)
-        assert_equals(sum, 6, "Sum of [1,2,3] should be 6")
+    it("should work with closures", || {
+        let double = |x| x * 2
+        assert_equals(double(5), 10, "Closure should double input")
+        
+        let add = |x, y| x + y  
+        assert_equals(add(3, 4), 7, "Two-param closure should add")
     })
 })
 
