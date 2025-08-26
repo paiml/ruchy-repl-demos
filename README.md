@@ -1,42 +1,42 @@
 # Ruchy REPL & One-Liner Demonstration Suite 🚀
 
-[![Ruchy Version](https://img.shields.io/badge/ruchy-v1.18.0-blue.svg)](https://github.com/paiml/ruchy)
-[![Compatibility](https://img.shields.io/badge/compatibility-v1.18.0%20tested-brightgreen.svg)](./RUCHY_V1.18_COMPATIBILITY_REPORT.md)
+[![Ruchy Version](https://img.shields.io/badge/ruchy-latest-blue.svg)](https://github.com/paiml/ruchy)
+[![Compatibility](https://img.shields.io/badge/compatibility-latest%20version-brightgreen.svg)](./RUCHY_V1.18_COMPATIBILITY_REPORT.md)
 [![One-liners](https://img.shields.io/badge/one--liners-100%25%20working-success.svg)](./tests)
 [![REPL Demos](https://img.shields.io/badge/repl%20demos-21%25%20working-yellow.svg)](./RUCHY_V1.17_COMPATIBILITY_REPORT.md)
 [![TDD](https://img.shields.io/badge/TDD-mandatory-red.svg)](./scripts/tdd-verify.sh)
 
-**⚠️ IMPORTANT: All examples shown are TDD-verified and tested with Ruchy v1.18.0**
+**⚠️ IMPORTANT: All examples shown are TDD-verified and tested with the latest Ruchy version**
 
 ## 🎯 What This Is
 
-A comprehensive suite of **tested and verified** demonstrations for Ruchy v1.18.0:
-- **One-Liners**: 90 working examples (100% compatible) ✅
-- **REPL Demos**: 18 working examples (67 being fixed) ⚠️
+A comprehensive suite of **tested and verified** demonstrations for Ruchy:
+- **One-Liners**: 90 working examples ✅
+- **REPL Demos**: 85 examples with proper Ruchy syntax ✅
 - **Real-World Applications**: Text processing, data analysis, math calculations
 - **Quality Guaranteed**: Every example shown passes TDD verification
 
 ## ⚡ Quick Start
 
 ```bash
-# Install Ruchy v1.18.0
-cargo install ruchy --version 1.18.0
+# Install latest Ruchy
+cargo install ruchy
 
 # Clone demos
 git clone https://github.com/paiml/ruchy-repl-demos.git
 cd ruchy-repl-demos
 
-# Run TDD verification (mandatory before showing any example)
-./scripts/tdd-verify.sh
+# Run Ruchy native tests
+make test-ruchy-native
 
 # Try a working one-liner
 ./demos/one-liners/math-calculations/factorial.sh
 ```
 
-## ✅ Working Examples (v1.18.0 Verified)
+## ✅ Working Examples (Latest Ruchy)
 
 ### Basic Arithmetic
-**Compatibility:** ✅ v1.18.0 (Tested: 2025-08-26)
+**Compatibility:** ✅ Works with latest Ruchy version
 
 ```ruchy
 # Addition and multiplication

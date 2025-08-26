@@ -463,3 +463,4 @@ ${var^^}       # No parameter expansion
 
 **Remember**: Every demo is a first impression. Make it count.
 - every task is TDD.  All code must be 80% coverage or greater.  All code must pass pmat.
+- this project shoudl work with ANY ruchy version, by always testing latest cargo install ruchy
