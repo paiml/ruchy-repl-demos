@@ -1,163 +1,115 @@
-// Ruchy Test Framework for REPL & One-Liner Demos
-// This is the core testing framework written in Ruchy itself
-
-// Test result tracking
-let mut total_tests = 0
-let mut passed_tests = 0
-let mut failed_tests = 0
-let mut test_results = []
-
-// Assert function for testing
-fun assert(condition, message) {
-    total_tests = total_tests + 1
+{
+let total_tests = 0 in ()
+let passed_tests = 0 in ()
+let failed_tests = 0 in ()
+let test_results = List([]) in ()
+fun assert(condition: Any, message: Any) {
+    Assign { target: Expr { kind: Identifier("total_tests"), span: Span { start: 307, end: 318 }, attributes: [] }, value: Expr { kind: Binary { left: Expr { kind: Identifier("total_tests"), span: Span { start: 321, end: 332 }, attributes: [] }, op: Add, right: Expr { kind: Literal(Integer(1)), span: Span { start: 335, end: 336 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] } }
     if condition {
-        passed_tests = passed_tests + 1
-        test_results.push({
-            status: "PASS",
-            message: message
-        })
+        Assign { target: Expr { kind: Identifier("passed_tests"), span: Span { start: 364, end: 376 }, attributes: [] }, value: Expr { kind: Binary { left: Expr { kind: Identifier("passed_tests"), span: Span { start: 379, end: 391 }, attributes: [] }, op: Add, right: Expr { kind: Literal(Integer(1)), span: Span { start: 394, end: 395 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] } }
+        MethodCall { receiver: Expr { kind: Identifier("test_results"), span: Span { start: 404, end: 416 }, attributes: [] }, method: "push", args: [Expr { kind: ObjectLiteral { fields: [KeyValue { key: "status", value: Expr { kind: Literal(String("PASS")), span: Span { start: 444, end: 450 }, attributes: [] } }, KeyValue { key: "message", value: Expr { kind: Identifier("message"), span: Span { start: 473, end: 480 }, attributes: [] } }] }, span: Span { start: 422, end: 423 }, attributes: [] }] }
         true
-    } else {
-        failed_tests = failed_tests + 1
-        test_results.push({
-            status: "FAIL", 
-            message: message
-        })
-        println("❌ FAILED: " + message)
+        } else {
+        Assign { target: Expr { kind: Identifier("failed_tests"), span: Span { start: 526, end: 538 }, attributes: [] }, value: Expr { kind: Binary { left: Expr { kind: Identifier("failed_tests"), span: Span { start: 541, end: 553 }, attributes: [] }, op: Add, right: Expr { kind: Literal(Integer(1)), span: Span { start: 556, end: 557 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] } }
+        MethodCall { receiver: Expr { kind: Identifier("test_results"), span: Span { start: 566, end: 578 }, attributes: [] }, method: "push", args: [Expr { kind: ObjectLiteral { fields: [KeyValue { key: "status", value: Expr { kind: Literal(String("FAIL")), span: Span { start: 606, end: 612 }, attributes: [] } }, KeyValue { key: "message", value: Expr { kind: Identifier("message"), span: Span { start: 636, end: 643 }, attributes: [] } }] }, span: Span { start: 584, end: 585 }, attributes: [] }] }
+        Call { func: Expr { kind: Identifier("println"), span: Span { start: 663, end: 670 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("❌ FAILED: ")), span: Span { start: 671, end: 685 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("message"), span: Span { start: 688, end: 695 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
         false
+        }
     }
-}
-
-// Assert equals function
-fun assert_equals(actual, expected, message) {
+fun assert_equals(actual: Any, expected: Any, message: Any) {
     if actual == expected {
-        assert(true, message)
-    } else {
-        assert(false, message + " - Expected: " + expected + ", Got: " + actual)
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 829, end: 835 }, attributes: [] }, args: [Expr { kind: Literal(Bool(true)), span: Span { start: 836, end: 840 }, attributes: [] }, Expr { kind: Identifier("message"), span: Span { start: 842, end: 849 }, attributes: [] }] }
+        } else {
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 872, end: 878 }, attributes: [] }, args: [Expr { kind: Literal(Bool(false)), span: Span { start: 879, end: 884 }, attributes: [] }, Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Identifier("message"), span: Span { start: 886, end: 893 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String(" - Expected: ")), span: Span { start: 896, end: 911 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("expected"), span: Span { start: 914, end: 922 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String(", Got: ")), span: Span { start: 925, end: 934 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("actual"), span: Span { start: 937, end: 943 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+        }
     }
-}
-
-// Assert not equals
-fun assert_not_equals(actual, expected, message) {
+fun assert_not_equals(actual: Any, expected: Any, message: Any) {
     if actual != expected {
-        assert(true, message)
-    } else {
-        assert(false, message + " - Values should not be equal: " + actual)
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 1062, end: 1068 }, attributes: [] }, args: [Expr { kind: Literal(Bool(true)), span: Span { start: 1069, end: 1073 }, attributes: [] }, Expr { kind: Identifier("message"), span: Span { start: 1075, end: 1082 }, attributes: [] }] }
+        } else {
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 1105, end: 1111 }, attributes: [] }, args: [Expr { kind: Literal(Bool(false)), span: Span { start: 1112, end: 1117 }, attributes: [] }, Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Identifier("message"), span: Span { start: 1119, end: 1126 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String(" - Values should not be equal: ")), span: Span { start: 1129, end: 1162 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("actual"), span: Span { start: 1165, end: 1171 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+        }
     }
-}
-
-// Assert greater than
-fun assert_gt(actual, expected, message) {
+fun assert_gt(actual: Any, expected: Any, message: Any) {
     if actual > expected {
-        assert(true, message)
-    } else {
-        assert(false, message + " - " + actual + " should be > " + expected)
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 1283, end: 1289 }, attributes: [] }, args: [Expr { kind: Literal(Bool(true)), span: Span { start: 1290, end: 1294 }, attributes: [] }, Expr { kind: Identifier("message"), span: Span { start: 1296, end: 1303 }, attributes: [] }] }
+        } else {
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 1326, end: 1332 }, attributes: [] }, args: [Expr { kind: Literal(Bool(false)), span: Span { start: 1333, end: 1338 }, attributes: [] }, Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Identifier("message"), span: Span { start: 1340, end: 1347 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String(" - ")), span: Span { start: 1350, end: 1355 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("actual"), span: Span { start: 1358, end: 1364 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String(" should be > ")), span: Span { start: 1367, end: 1382 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("expected"), span: Span { start: 1385, end: 1393 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+        }
     }
-}
-
-// Assert less than
-fun assert_lt(actual, expected, message) {
+fun assert_lt(actual: Any, expected: Any, message: Any) {
     if actual < expected {
-        assert(true, message)
-    } else {
-        assert(false, message + " - " + actual + " should be < " + expected)
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 1502, end: 1508 }, attributes: [] }, args: [Expr { kind: Literal(Bool(true)), span: Span { start: 1509, end: 1513 }, attributes: [] }, Expr { kind: Identifier("message"), span: Span { start: 1515, end: 1522 }, attributes: [] }] }
+        } else {
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 1545, end: 1551 }, attributes: [] }, args: [Expr { kind: Literal(Bool(false)), span: Span { start: 1552, end: 1557 }, attributes: [] }, Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Identifier("message"), span: Span { start: 1559, end: 1566 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String(" - ")), span: Span { start: 1569, end: 1574 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("actual"), span: Span { start: 1577, end: 1583 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String(" should be < ")), span: Span { start: 1586, end: 1601 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("expected"), span: Span { start: 1604, end: 1612 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+        }
     }
-}
-
-// Assert contains (for strings and arrays)
-fun assert_contains(haystack, needle, message) {
-    if haystack.contains(needle) {
-        assert(true, message)
-    } else {
-        assert(false, message + " - '" + haystack + "' should contain '" + needle + "'")
+fun assert_contains(haystack: Any, needle: Any, message: Any) {
+    if MethodCall { receiver: Expr { kind: Identifier("haystack"), span: Span { start: 1723, end: 1731 }, attributes: [] }, method: "contains", args: [Expr { kind: Identifier("needle"), span: Span { start: 1741, end: 1747 }, attributes: [] }] } {
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 1759, end: 1765 }, attributes: [] }, args: [Expr { kind: Literal(Bool(true)), span: Span { start: 1766, end: 1770 }, attributes: [] }, Expr { kind: Identifier("message"), span: Span { start: 1772, end: 1779 }, attributes: [] }] }
+        } else {
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 1802, end: 1808 }, attributes: [] }, args: [Expr { kind: Literal(Bool(false)), span: Span { start: 1809, end: 1814 }, attributes: [] }, Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Identifier("message"), span: Span { start: 1816, end: 1823 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String(" - '")), span: Span { start: 1826, end: 1832 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("haystack"), span: Span { start: 1835, end: 1843 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String("' should contain '")), span: Span { start: 1846, end: 1866 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("needle"), span: Span { start: 1869, end: 1875 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String("'")), span: Span { start: 1878, end: 1881 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+        }
     }
-}
-
-// Assert throws error
-fun assert_throws(func, message) {
-    try {
-        func()
-        assert(false, message + " - Expected error but none was thrown")
-    } catch {
-        assert(true, message)
+fun assert_throws(func: Any, message: Any) {
+    try
+    {
+        Call { func: Expr { kind: Identifier("func"), span: Span { start: 1968, end: 1972 }, attributes: [] }, args: [] }
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 1983, end: 1989 }, attributes: [] }, args: [Expr { kind: Literal(Bool(false)), span: Span { start: 1990, end: 1995 }, attributes: [] }, Expr { kind: Binary { left: Expr { kind: Identifier("message"), span: Span { start: 1997, end: 2004 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String(" - Expected error but none was thrown")), span: Span { start: 2007, end: 2046 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+        }
+    catch
+    {
+        Call { func: Expr { kind: Identifier("assert"), span: Span { start: 2070, end: 2076 }, attributes: [] }, args: [Expr { kind: Literal(Bool(true)), span: Span { start: 2077, end: 2081 }, attributes: [] }, Expr { kind: Identifier("message"), span: Span { start: 2083, end: 2090 }, attributes: [] }] }
+        }
     }
-}
-
-// Test suite runner
-fun describe(suite_name, tests) {
-    println("\n📦 Test Suite: " + suite_name)
-    println("=" * 50)
-    
-    let suite_start = total_tests
-    tests()
-    let suite_tests = total_tests - suite_start
-    
-    println("Suite completed: " + passed_tests + "/" + suite_tests + " passed")
-}
-
-// Individual test runner
-fun it(test_name, test_func) {
-    let test_start = total_tests
-    test_func()
-    let test_passed = (total_tests - test_start) == (passed_tests - test_start + failed_tests - test_start)
-    
-    if test_passed {
-        println("  ✅ " + test_name)
-    } else {
-        println("  ❌ " + test_name)
+fun describe(suite_name: Any, tests: Any) {
+    Call { func: Expr { kind: Identifier("println"), span: Span { start: 2160, end: 2167 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("\n📦 Test Suite: ")), span: Span { start: 2168, end: 2189 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("suite_name"), span: Span { start: 2192, end: 2202 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+    Call { func: Expr { kind: Identifier("println"), span: Span { start: 2208, end: 2215 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("=")), span: Span { start: 2216, end: 2219 }, attributes: [] }, op: Multiply, right: Expr { kind: Literal(Integer(50)), span: Span { start: 2222, end: 2224 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+    let suite_start = total_tests in {
+        Call { func: Expr { kind: Identifier("tests"), span: Span { start: 2269, end: 2274 }, attributes: [] }, args: [] }
+        let suite_tests = total_tests - suite_start in ()
+        Call { func: Expr { kind: Identifier("println"), span: Span { start: 2334, end: 2341 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Literal(String("Suite completed: ")), span: Span { start: 2342, end: 2361 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("passed_tests"), span: Span { start: 2364, end: 2376 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String("/")), span: Span { start: 2379, end: 2382 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("suite_tests"), span: Span { start: 2385, end: 2396 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String(" passed")), span: Span { start: 2399, end: 2408 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+        }
     }
-}
-
-// Coverage calculation
-fun calculate_coverage(tested_functions, total_functions) {
-    let coverage = (tested_functions / total_functions) * 100
-    coverage
-}
-
-// Final test report
+fun it(test_name: Any, test_func: Any) {
+    let test_start = total_tests in {
+        Call { func: Expr { kind: Identifier("test_func"), span: Span { start: 2507, end: 2516 }, attributes: [] }, args: [] }
+        let test_passed = total_tests - test_start == passed_tests - test_start + failed_tests - test_start in ()
+        if test_passed {
+            Call { func: Expr { kind: Identifier("println"), span: Span { start: 2661, end: 2668 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("  ✅ ")), span: Span { start: 2669, end: 2677 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("test_name"), span: Span { start: 2680, end: 2689 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+            } else {
+            Call { func: Expr { kind: Identifier("println"), span: Span { start: 2712, end: 2719 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("  ❌ ")), span: Span { start: 2720, end: 2728 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("test_name"), span: Span { start: 2731, end: 2740 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+            }
+        }
+    }
+fun calculate_coverage(tested_functions: Any, total_functions: Any) {
+    let coverage = tested_functions / total_functions * 100 in coverage
+    }
 fun test_report() {
-    println("\n" + "=" * 50)
-    println("📊 TEST REPORT")
-    println("=" * 50)
-    println("Total tests: " + total_tests)
-    println("✅ Passed: " + passed_tests)
-    println("❌ Failed: " + failed_tests)
-    
+    Call { func: Expr { kind: Identifier("println"), span: Span { start: 2958, end: 2965 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("\n")), span: Span { start: 2966, end: 2970 }, attributes: [] }, op: Add, right: Expr { kind: Binary { left: Expr { kind: Literal(String("=")), span: Span { start: 2973, end: 2976 }, attributes: [] }, op: Multiply, right: Expr { kind: Literal(Integer(50)), span: Span { start: 2979, end: 2981 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+    Call { func: Expr { kind: Identifier("println"), span: Span { start: 2987, end: 2994 }, attributes: [] }, args: [Expr { kind: Literal(String("📊 TEST REPORT")), span: Span { start: 2995, end: 3013 }, attributes: [] }] }
+    Call { func: Expr { kind: Identifier("println"), span: Span { start: 3019, end: 3026 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("=")), span: Span { start: 3027, end: 3030 }, attributes: [] }, op: Multiply, right: Expr { kind: Literal(Integer(50)), span: Span { start: 3033, end: 3035 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+    Call { func: Expr { kind: Identifier("println"), span: Span { start: 3041, end: 3048 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("Total tests: ")), span: Span { start: 3049, end: 3064 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("total_tests"), span: Span { start: 3067, end: 3078 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+    Call { func: Expr { kind: Identifier("println"), span: Span { start: 3084, end: 3091 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("✅ Passed: ")), span: Span { start: 3092, end: 3106 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("passed_tests"), span: Span { start: 3109, end: 3121 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+    Call { func: Expr { kind: Identifier("println"), span: Span { start: 3127, end: 3134 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("❌ Failed: ")), span: Span { start: 3135, end: 3149 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("failed_tests"), span: Span { start: 3152, end: 3164 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
     let pass_rate = if total_tests > 0 {
-        (passed_tests / total_tests) * 100
-    } else {
+        passed_tests / total_tests * 100
+        } else {
         0
+        } in {
+        Call { func: Expr { kind: Identifier("println"), span: Span { start: 3293, end: 3300 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Binary { left: Expr { kind: Literal(String("Pass rate: ")), span: Span { start: 3301, end: 3314 }, attributes: [] }, op: Add, right: Expr { kind: Identifier("pass_rate"), span: Span { start: 3317, end: 3326 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }, op: Add, right: Expr { kind: Literal(String("%")), span: Span { start: 3329, end: 3332 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+        if pass_rate >= 80 {
+            Call { func: Expr { kind: Identifier("println"), span: Span { start: 3372, end: 3379 }, attributes: [] }, args: [Expr { kind: Literal(String("✅ Quality gate PASSED (>= 80%)")), span: Span { start: 3380, end: 3414 }, attributes: [] }] }
+            } else {
+            Call { func: Expr { kind: Identifier("println"), span: Span { start: 3437, end: 3444 }, attributes: [] }, args: [Expr { kind: Literal(String("❌ Quality gate FAILED (< 80%)")), span: Span { start: 3445, end: 3478 }, attributes: [] }] }
+            }
+        Call { func: Expr { kind: Identifier("println"), span: Span { start: 3495, end: 3502 }, attributes: [] }, args: [Expr { kind: Binary { left: Expr { kind: Literal(String("=")), span: Span { start: 3503, end: 3506 }, attributes: [] }, op: Multiply, right: Expr { kind: Literal(Integer(50)), span: Span { start: 3509, end: 3511 }, attributes: [] } }, span: Span { start: 0, end: 0 }, attributes: [] }] }
+        if failed_tests > 0 {
+            1
+            } else {
+            0
+            }
+        }
     }
-    
-    println("Pass rate: " + pass_rate + "%")
-    
-    if pass_rate >= 80 {
-        println("✅ Quality gate PASSED (>= 80%)")
-    } else {
-        println("❌ Quality gate FAILED (< 80%)")
-    }
-    
-    println("=" * 50)
-    
-    // Return exit code
-    if failed_tests > 0 {
-        1  // Failure
-    } else {
-        0  // Success
-    }
-}
-
-// Export testing functions for use in test files
-export {
-    assert,
-    assert_equals,
-    assert_not_equals,
-    assert_gt,
-    assert_lt,
-    assert_contains,
-    assert_throws,
-    describe,
-    it,
-    calculate_coverage,
-    test_report
+Export { items: ["assert", "assert_equals", "assert_not_equals", "assert_gt", "assert_lt", "assert_contains", "assert_throws", "describe", "it", "calculate_coverage", "test_report"] }
 }

@@ -1,0 +1,433 @@
+// Test suite for algorithm REPL demos
+import { assert, assert_equals, assert_lt, assert_gt, describe, it, test_report } from "./test_framework.ruchy"
+
+describe("Sorting Algorithms", || {
+    it("should implement quicksort correctly", || {
+        fun quicksort(arr) {
+            if arr.len() <= 1 { return arr }
+            
+            let pivot = arr[arr.len() / 2]
+            let left = arr.filter(|x| x < pivot)
+            let middle = arr.filter(|x| x == pivot)
+            let right = arr.filter(|x| x > pivot)
+            
+            quicksort(left) + middle + quicksort(right)
+        }
+        
+        let unsorted = [3, 1, 4, 1, 5, 9, 2, 6, 5]
+        let sorted = quicksort(unsorted)
+        
+        assert_equals(sorted[0], 1, "First element")
+        assert_equals(sorted[sorted.len()-1], 9, "Last element")
+        
+        // Verify sorted order
+        for i in 1..sorted.len() {
+            assert(sorted[i] >= sorted[i-1], "Array is sorted")
+        }
+    })
+    
+    it("should implement mergesort correctly", || {
+        fun merge(left, right) {
+            let mut result = []
+            let mut i = 0
+            let mut j = 0
+            
+            while i < left.len() && j < right.len() {
+                if left[i] <= right[j] {
+                    result.push(left[i])
+                    i += 1
+                } else {
+                    result.push(right[j])
+                    j += 1
+                }
+            }
+            
+            while i < left.len() {
+                result.push(left[i])
+                i += 1
+            }
+            
+            while j < right.len() {
+                result.push(right[j])
+                j += 1
+            }
+            
+            result
+        }
+        
+        fun mergesort(arr) {
+            if arr.len() <= 1 { return arr }
+            
+            let mid = arr.len() / 2
+            let left = mergesort(arr[..mid])
+            let right = mergesort(arr[mid..])
+            
+            merge(left, right)
+        }
+        
+        let data = [64, 34, 25, 12, 22, 11, 90]
+        let sorted = mergesort(data)
+        
+        assert_equals(sorted, [11, 12, 22, 25, 34, 64, 90], "Mergesort result")
+    })
+    
+    it("should handle edge cases in sorting", || {
+        fun sort(arr) {
+            let mut sorted = arr.clone()
+            sorted.sort()
+            sorted
+        }
+        
+        assert_equals(sort([]), [], "Empty array")
+        assert_equals(sort([1]), [1], "Single element")
+        assert_equals(sort([2, 1]), [1, 2], "Two elements")
+        assert_equals(sort([1, 1, 1]), [1, 1, 1], "All same")
+    })
+})
+
+describe("Searching Algorithms", || {
+    it("should implement binary search", || {
+        fun binary_search(arr, target) {
+            let mut left = 0
+            let mut right = arr.len() - 1
+            
+            while left <= right {
+                let mid = (left + right) / 2
+                
+                if arr[mid] == target {
+                    return Some(mid)
+                } else if arr[mid] < target {
+                    left = mid + 1
+                } else {
+                    right = mid - 1
+                }
+            }
+            
+            None
+        }
+        
+        let sorted = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+        
+        assert_equals(binary_search(sorted, 7), Some(3), "Find 7")
+        assert_equals(binary_search(sorted, 1), Some(0), "Find first")
+        assert_equals(binary_search(sorted, 19), Some(9), "Find last")
+        assert_equals(binary_search(sorted, 8), None, "Not found")
+    })
+    
+    it("should implement linear search", || {
+        fun linear_search(arr, target) {
+            for i in 0..arr.len() {
+                if arr[i] == target {
+                    return Some(i)
+                }
+            }
+            None
+        }
+        
+        let data = [5, 2, 8, 1, 9, 3]
+        assert_equals(linear_search(data, 8), Some(2), "Find 8")
+        assert_equals(linear_search(data, 10), None, "Not found")
+    })
+})
+
+describe("Graph Algorithms", || {
+    it("should implement depth-first search", || {
+        fun dfs(graph, start, visited) {
+            if visited.contains(start) {
+                return visited
+            }
+            
+            visited.insert(start)
+            
+            for neighbor in graph[start] {
+                dfs(graph, neighbor, visited)
+            }
+            
+            visited
+        }
+        
+        let graph = {
+            "A": ["B", "C"],
+            "B": ["D"],
+            "C": ["E"],
+            "D": [],
+            "E": []
+        }
+        
+        let visited = dfs(graph, "A", HashSet::new())
+        assert_equals(visited.len(), 5, "All nodes visited")
+        assert(visited.contains("A"), "Visited A")
+        assert(visited.contains("E"), "Visited E")
+    })
+    
+    it("should implement breadth-first search", || {
+        fun bfs(graph, start) {
+            let mut visited = HashSet::new()
+            let mut queue = VecDeque::new()
+            
+            queue.push_back(start)
+            visited.insert(start)
+            
+            while !queue.is_empty() {
+                let node = queue.pop_front().unwrap()
+                
+                for neighbor in graph[node] {
+                    if !visited.contains(neighbor) {
+                        visited.insert(neighbor)
+                        queue.push_back(neighbor)
+                    }
+                }
+            }
+            
+            visited
+        }
+        
+        let graph = {
+            "A": ["B", "C"],
+            "B": ["D", "E"],
+            "C": ["F"],
+            "D": [],
+            "E": [],
+            "F": []
+        }
+        
+        let visited = bfs(graph, "A")
+        assert_equals(visited.len(), 6, "All nodes visited")
+    })
+    
+    it("should find shortest path with BFS", || {
+        fun shortest_path(graph, start, end) {
+            let mut queue = VecDeque::new()
+            let mut visited = HashSet::new()
+            let mut parent = HashMap::new()
+            
+            queue.push_back(start)
+            visited.insert(start)
+            
+            while !queue.is_empty() {
+                let node = queue.pop_front().unwrap()
+                
+                if node == end {
+                    // Reconstruct path
+                    let mut path = []
+                    let mut current = end
+                    
+                    while current != start {
+                        path.push(current)
+                        current = parent[current]
+                    }
+                    path.push(start)
+                    path.reverse()
+                    return Some(path)
+                }
+                
+                for neighbor in graph[node] {
+                    if !visited.contains(neighbor) {
+                        visited.insert(neighbor)
+                        parent.insert(neighbor, node)
+                        queue.push_back(neighbor)
+                    }
+                }
+            }
+            
+            None
+        }
+        
+        let graph = {
+            "A": ["B", "C"],
+            "B": ["A", "D"],
+            "C": ["A", "D", "E"],
+            "D": ["B", "C", "E"],
+            "E": ["C", "D"]
+        }
+        
+        let path = shortest_path(graph, "A", "E")
+        assert(path.is_some(), "Path exists")
+        assert_equals(path.unwrap().len(), 3, "Shortest path length")
+    })
+})
+
+describe("Dynamic Programming", || {
+    it("should solve fibonacci with memoization", || {
+        fun fib_memo(n, memo) {
+            if n <= 1 { return n }
+            
+            if memo.contains_key(n) {
+                return memo[n]
+            }
+            
+            let result = fib_memo(n - 1, memo) + fib_memo(n - 2, memo)
+            memo.insert(n, result)
+            result
+        }
+        
+        let mut memo = HashMap::new()
+        assert_equals(fib_memo(10, memo), 55, "10th fibonacci")
+        assert_equals(fib_memo(15, memo), 610, "15th fibonacci")
+        assert(memo.len() > 10, "Memoization used")
+    })
+    
+    it("should solve knapsack problem", || {
+        fun knapsack(capacity, weights, values) {
+            let n = weights.len()
+            let mut dp = vec![vec![0; capacity + 1]; n + 1]
+            
+            for i in 1..=n {
+                for w in 1..=capacity {
+                    if weights[i-1] <= w {
+                        dp[i][w] = max(
+                            dp[i-1][w],
+                            dp[i-1][w - weights[i-1]] + values[i-1]
+                        )
+                    } else {
+                        dp[i][w] = dp[i-1][w]
+                    }
+                }
+            }
+            
+            dp[n][capacity]
+        }
+        
+        let weights = [1, 2, 3, 4]
+        let values = [10, 20, 30, 40]
+        let capacity = 5
+        
+        let max_value = knapsack(capacity, weights, values)
+        assert_equals(max_value, 50, "Maximum value in knapsack")
+    })
+    
+    it("should find longest common subsequence", || {
+        fun lcs(s1, s2) {
+            let m = s1.len()
+            let n = s2.len()
+            let mut dp = vec![vec![0; n + 1]; m + 1]
+            
+            for i in 1..=m {
+                for j in 1..=n {
+                    if s1.chars().nth(i-1) == s2.chars().nth(j-1) {
+                        dp[i][j] = dp[i-1][j-1] + 1
+                    } else {
+                        dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+                    }
+                }
+            }
+            
+            dp[m][n]
+        }
+        
+        assert_equals(lcs("ABCDGH", "AEDFHR"), 3, "LCS length")
+        assert_equals(lcs("AGGTAB", "GXTXAYB"), 4, "LCS length")
+    })
+})
+
+describe("Dijkstra's Algorithm", || {
+    it("should find shortest paths", || {
+        fun dijkstra(graph, start) {
+            let mut distances = HashMap::new()
+            let mut visited = HashSet::new()
+            let mut pq = BinaryHeap::new()
+            
+            // Initialize distances
+            for node in graph.keys() {
+                distances.insert(node, if node == start { 0 } else { i32::MAX })
+            }
+            
+            pq.push((0, start))
+            
+            while !pq.is_empty() {
+                let (dist, node) = pq.pop().unwrap()
+                
+                if visited.contains(node) { continue }
+                visited.insert(node)
+                
+                for (neighbor, weight) in graph[node] {
+                    let new_dist = dist + weight
+                    if new_dist < distances[neighbor] {
+                        distances[neighbor] = new_dist
+                        pq.push((new_dist, neighbor))
+                    }
+                }
+            }
+            
+            distances
+        }
+        
+        let graph = {
+            "A": [("B", 4), ("C", 2)],
+            "B": [("D", 3), ("C", 1)],
+            "C": [("D", 5)],
+            "D": []
+        }
+        
+        let distances = dijkstra(graph, "A")
+        assert_equals(distances["A"], 0, "Distance to start")
+        assert_equals(distances["B"], 3, "Distance to B via C")
+        assert_equals(distances["D"], 6, "Distance to D")
+    })
+})
+
+describe("Topological Sort", || {
+    it("should perform topological sorting", || {
+        fun topological_sort(graph) {
+            let mut in_degree = HashMap::new()
+            let mut queue = VecDeque::new()
+            let mut result = []
+            
+            // Calculate in-degrees
+            for node in graph.keys() {
+                in_degree.insert(node, 0)
+            }
+            
+            for neighbors in graph.values() {
+                for neighbor in neighbors {
+                    in_degree[neighbor] += 1
+                }
+            }
+            
+            // Find nodes with no incoming edges
+            for (node, degree) in in_degree {
+                if degree == 0 {
+                    queue.push_back(node)
+                }
+            }
+            
+            // Process nodes
+            while !queue.is_empty() {
+                let node = queue.pop_front().unwrap()
+                result.push(node)
+                
+                for neighbor in graph[node] {
+                    in_degree[neighbor] -= 1
+                    if in_degree[neighbor] == 0 {
+                        queue.push_back(neighbor)
+                    }
+                }
+            }
+            
+            result
+        }
+        
+        let dag = {
+            "A": ["C"],
+            "B": ["C", "D"],
+            "C": ["E"],
+            "D": ["F"],
+            "E": ["F"],
+            "F": []
+        }
+        
+        let order = topological_sort(dag)
+        assert_equals(order.len(), 6, "All nodes in order")
+        
+        // Verify A and B come before C
+        let c_index = order.iter().position(|x| x == "C").unwrap()
+        let a_index = order.iter().position(|x| x == "A").unwrap()
+        let b_index = order.iter().position(|x| x == "B").unwrap()
+        
+        assert_lt(a_index, c_index, "A before C")
+        assert_lt(b_index, c_index, "B before C")
+    })
+})
+
+// Run the test report
+test_report()
