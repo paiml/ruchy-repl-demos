@@ -292,9 +292,10 @@ Assignee: Claude
 ### Compatibility Matrix
 ```yaml
 ruchy_versions:
-  minimum: "1.9.1"
-  recommended: "1.11.0"
-  tested: ["1.9.1", "1.10.0", "1.11.0"]
+  minimum: "1.18.0"
+  recommended: "1.18.0"
+  tested: ["1.17.0", "1.18.0"]
+  current: "1.18.0"
   
 rust_versions:
   minimum: "1.70.0"

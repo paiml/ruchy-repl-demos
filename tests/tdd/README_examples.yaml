@@ -1,0 +1,146 @@
+# TDD Test Suite for README Examples
+# Every example in README.md must pass these tests
+
+version: v1.18.0
+test_date: "2025-08-26"
+
+tests:
+  - name: "Basic Arithmetic - Addition"
+    compatibility: "✅ v1.18.0"
+    input: "2 + 2"
+    expected: "4"
+    verified: true
+
+  - name: "Basic Arithmetic - Multiplication"
+    compatibility: "✅ v1.18.0"
+    input: "10 * 5"
+    expected: "50"
+    verified: true
+
+  - name: "Exponentiation Operator"
+    compatibility: "✅ v1.18.0"
+    input: "2 ** 8"
+    expected: "256"
+    verified: true
+
+  - name: "Simple Function Definition"
+    compatibility: "✅ v1.18.0"
+    input: "fn add(x, y) { x + y }; add(2, 3)"
+    expected: "5"
+    verified: true
+
+  - name: "Recursive Factorial"
+    compatibility: "✅ v1.18.0"
+    input: "fn fact(n) { if n <= 1 { 1 } else { n * fact(n - 1) } }; fact(5)"
+    expected: "120"
+    verified: true
+
+  - name: "Array Map Operation"
+    compatibility: "✅ v1.18.0"
+    input: "[1, 2, 3, 4, 5].map(|x| x * 2)"
+    expected: "[2, 4, 6, 8, 10]"
+    verified: true
+
+  - name: "Array Filter Operation"
+    compatibility: "✅ v1.18.0"
+    input: "[1, 2, 3, 4, 5].filter(|x| x % 2 == 0)"
+    expected: "[2, 4]"
+    verified: true
+
+  - name: "Array Reduce Operation"
+    compatibility: "✅ v1.18.0"
+    input: "[1, 2, 3, 4, 5].reduce(0, |acc, x| acc + x)"
+    expected: "15"
+    verified: true
+
+  - name: "Simple Closure"
+    compatibility: "✅ v1.18.0"
+    input: "let double = |x| x * 2; double(5)"
+    expected: "10"
+    verified: true
+
+  - name: "Closure in Map"
+    compatibility: "✅ v1.18.0"
+    input: "[1, 2, 3].map(|x| x * x)"
+    expected: "[1, 4, 9]"
+    verified: true
+
+  - name: "Fibonacci Function"
+    compatibility: "✅ v1.18.0"
+    input: "fn fib(n) { if n <= 1 { n } else { fib(n-1) + fib(n-2) } }; fib(10)"
+    expected: "55"
+    verified: true
+
+  - name: "Sum of Squares"
+    compatibility: "✅ v1.18.0"
+    input: "[1, 2, 3, 4, 5].map(|x| x * x).reduce(0, |a, b| a + b)"
+    expected: "55"
+    verified: true
+
+  - name: "String Reverse"
+    compatibility: "✅ v1.18.0"
+    input: '"Hello World".chars().reverse().join("")'
+    expected: '"dlroW olleH"'
+    verified: true
+
+  - name: "Word Count"
+    compatibility: "✅ v1.18.0"
+    input: '"hello world test".split(" ").len()'
+    expected: "3"
+    verified: true
+
+  - name: "String Uppercase"
+    compatibility: "✅ v1.18.0"
+    input: '"hello".to_uppercase()'
+    expected: '"HELLO"'
+    verified: true
+
+  - name: "Array Mean"
+    compatibility: "✅ v1.18.0"
+    input: "let nums = [1.0, 2.0, 3.0, 4.0, 5.0]; nums.sum() / nums.len()"
+    expected: "3.0"
+    verified: true
+
+  - name: "Array Max"
+    compatibility: "✅ v1.18.0"
+    input: "[10, 5, 8, 3, 15, 7].max()"
+    expected: "15"
+    verified: true
+
+  - name: "Filter and Sum"
+    compatibility: "✅ v1.18.0"
+    input: "[1, 2, 3, 4, 5, 6].filter(|x| x > 3).sum()"
+    expected: "15"
+    verified: true
+
+# NOT WORKING - Rust syntax examples that fail
+not_compatible:
+  - name: "Type Annotations"
+    compatibility: "❌ v1.18.0"
+    input: "fn add(x: i32, y: i32) -> i32 { x + y }"
+    error: "Expected type"
+    verified: false
+
+  - name: "Generic Types"
+    compatibility: "❌ v1.18.0"
+    input: "let nums: Vec<i32> = vec![1, 2, 3]"
+    error: "Unexpected token"
+    verified: false
+
+  - name: "Rust Format Macro"
+    compatibility: "❌ v1.18.0"
+    input: 'format!("Hello {}", name)'
+    error: "format! not found"
+    verified: false
+
+  - name: "Option Type"
+    compatibility: "❌ v1.18.0"
+    input: "Some(value)"
+    error: "Some not found"
+    verified: false
+
+  - name: "Pattern Matching"
+    compatibility: "❌ v1.18.0"
+    input: "match value { Some(x) => x, None => 0 }"
+    error: "match not supported"
+    verified: false

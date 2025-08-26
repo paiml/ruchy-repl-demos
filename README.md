@@ -1,231 +1,263 @@
 # Ruchy REPL & One-Liner Demonstration Suite 🚀
 
-[![Tests](https://img.shields.io/badge/tests-150%2B%20demos-brightgreen.svg)](./tests)
-[![Ruchy](https://img.shields.io/badge/ruchy-v1.9.1%2B-blue.svg)](https://github.com/paiml/ruchy)
-[![Quality](https://img.shields.io/badge/quality-Toyota%20Way-gold.svg)](./CLAUDE.md)
-[![Coverage](https://img.shields.io/badge/coverage-100%25-success.svg)](./tests)
+[![Ruchy Version](https://img.shields.io/badge/ruchy-v1.18.0-blue.svg)](https://github.com/paiml/ruchy)
+[![Compatibility](https://img.shields.io/badge/compatibility-v1.18.0%20tested-brightgreen.svg)](./RUCHY_V1.18_COMPATIBILITY_REPORT.md)
+[![One-liners](https://img.shields.io/badge/one--liners-100%25%20working-success.svg)](./tests)
+[![REPL Demos](https://img.shields.io/badge/repl%20demos-21%25%20working-yellow.svg)](./RUCHY_V1.17_COMPATIBILITY_REPORT.md)
+[![TDD](https://img.shields.io/badge/TDD-mandatory-red.svg)](./scripts/tdd-verify.sh)
 
-**Production-ready demonstrations of Ruchy's interactive REPL and powerful one-liner capabilities**
+**⚠️ IMPORTANT: All examples shown are TDD-verified and tested with Ruchy v1.18.0**
 
 ## 🎯 What This Is
 
-A comprehensive suite of tested, verified demonstrations showcasing:
-- **Interactive REPL**: 50+ examples from basics to advanced patterns
-- **One-Liners**: 100+ practical command-line solutions
-- **Real-World Applications**: Text processing, data analysis, system automation
-- **Quality Guaranteed**: Every demo tested and verified with formal analysis
+A comprehensive suite of **tested and verified** demonstrations for Ruchy v1.18.0:
+- **One-Liners**: 90 working examples (100% compatible) ✅
+- **REPL Demos**: 18 working examples (67 being fixed) ⚠️
+- **Real-World Applications**: Text processing, data analysis, math calculations
+- **Quality Guaranteed**: Every example shown passes TDD verification
 
 ## ⚡ Quick Start
 
 ```bash
-# Install Ruchy (v1.9.1+)
-cargo install ruchy
+# Install Ruchy v1.18.0
+cargo install ruchy --version 1.18.0
 
 # Clone demos
 git clone https://github.com/paiml/ruchy-repl-demos.git
 cd ruchy-repl-demos
 
-# Run tests to verify everything works
-make test
+# Run TDD verification (mandatory before showing any example)
+./scripts/tdd-verify.sh
 
-# Try a REPL demo
-ruchy repl < demos/repl/01-basics/demo_01_arithmetic.repl
-
-# Execute a one-liner
-./demos/one-liners/text-processing/reverse_string.sh
+# Try a working one-liner
+./demos/one-liners/math-calculations/factorial.sh
 ```
 
-## 📚 Demo Categories
+## ✅ Working Examples (v1.18.0 Verified)
 
-### REPL Demonstrations
+### Basic Arithmetic
+**Compatibility:** ✅ v1.18.0 (Tested: 2025-08-26)
 
-| Category | Demos | Description |
-|----------|-------|-------------|
-| **Basics** | 10 | Arithmetic, variables, basic expressions |
-| **Functions** | 10 | Definition, closures, recursion, composition |
-| **Data Structures** | 10 | Arrays, maps, structs, collections |
-| **Algorithms** | 5 | Sorting, searching, classic CS problems |
-| **Functional** | 10 | Map, filter, reduce, pipeline operations |
-| **Advanced** | 5 | Pattern matching, generics, type inference |
-
-### One-Liner Examples
-
-| Category | Demos | Use Cases |
-|----------|-------|-----------|
-| **Text Processing** | 20 | String manipulation, parsing, formatting |
-| **Data Analysis** | 15 | Statistics, aggregation, calculations |
-| **File Operations** | 10 | Read, write, transform files |
-| **Math Calculations** | 20 | Formulas, sequences, numerical methods |
-| **System Scripting** | 15 | Automation, environment, timestamps |
-| **Functional Chains** | 20 | Pipeline operations, composition |
-
-## 🔬 Quality Assurance
-
-Every demonstration includes:
-
-```bash
-# Syntax validation
-ruchy check demo.ruchy          # ✓ Valid syntax
-
-# Runtime complexity
-ruchy runtime demo.ruchy        # O(n) complexity
-
-# Formal verification
-ruchy provability demo.ruchy    # 100% provable
-
-# Quality scoring
-ruchy score demo.ruchy          # Score: A+ (0.95/1.0)
-```
-
-## 💡 Featured Examples
-
-### REPL: Functional Composition
 ```ruchy
->>> let add_one = |x| x + 1
->>> let double = |x| x * 2
->>> let transform = add_one >> double
->>> transform(5)
-12
+# Addition and multiplication
+2 + 2  # Output: 4
+10 * 5  # Output: 50
+
+# Exponentiation works!
+2 ** 8  # Output: 256
 ```
 
-### One-Liner: Prime Numbers
-```bash
-ruchy -e 'fn is_prime(n) { n > 1 && !(2..n).any(|i| n % i == 0) }; 
-         println((2..50).filter(is_prime).join(", "))'
-# Output: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47
-```
+### Simple Functions
+**Compatibility:** ✅ v1.18.0 (Tested: 2025-08-26)
 
-### REPL: Pattern Matching
 ```ruchy
->>> fn classify(n: i32) -> String {
-...     match n {
-...         n if n < 0 => "negative",
-...         0 => "zero",
-...         1..=10 => "small",
-...         _ => "large"
-...     }
-... }
->>> [classify(-5), classify(0), classify(7), classify(100)]
-["negative", "zero", "small", "large"]
+# Function definition (no type annotations)
+fn add(x, y) { x + y }
+add(2, 3)  # Output: 5
+
+# Recursive function
+fn fact(n) { 
+    if n <= 1 { 1 } else { n * fact(n - 1) }
+}
+fact(5)  # Output: 120
 ```
 
-### One-Liner: Data Pipeline
-```bash
-ruchy -e '(1..=100) 
-         |> filter(|x| x % 2 == 0) 
-         |> map(|x| x * x) 
-         |> take(5) 
-         |> sum() 
-         |> println'
-# Output: 220 (4 + 16 + 36 + 64 + 100)
+### Array Operations
+**Compatibility:** ✅ v1.18.0 (Tested: 2025-08-26)
+
+```ruchy
+# Array creation and methods
+let nums = [1, 2, 3, 4, 5]
+
+# Map operation
+nums.map(|x| x * 2)  # Output: [2, 4, 6, 8, 10]
+
+# Filter operation
+nums.filter(|x| x % 2 == 0)  # Output: [2, 4]
+
+# Reduce operation
+nums.reduce(0, |acc, x| acc + x)  # Output: 15
 ```
 
-## 📊 Learning Path
+### Working Closures
+**Compatibility:** ✅ v1.18.0 (Tested: 2025-08-26)
 
-### Beginner
-1. Start with `demos/repl/01-basics/`
-2. Try simple one-liners in `text-processing/`
-3. Experiment with `math-calculations/`
+```ruchy
+# Simple closure syntax
+let double = |x| x * 2
+double(5)  # Output: 10
 
-### Intermediate
-1. Explore `demos/repl/02-functions/`
-2. Work through `data-analysis/` one-liners
-3. Study `demos/repl/03-data-structures/`
+# Closures in array operations
+[1, 2, 3].map(|x| x * x)  # Output: [1, 4, 9]
+```
 
-### Advanced
-1. Master `demos/repl/05-functional/`
-2. Build complex `functional-chains/`
-3. Tackle `demos/repl/06-advanced/`
+## 📊 One-Liner Examples (100% Working)
 
-## 🛠️ Development
-
-### Running Tests
+### Math Calculations ✅
 ```bash
-# All tests
+# Factorial
+ruchy -e 'fn fact(n) { if n <= 1 { 1 } else { n * fact(n - 1) } }; fact(5)'
+# Output: 120
+
+# Fibonacci
+ruchy -e 'fn fib(n) { if n <= 1 { n } else { fib(n-1) + fib(n-2) } }; fib(10)'
+# Output: 55
+
+# Sum of squares
+ruchy -e '[1, 2, 3, 4, 5].map(|x| x * x).reduce(0, |a, b| a + b)'
+# Output: 55
+```
+
+### Text Processing ✅
+```bash
+# Reverse array of characters
+ruchy -e '["h","e","l","l","o"].reverse()'
+# Output: ["o", "l", "l", "e", "h"]
+
+# Count array elements
+ruchy -e '["hello", "world", "test"].len()'
+# Output: 3
+
+# Transform array elements
+ruchy -e '["hello", "world"].map(|s| s + "!")'
+# Output: ["hello!", "world!"]
+```
+
+### Data Analysis ✅
+```bash
+# Calculate mean (integer division)
+ruchy -e 'let nums = [1, 2, 3, 4, 5]; nums.sum() / nums.len()'
+# Output: 3
+
+# Find max value using reduce
+ruchy -e '[10, 5, 8, 3, 15, 7].reduce(0, |a, b| if a > b { a } else { b })'
+# Output: 15
+
+# Filter and sum
+ruchy -e '[1, 2, 3, 4, 5, 6].filter(|x| x > 3).sum()'
+# Output: 15
+```
+
+## ❌ Not Compatible with v1.18.0
+
+### These Rust features don't work:
+```rust
+// ❌ Type annotations - NOT SUPPORTED
+fn add(x: i32, y: i32) -> i32 { x + y }
+
+// ❌ Generic types - NOT SUPPORTED
+let nums: Vec<i32> = vec![1, 2, 3];
+
+// ❌ Rust stdlib - NOT SUPPORTED
+format!("Hello {}", name)
+Some(value)
+Result<T, E>
+
+// ❌ Pattern matching - NOT SUPPORTED
+match value {
+    Some(x) => x,
+    None => 0,
+}
+
+// ❌ Traits - NOT SUPPORTED
+impl Display for MyType { }
+```
+
+## 📁 Project Structure
+
+```
+demos/
+├── one-liners/        # 90 working examples (100% compatible)
+│   ├── text-processing/     ✅ All working
+│   ├── data-analysis/       ✅ All working
+│   ├── file-operations/     ✅ All working
+│   ├── math-calculations/   ✅ All working
+│   ├── system-scripting/    ✅ All working
+│   └── functional-chains/   ✅ All working
+└── repl/              # 85 total (18 working, 67 being fixed)
+    ├── 01-basics/            ⚠️ 80% working
+    ├── 02-functions/         ⚠️ 40% working
+    ├── 03-data-structures/   ⚠️ 27% working
+    ├── 04-algorithms/        ❌ 0% working (fixing)
+    ├── 05-functional/        ❌ 0% working (fixing)
+    └── 06-advanced/          ❌ 5% working (fixing)
+```
+
+## 🔒 Quality Gates
+
+**MANDATORY: No example shown without TDD verification**
+
+```bash
+# Run quality gate before any release
+make quality-gate
+
+# Checks performed:
+✓ Syntax validation with Ruchy v1.17.0
+✓ Execution testing
+✓ Output verification
+✓ Version compatibility check
+✓ Documentation accuracy
+
+# Individual example testing
+make test-example EXAMPLE=demos/one-liners/math-calculations/factorial.sh
+```
+
+## 📈 Compatibility Status
+
+| Feature | v1.18.0 Support | Status |
+|---------|-----------------|--------|
+| Basic arithmetic | ✅ Yes | Working |
+| Exponentiation (`**`) | ✅ Yes | Working |
+| Simple functions | ✅ Yes | Working |
+| Closures (`\|x\| x * 2`) | ✅ Yes | Working |
+| Arrays | ✅ Yes | Working |
+| Array methods (map, filter) | ✅ Yes | Working |
+| Type annotations | ❌ No | Not supported |
+| Generics | ❌ No | Not supported |
+| Rust stdlib | ❌ No | Not supported |
+| Pattern matching | ❌ No | Not supported |
+
+## 🚀 Development
+
+```bash
+# Run TDD verification
+./scripts/tdd-verify.sh
+
+# Test specific category
+make test-category CATEGORY=one-liners/math-calculations
+
+# Check version compatibility
+ruchy --version  # Must be 1.18.0
+
+# Run all tests
 make test
-
-# Specific category
-make test-repl-basics
-make test-oneliner-text
-
-# With coverage
-make coverage
 ```
 
-### Adding New Demos
-1. Create demo file in appropriate category
-2. Write test in `tests/` directory
-3. Run `make validate` to verify
-4. Update documentation
-5. Submit PR with test results
+## 📚 Documentation
 
-### Quality Gates
-```bash
-make quality-gate  # Must pass before merge
-```
+- [Integration Report v1.18.0](./RUCHY_V1.18_COMPATIBILITY_REPORT.md) - Full compatibility details
+- [Previous v1.17.0 Report](./INTEGRATION_REPORT_V1.17.md) - Historical reference
+- [Development Guidelines](./CLAUDE.md) - TDD requirements and standards
+- [Roadmap](./ROADMAP.md) - Fix plan for broken examples
 
-Checks:
-- ✅ All demos execute successfully
-- ✅ Performance < 100ms per demo
-- ✅ Test coverage 100%
-- ✅ No TODO/FIXME comments
-- ✅ Documentation complete
+## ⚠️ Known Issues
 
-## 📈 Project Status
-
-| Metric | Target | Current | Status |
-|--------|--------|---------|--------|
-| Demo Count | 150+ | 150 | ✅ |
-| Test Coverage | 100% | 100% | ✅ |
-| Performance | <100ms | ✓ All pass | ✅ |
-| Quality Score | A+ | A+ (0.95) | ✅ |
-| Documentation | Complete | Complete | ✅ |
-
-## 🎓 Educational Value
-
-Each demonstration teaches:
-- **Core Concept**: One specific Ruchy feature
-- **Best Practice**: Idiomatic usage pattern
-- **Real Application**: Practical use case
-- **Performance**: Complexity characteristics
-- **Verification**: Formal correctness proof
-
-## 🔄 Continuous Updates
-
-This project follows continuous delivery:
-- **Sprint Releases**: Every 2 days
-- **User Feedback**: Integrated within 24 hours
-- **Version Updates**: Tracks latest Ruchy features
-- **Quality Maintained**: Zero regression policy
-
-## 📝 Documentation
-
-- [Specification](docs/specifications/ruchy-repl-one-liner.spec) - Complete project specification
-- [Development Guide](CLAUDE.md) - Toyota Way quality standards
-- [Roadmap](ROADMAP.md) - Development timeline and milestones
-- [Tutorials](docs/tutorials/) - Step-by-step learning guides
+- 67 REPL demos use Rust syntax incompatible with Ruchy v1.18.0
+- Being rewritten to use only Ruchy-native syntax
+- ETA for full compatibility: Sprint 5 completion
 
 ## 🤝 Contributing
 
-We welcome contributions that:
-1. Add new demonstration categories
-2. Improve existing examples
-3. Enhance test coverage
-4. Fix bugs (though we aim for zero)
-5. Improve documentation
+All contributions must:
+1. Pass TDD verification
+2. Work with Ruchy v1.18.0
+3. Include test files
+4. Have version compatibility labels
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+## 📄 License
 
-## 📜 License
-
-MIT License - See [LICENSE](LICENSE) for details.
-
-## 🏆 Acknowledgments
-
-- Ruchy language team for the amazing REPL
-- Toyota Production System for quality methodology
-- Community contributors for feedback and ideas
+MIT License - See [LICENSE](./LICENSE) for details
 
 ---
 
-**Ready to explore Ruchy's interactive power? Start with `make test` to verify everything works!**
+**Remember**: Every example shown has been tested and verified with Ruchy v1.18.0. No untested code in documentation!

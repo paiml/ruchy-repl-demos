@@ -4,7 +4,9 @@
         test-oneliner-text test-oneliner-data test-oneliner-file \
         test-oneliner-math test-oneliner-system test-oneliner-functional \
         demos-repl demos-oneliner verify lint pre-commit release \
-        test-local test-latest test-version monitor-releases compat-matrix
+        test-local test-latest test-version monitor-releases compat-matrix \
+        tdd-verify test-readme test-example verify-version-compatibility \
+        check-documentation-examples test-all-examples continuous-tdd-check
 
 # Use strict POSIX shell
 SHELL := /bin/sh
@@ -35,6 +37,8 @@ help:
 	@echo "  make verify       - Verify syntax of all demos"
 	@echo "  make lint         - Check for quality issues"
 	@echo "  make benchmark    - Run performance benchmarks"
+	@echo "  make tdd-verify   - Run TDD verification (MANDATORY)"
+	@echo "  make test-readme  - Test all README examples"
 	@echo ""
 	@echo "Development Commands:"
 	@echo "  make install      - Install dependencies"
@@ -45,10 +49,15 @@ help:
 install:
 	@echo "Checking Ruchy installation..."
 	@if ! command -v ruchy >/dev/null 2>&1; then \
-		echo "ERROR: ruchy not found. Install with: cargo install ruchy"; \
+		echo "ERROR: ruchy not found. Install with: cargo install ruchy --version 1.18.0"; \
 		exit 1; \
 	fi
-	@ruchy --version
+	@RUCHY_VERSION=$$(ruchy --version | cut -d' ' -f2); \
+	if [ "$$RUCHY_VERSION" != "1.18.0" ]; then \
+		echo "WARNING: Expected Ruchy v1.18.0, found $$RUCHY_VERSION"; \
+	else \
+		echo "✓ Ruchy v1.18.0 installed"; \
+	fi
 	@echo "✓ Ruchy installed"
 	@echo "Setting up directory structure..."
 	@mkdir -p demos/repl/01-basics demos/repl/02-functions demos/repl/03-data-structures
@@ -296,8 +305,58 @@ verify:
 	done
 	@echo "✓ Syntax verification complete"
 
+# TDD Verification (MANDATORY)
+tdd-verify:
+	@echo "Running TDD Quality Gate Verification..."
+	@chmod +x scripts/tdd-verify.sh
+	@./scripts/tdd-verify.sh
+
+test-readme:
+	@echo "Testing README examples..."
+	@chmod +x tests/tdd/test_readme_examples.sh
+	@./tests/tdd/test_readme_examples.sh
+
+test-example:
+	@echo "Testing individual example: $(EXAMPLE)"
+	@if [ -z "$(EXAMPLE)" ]; then \
+		echo "ERROR: Please provide EXAMPLE=path/to/demo"; \
+		exit 1; \
+	fi
+	@if echo "$(EXAMPLE)" | grep -q "\.repl$$"; then \
+		ruchy "$(EXAMPLE)" || exit 1; \
+	elif echo "$(EXAMPLE)" | grep -q "\.sh$$"; then \
+		sh "$(EXAMPLE)" || exit 1; \
+	else \
+		echo "ERROR: Unknown file type"; \
+		exit 1; \
+	fi
+	@echo "✓ Example passed"
+
+verify-version-compatibility:
+	@echo "Verifying Ruchy version compatibility..."
+	@RUCHY_VERSION=$$(ruchy --version | cut -d' ' -f2); \
+	if [ "$$RUCHY_VERSION" != "1.18.0" ]; then \
+		echo "ERROR: Ruchy v1.18.0 required, found $$RUCHY_VERSION"; \
+		exit 1; \
+	fi
+	@echo "✓ Ruchy v1.18.0 verified"
+
+check-documentation-examples:
+	@echo "Checking documentation examples..."
+	@./tests/tdd/test_readme_examples.sh
+
+test-all-examples: tdd-verify
+	@echo "✓ All examples tested"
+
+continuous-tdd-check:
+	@echo "Running continuous TDD checks..."
+	@while true; do \
+		$(MAKE) tdd-verify; \
+		sleep 3600; \
+	done
+
 # Quality gates
-quality-gate: test lint verify benchmark
+quality-gate: verify-version-compatibility tdd-verify test lint verify benchmark
 	@echo "Running quality gate checks..."
 	@echo "✓ Checking for TODO/FIXME comments..."
 	@if find demos -type f \( -name "*.ruchy" -o -name "*.repl" \) -exec grep -l "TODO\|FIXME\|HACK" {} \; | grep .; then \
@@ -356,7 +415,7 @@ clean:
 	@echo "✓ Clean complete"
 
 # Pre-commit hook
-pre-commit: quality-gate
+pre-commit: tdd-verify quality-gate
 	@echo "✓ Pre-commit checks passed"
 
 # Release preparation

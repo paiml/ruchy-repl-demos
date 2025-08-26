@@ -1,210 +1,262 @@
 # Ruchy REPL & One-Liner Demos - Development Roadmap
 
-**Last Updated**: August 24, 2025  
-**Current Version**: v0.1.0-dev  
-**Target Release**: v1.0.0
+**Last Updated**: August 26, 2025  
+**Current Version**: v1.0.0  
+**Ruchy Version**: v1.18.0
 
-## 🚨 Sprint 1: Foundation (Next 4 Hours)
+## 🚨 CRITICAL: TDD-Only Example Policy
 
-### Objective: Core Infrastructure & Basic Demos
-**Success Metric**: 20 working demos with tests
+### Zero Tolerance Quality Policy
+**NO EXAMPLE CAN BE SHOWN WITHOUT PASSING TDD VERIFICATION**
 
-### Tasks:
-- [x] Create project specification
-- [x] Setup CLAUDE.md guidelines
-- [x] Create README documentation
-- [x] Define roadmap
-- [ ] **DEMO-001**: Create Makefile with targets
-- [ ] **DEMO-002**: Setup directory structure
-- [ ] **DEMO-003**: Implement 10 basic REPL demos
-- [ ] **DEMO-004**: Implement 10 text processing one-liners
-- [ ] **DEMO-005**: Create test harness
-- [ ] **DEMO-006**: Run initial quality gates
+Every example MUST:
+1. Have a corresponding test file
+2. Pass automated test execution
+3. Be verified against current Ruchy version (v1.18.0)
+4. Include version compatibility label
+5. Show actual tested output
 
-### Deliverables:
-```
-demos/
-├── repl/01-basics/          # 10 demos
-└── one-liners/text-processing/  # 10 demos
-tests/
-├── repl/                    # 10 test files
-└── one-liner/               # 10 test scripts
+### Version Compatibility Labels
+```markdown
+✅ v1.18.0 - Tested and Working
+❌ v1.18.0 - Failed (Rust syntax not supported)
+⚠️  v1.18.0 - Partial (Some features work)
+🔄 Pending - Not yet tested
 ```
 
 ---
 
-## 📊 Sprint 2: Core Features (Hours 4-8)
+## 📊 Current Compatibility Status
 
-### Objective: Functions & Data Operations
-**Success Metric**: 50 total demos, all passing
+### v1.18.0 Test Results (Identical to v1.17.0)
+| Category | Total | Working | Failed | Status |
+|----------|-------|---------|--------|--------|
+| **One-liners** | 90 | 90 | 0 | ✅ 100% Compatible |
+| **REPL Demos** | 85 | 18 | 67 | ❌ 21% Compatible |
 
-### Tasks:
-- [ ] **DEMO-007**: Function definition REPL demos (10)
-- [ ] **DEMO-008**: Data structure REPL demos (10)
-- [ ] **DEMO-009**: Math calculation one-liners (10)
-- [ ] **DEMO-010**: Data analysis one-liners (10)
-- [ ] **DEMO-011**: Integration test suite
-- [ ] **DEMO-012**: Performance benchmarks
-
-### Quality Gates:
-- Test coverage: 100%
-- Performance: < 100ms per demo
-- Zero failures
-- Documentation complete
+### Critical Issues
+- 67 REPL demos use Rust syntax incompatible with v1.18.0
+- Type annotations not supported
+- Rust stdlib unavailable
+- Advanced features missing
 
 ---
 
-## 🎯 Sprint 3: Advanced Patterns (Hours 8-12)
+## 🎯 Sprint 5: v1.17.0 Compatibility Fix (CURRENT)
 
-### Objective: Algorithms & Functional Programming
-**Success Metric**: 80 total demos with formal verification
+### Objective: Fix All Broken Examples
+**Success Metric**: 100% examples pass TDD with v1.18.0
 
 ### Tasks:
-- [ ] **DEMO-013**: Algorithm REPL demos (5)
-- [ ] **DEMO-014**: Functional programming REPL (10)
-- [ ] **DEMO-015**: File operation one-liners (10)
-- [ ] **DEMO-016**: System scripting one-liners (15)
-- [ ] **DEMO-017**: Formal verification integration
-- [ ] **DEMO-018**: Complexity analysis for all demos
+- [x] **TDD-001**: Test all demos against v1.18.0
+- [x] **TDD-002**: Create compatibility report
+- [ ] **TDD-003**: Update README with only working examples
+- [ ] **TDD-004**: Fix 67 failing REPL demos
+- [ ] **TDD-005**: Create TDD test suite for all examples
+- [ ] **TDD-006**: Implement quality gates
+- [ ] **TDD-007**: Update documentation
+- [ ] **TDD-008**: Release v2.0.0 with full compatibility
 
-### Verification Requirements:
+### Quality Gates (MANDATORY):
 ```bash
-# Each demo must pass:
-ruchy check demo.ruchy
-ruchy runtime demo.ruchy
-ruchy provability demo.ruchy
-ruchy score demo.ruchy
+# Every example must pass:
+make test-example EXAMPLE=demo.repl  # TDD test
+ruchy demo.repl                      # Syntax check
+make verify-output EXAMPLE=demo.repl # Output verification
 ```
 
 ---
 
-## 🚀 Sprint 4: Complete Suite (Hours 12-16)
+## 📋 TDD Implementation Plan
 
-### Objective: Advanced Features & Polish
-**Success Metric**: 150+ demos, production ready
+### Phase 1: Documentation Update (Immediate)
+1. **README.md** - Show ONLY v1.18.0 working examples
+2. **Add version labels** to every code block
+3. **Remove all untested examples**
+4. **Add test status badges**
 
-### Tasks:
-- [ ] **DEMO-019**: Advanced REPL patterns (5)
-- [ ] **DEMO-020**: Functional chain one-liners (20)
-- [ ] **DEMO-021**: Remaining one-liner categories
-- [ ] **DEMO-022**: Tutorial documentation
-- [ ] **DEMO-023**: CI/CD pipeline setup
-- [ ] **DEMO-024**: v1.0.0 release preparation
+### Phase 2: Test Suite Creation
+```
+tests/
+├── tdd/
+│   ├── repl/
+│   │   └── test_*.yaml    # TDD specs for each demo
+│   └── one-liner/
+│       └── test_*.sh       # TDD scripts for each demo
+└── verify.sh              # Master TDD runner
+```
 
-### Release Checklist:
-- [ ] All 150+ demos working
-- [ ] 100% test coverage
-- [ ] Performance validated
-- [ ] Documentation complete
-- [ ] Quality gates passing
-- [ ] README examples verified
+### Phase 3: Demo Fixes
+Priority order based on failure rate:
+1. **algorithms/** - 100% broken, needs complete rewrite
+2. **functional/** - 100% broken, remove Rust features
+3. **advanced/** - 95% broken, simplify to basics
+4. **data-structures/** - 73% broken, remove types
+5. **functions/** - 60% broken, fix signatures
+6. **basics/** - 20% broken, minor fixes
+
+---
+
+## 🔒 Quality Gate Requirements
+
+### Pre-Commit Checks
+```makefile
+quality-gate:
+    @echo "Running TDD Quality Gates..."
+    @make test-all-examples
+    @make verify-version-compatibility
+    @make check-documentation-examples
+    @echo "✅ All quality gates passed"
+```
+
+### TDD Test Format
+```yaml
+# tests/tdd/repl/test_example.yaml
+name: "Example Name"
+version_compatibility:
+  v1.18.0: "working"
+  status: "✅"
+test:
+  input: |
+    let x = 5
+    x * 2
+  expected_output: |
+    10
+  actual_tested: true
+  test_date: "2025-08-26"
+```
+
+### Documentation Requirements
+```markdown
+## Example: Array Operations
+
+**Compatibility:** ✅ v1.18.0 (Tested: 2025-08-26)
+
+```ruchy
+// This example has been TDD verified
+let nums = [1, 2, 3]
+nums.map(|x| x * 2)
+// Output: [2, 4, 6]
+```
+
+**Test:** `tests/tdd/repl/test_array_ops.yaml`
+```
 
 ---
 
 ## 📈 Success Metrics Dashboard
 
-| Sprint | Target Demos | Actual | Tests | Coverage | Status |
-|--------|-------------|--------|-------|----------|--------|
-| Sprint 1 | 20 | - | - | - | 🔄 In Progress |
-| Sprint 2 | 50 | - | - | - | ⏳ Pending |
-| Sprint 3 | 80 | - | - | - | ⏳ Pending |
-| Sprint 4 | 150+ | - | - | - | ⏳ Pending |
+| Sprint | Target | Actual | TDD Coverage | v1.17.0 Compatible | Status |
+|--------|--------|--------|--------------|-------------------|--------|
+| Sprint 1-4 | 150 | 175 | 0% | 61.71% | ❌ Failed QA |
+| Sprint 5 | 175 | - | 100% | 100% | 🔄 In Progress |
 
 ---
 
-## 🔄 Continuous Delivery Plan
+## 🚀 Release Plan
 
-### Release Cycle
-```
-v0.1.0 - Foundation (20 demos) - Hour 4
-v0.2.0 - Core Features (50 demos) - Hour 8  
-v0.3.0 - Advanced (80 demos) - Hour 12
-v1.0.0 - Complete Suite (150+ demos) - Hour 16
-```
+### v2.0.0 - Full v1.17.0 Compatibility
+**Target**: End of Sprint 5
 
-### Per-Sprint Deliverables
-1. **Code**: Working demos in `demos/`
-2. **Tests**: Passing tests in `tests/`
-3. **Docs**: Updated README and tutorials
-4. **Quality**: All gates passing
-5. **Release**: Tagged version with CHANGELOG
+Requirements:
+- [ ] 100% demos pass with v1.17.0
+- [ ] 100% TDD test coverage
+- [ ] All documentation updated
+- [ ] Quality gates implemented
+- [ ] Version labels on all examples
+- [ ] No untested code in documentation
+
+### Release Checklist:
+```bash
+make pre-release-check
+# ✅ All 175 demos tested
+# ✅ All tests passing with v1.17.0
+# ✅ Documentation contains only verified examples
+# ✅ Version compatibility clearly labeled
+# ✅ Quality gates enforced
+```
 
 ---
 
 ## 🎯 Current Focus (NOW)
 
-### Immediate Actions (Next 30 minutes)
-1. Create Makefile with all targets
-2. Setup directory structure
-3. Write first 5 REPL basic demos
-4. Create corresponding tests
-5. Verify with `ruchy check`
+### Immediate Actions:
+1. ✅ Test all demos against v1.17.0
+2. ✅ Create compatibility report
+3. 🔄 Update README with only working examples
+4. 🔄 Implement TDD quality gates
+5. ⏳ Fix failing REPL demos
 
-### Demo Priority Order
-1. **Arithmetic expressions** - Simplest starting point
-2. **Variable definitions** - Core feature
-3. **Function definitions** - Key capability
-4. **String operations** - Common use case
-5. **Array operations** - Data manipulation
+### Working Examples Priority:
+Show these in README (all tested ✅):
+1. **One-liners** - 100% working
+2. **Basic arithmetic** - Working
+3. **Simple functions** - Working
+4. **Basic arrays** - Working
+5. **Simple closures** - Working
+
+### Hide These (failed ❌):
+1. Rust type annotations
+2. Generic types
+3. Rust stdlib calls
+4. Advanced pattern matching
+5. Traits and lifetimes
 
 ---
 
 ## 📊 Quality Tracking
 
-### Toyota Way Metrics
-- **Defect Rate**: 0% (target)
-- **First-Time Success**: 100% (target)
-- **Test Coverage**: 100% (minimum)
-- **Performance**: <100ms (all demos)
-- **Documentation**: 100% (all demos)
+### TDD Metrics
+- **Test Coverage**: 100% (required)
+- **v1.17.0 Compatibility**: 100% (required)
+- **Documentation Accuracy**: 100% (required)
+- **False Examples**: 0 (zero tolerance)
 
-### Continuous Improvement
-- Sprint retrospectives every 4 hours
-- User feedback integration within 1 hour
-- Bug fixes within 30 minutes
-- Documentation updates immediate
+### Continuous Verification
+```bash
+# Run every hour
+make continuous-tdd-check
+```
 
 ---
 
 ## 🚨 Risk Mitigation
 
-### Identified Risks
-1. **Format string issues in Ruchy** - Use simple println for now
-2. **REPL multiline parsing** - Test thoroughly
-3. **Performance on complex demos** - Keep demos focused
-4. **Cross-platform compatibility** - Test on Linux/Mac
+### Critical Risk: Showing Broken Examples
+**Mitigation**: TDD gate prevents any untested code in docs
 
-### Mitigation Strategies
-- Test every demo immediately after creation
-- Keep demos simple and focused
-- Use stable Ruchy features only
-- Maintain fallback examples
+### Risk: Version Incompatibility
+**Mitigation**: Clear version labels on every example
+
+### Risk: User Confusion
+**Mitigation**: Show only simple, working examples
 
 ---
 
-## 📝 Sprint Notes
+## 📝 Sprint 5 Notes
 
-### Sprint 1 Notes
-- Starting with basics to establish patterns
-- Focus on working examples over quantity
-- Test infrastructure critical for success
+### Lessons Learned:
+1. Rust syntax ≠ Ruchy syntax
+2. Must test against actual Ruchy version
+3. Documentation must reflect reality
+4. TDD prevents embarrassing failures
 
-### Future Optimizations
-- WASM compilation for web demos
-- Interactive tutorial mode
-- Video demonstrations
-- Community contribution system
-
----
-
-## 🎊 Milestone Celebrations
-
-- [ ] **20 demos**: Foundation complete 🎉
-- [ ] **50 demos**: Core features done 🚀
-- [ ] **100 demos**: Major milestone 🏆
-- [ ] **150+ demos**: Full suite ready 🎊
-- [ ] **v1.0.0**: Production release 🌟
+### Key Decisions:
+1. Remove all Rust-specific syntax
+2. Focus on Ruchy v1.17.0 native features
+3. Simplify examples to basics that work
+4. Label everything with version compatibility
 
 ---
 
-**Remember**: Quality over quantity. Every demo must work perfectly.
+## 🎊 Milestone Progress
+
+- [x] **175 demos created**: Done but 38% broken 😞
+- [x] **Compatibility tested**: v1.17.0 issues found
+- [ ] **100% TDD coverage**: In progress
+- [ ] **All demos working**: 67 need fixes
+- [ ] **v2.0.0 release**: Pending fixes
+
+---
+
+**Remember**: NO EXAMPLE WITHOUT TDD VERIFICATION. PERIOD.
