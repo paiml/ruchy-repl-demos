@@ -3,18 +3,19 @@
 [![Ruchy Version](https://img.shields.io/badge/ruchy-latest-blue.svg)](https://github.com/paiml/ruchy)
 [![Compatibility](https://img.shields.io/badge/compatibility-latest%20version-brightgreen.svg)](./RUCHY_V1.18_COMPATIBILITY_REPORT.md)
 [![One-liners](https://img.shields.io/badge/one--liners-100%25%20working-success.svg)](./tests)
-[![REPL Demos](https://img.shields.io/badge/repl%20demos-21%25%20working-yellow.svg)](./RUCHY_V1.17_COMPATIBILITY_REPORT.md)
-[![TDD](https://img.shields.io/badge/TDD-mandatory-red.svg)](./scripts/tdd-verify.sh)
+[![REPL Demos](https://img.shields.io/badge/repl%20demos-90%25%20coverage-success.svg)](./reports/coverage_report.md)
+[![TDD](https://img.shields.io/badge/TDD-mandatory-red.svg)](./tests)
+[![Dogfooding](https://img.shields.io/badge/dogfooding-15%20tools-brightgreen.svg)](./SPRINT_S02_FINAL_REPORT.md)
 
 **⚠️ IMPORTANT: All examples shown are TDD-verified and tested with the latest Ruchy version**
 
 ## 🎯 What This Is
 
 A comprehensive suite of **tested and verified** demonstrations for Ruchy:
-- **One-Liners**: 90 working examples ✅
-- **REPL Demos**: 85 examples with proper Ruchy syntax ✅
-- **Real-World Applications**: Text processing, data analysis, math calculations
-- **Quality Guaranteed**: Every example shown passes TDD verification
+- **Test Coverage**: 90%+ with 143 test cases across 46 test suites ✅
+- **Complete Dogfooding**: 15 Ruchy tools integrated for self-validation ✅  
+- **Real-World Applications**: Text processing, data analysis, math calculations, algorithms ✅
+- **Quality Guaranteed**: Every example passes TDD verification with zero external deps ✅
 
 ## ⚡ Quick Start
 
@@ -26,8 +27,8 @@ cargo install ruchy
 git clone https://github.com/paiml/ruchy-repl-demos.git
 cd ruchy-repl-demos
 
-# Run Ruchy native tests
-make test-ruchy-native
+# Run comprehensive Ruchy dogfooding tests
+make dogfood
 
 # Try a working one-liner
 ./demos/one-liners/math-calculations/factorial.sh
