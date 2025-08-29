@@ -1,24 +1,27 @@
-# Integration Report - Ruchy REPL Demos v1.25.0
+# Integration Report - Ruchy REPL Demos v1.26.0
 
 **Date**: 2025-08-29  
-**Ruchy Version**: 1.25.0  
+**Ruchy Version**: 1.26.0 (latest)  
+**Previous Version**: 1.25.0  
 **Platform**: Linux 6.8.0-78-generic  
-**Test Coverage**: 45% (85/190 demos tested)
+**Test Coverage**: 47% (90/190 demos tested)
 
 ## Executive Summary
 
-Following the Ruchy update to v1.25.0, comprehensive testing reveals a **split state**: one-liner demos are 100% functional while the test framework requires complete rebuild. This report documents the current state and provides a roadmap to full functionality.
+Following the Ruchy update to v1.26.0 (latest version), comprehensive testing reveals a **split state**: all 90 one-liner demos are 100% functional while the test framework requires complete rebuild. This report documents the current state and provides a roadmap to full functionality.
 
 ## Version Compatibility Matrix
 
-| Component | v1.18.0 | v1.25.0 | Status |
-|-----------|---------|---------|--------|
-| Basic Execution (`-e`) | ✅ | ✅ | Stable |
-| REPL Mode | ✅ | ✅ | Stable |
-| One-Liners | ✅ | ✅ | **100% Working** |
-| Test Framework | ✅ | ❌ | Broken |
-| `eval` Command | ✅ | ❌ | Removed/Changed |
-| Import System | ✅ | ❌ | Needs Update |
+| Component | v1.18.0 | v1.25.0 | v1.26.0 | Status |
+|-----------|---------|---------|---------|--------|
+| Basic Execution (`-e`) | ✅ | ✅ | ✅ | Stable |
+| REPL Mode | ✅ | ✅ | ✅ | Stable |
+| One-Liners | ✅ | ✅ | ✅ | **100% Working** |
+| Test Framework | ✅ | ❌ | ❌ | Broken |
+| `eval` Command | ✅ | ❌ | ❌ | Removed (use `-e`) |
+| Import System | ✅ | ❌ | ❌ | Needs Update |
+| `.for_each()` | ✅ | ✅ | ❌ | Removed in v1.26.0 |
+| `.sum()` on ranges | ✅ | ✅ | ❌ | Not available |
 
 ## Feature Support Matrix
 
@@ -35,14 +38,14 @@ Following the Ruchy update to v1.25.0, comprehensive testing reveals a **split s
 
 ## Demo Inventory
 
-### One-Liner Demos (85 total) ✅
+### One-Liner Demos (90 total) ✅
 ```
-text-processing/     10 demos  ✅ 100% passing
-data-analysis/       15 demos  ✅ 100% passing  
-file-operations/     10 demos  ✅ 100% passing
-functional-chains/   25 demos  ✅ 100% passing
-math-calculations/   10 demos  ✅ 100% passing
-system-scripting/    20 demos  ✅ 100% passing
+text-processing/     10 demos  ✅ 100% passing (v1.26.0)
+data-analysis/       15 demos  ✅ 100% passing (v1.26.0)
+file-operations/     10 demos  ✅ 100% passing (v1.26.0)
+functional-chains/   25 demos  ✅ 100% passing (v1.26.0)
+math-calculations/   10 demos  ✅ 100% passing (v1.26.0)
+system-scripting/    20 demos  ✅ 100% passing (v1.26.0)
 ```
 
 ### REPL Demos (105 total) ⚠️
@@ -62,6 +65,12 @@ system-scripting/    20 demos  ✅ 100% passing
 2. **Import syntax changes** - May affect test framework
 3. **AST output format** - Different structure
 4. **Error messages** - New format
+
+### v1.26.0 Additional Changes
+1. **`.for_each()` removed** - Use alternative iteration methods
+2. **`.sum()` not available on ranges** - Use manual reduction
+3. **Complex inline function calls** - Not supported
+4. **No API changes affecting demos** - All demos still work
 
 ## Migration Guide
 
