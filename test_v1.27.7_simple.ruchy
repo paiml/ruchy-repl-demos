@@ -1,0 +1,50 @@
+// Test file for v1.27.7 - Object literals and field access (simplified)
+
+// Test 1: Object literal creation (NEW in v1.27.7)
+let person = {
+    name: "Alice",
+    age: 30,
+    city: "San Francisco"
+}
+println(f"Person created: {person}")
+
+// Test 2: Field access (FIXED in v1.27.7)
+println(f"Name: {person.name}")
+println(f"Age: {person.age}")
+println(f"City: {person.city}")
+
+// Test 3: Nested objects
+let config = {
+    server: {
+        host: "localhost",
+        port: 8080
+    },
+    debug: true
+}
+println(f"Server: {config.server}")
+println(f"Server host: {config.server.host}")
+println(f"Server port: {config.server.port}")
+println(f"Debug mode: {config.debug}")
+
+// Test 4: Updating object fields
+person.age = 31
+println(f"Updated age: {person.age}")
+
+// Test 5: Array of objects
+let users = [
+    { name: "Bob", score: 85 },
+    { name: "Carol", score: 92 },
+    { name: "Dave", score: 78 }
+]
+println(f"First user: {users[0].name} with score {users[0].score}")
+println(f"Second user: {users[1].name} with score {users[1].score}")
+
+// Test 6: All previous v1.27.6 features still work
+let x = 42
+let message = f"The answer is {x}"
+println(message)
+
+fun greet(name) {
+    f"Hello, {name}!"
+}
+println(greet("v1.27.7"))

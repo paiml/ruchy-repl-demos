@@ -1,0 +1,28 @@
+// Simple test file to verify quality tools v1.27.6
+
+// Test 1: Basic arithmetic
+let result = 2 + 2
+println(f"2 + 2 = {result}")
+
+// Test 2: Function with parameters (lint should handle correctly)
+fun add(x, y) {
+    x + y
+}
+println(f"add(3, 4) = {add(3, 4)}")
+
+// Test 3: String interpolation (fixed in v1.27.6)
+let name = "Ruchy"
+let version = "1.27.6"
+let message = f"Testing {name} version {version}"
+println(message)
+
+// Test 4: Array operations
+let numbers = [1, 2, 3, 4, 5]
+let sum = numbers.sum()
+println(f"Sum of [1,2,3,4,5] = {sum}")
+
+// Test 5: Closure
+let double = |x| x * 2
+println(f"double(5) = {double(5)}")
+
+// All variables are used, lint should pass 100%

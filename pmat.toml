@@ -1,0 +1,39 @@
+# PMAT TDG v2.39.0 Configuration for ruchy-repl-demos
+# Based on ../ruchy CLAUDE.md TDG Quality Standards
+
+[quality]
+max_cyclomatic_complexity = 20  # TDG Structural Complexity limit
+max_cognitive_complexity = 15   # TDG Semantic Complexity limit
+max_satd_comments = 0           # Zero SATD tolerance
+max_dead_code_percentage = 5.0  # Traditional threshold
+min_code_entropy = 2.0          # Traditional threshold
+
+[tdg]
+# TDG Quality Standards (Zero Tolerance - v2.39.0)
+min_overall_grade = "A-"        # Must maintain A- or higher (≥85 points)
+structural_complexity_max = 20  # ≤20 per function
+semantic_complexity_max = 15    # Cognitive complexity ≤15
+code_duplication_max = 10.0     # <10% code duplication
+documentation_coverage_min = 70 # >70% for public APIs
+technical_debt_max = 0          # Zero SATD comments
+consistency_score_min = 80      # ≥80% naming/style consistency
+
+[reporting]
+format = "markdown"
+output = "reports/pmat_quality.md"
+tdg_output = "reports/TDG_QUALITY_REPORT.md"
+
+[thresholds]
+complexity_p99 = 20            # Updated to match TDG standards
+dead_code = 5.0
+entropy = 2.0
+tdg_min_grade = 85             # A- grade minimum (85 points)
+
+[analysis]
+include_patterns = ["*.ruchy", "*.rs", "*.toml", "*.md"]
+exclude_patterns = ["target/", ".git/", "book/", "node_modules/"]
+
+[dashboard]
+port = 8080
+update_interval = 5            # Real-time updates every 5 seconds
+auto_open = true

@@ -1,0 +1,83 @@
+// REPL Demo: Objects and Arrays (NEW in v1.27.7+)
+// Version: v1.27.10 compatible
+// Features: Object literals, field access, arrays
+
+println("=== Ruchy Objects and Arrays Demo ===")
+
+// Object literals (NEW in v1.27.7)
+println("\n1. Object Creation:")
+let person = {
+    name: "Alice Johnson",
+    age: 28,
+    city: "San Francisco",
+    occupation: "Developer"
+}
+println(f"Created person: {person}")
+
+// Field access (FIXED in v1.27.7)
+println("\n2. Object Field Access:")
+println(f"  Name: {person.name}")
+println(f"  Age: {person.age}")
+println(f"  City: {person.city}")
+println(f"  Job: {person.occupation}")
+
+// Nested objects
+println("\n3. Nested Objects:")
+let company = {
+    name: "TechCorp",
+    location: {
+        city: "Seattle",
+        state: "WA",
+        country: "USA"
+    },
+    employee_count: 1500
+}
+println(f"Company: {company.name}")
+println(f"Location: {company.location.city}, {company.location.state}")
+println(f"Employees: {company.employee_count}")
+
+// Arrays (existing feature)
+println("\n4. Arrays:")
+let numbers = [1, 2, 3, 4, 5]
+println(f"Numbers array: {numbers}")
+println(f"First element: {numbers[0]}")
+println(f"Last element: {numbers[4]}")
+println(f"Array length: {numbers.len()}")
+
+// Array methods
+println("\n5. Array Operations:")
+let sum = numbers.sum()
+println(f"Sum of array: {sum}")
+
+let doubled_numbers = numbers.map(|x| x * 2)
+println(f"Doubled: {doubled_numbers}")
+
+// Array of objects
+println("\n6. Array of Objects:")
+let team = [
+    { name: "Alice", role: "Lead" },
+    { name: "Bob", role: "Developer" },
+    { name: "Carol", role: "Designer" }
+]
+println(f"Team member 1: {team[0].name} - {team[0].role}")
+println(f"Team member 2: {team[1].name} - {team[1].role}")
+println(f"Team member 3: {team[2].name} - {team[2].role}")
+
+// Mixed data structures
+println("\n7. Complex Data:")
+let project = {
+    title: "Ruchy Demo Suite",
+    version: "1.27.10",
+    contributors: ["Alice", "Bob", "Carol"],
+    features: {
+        objects: true,
+        arrays: true,
+        functions: true
+    }
+}
+println(f"Project: {project.title} v{project.version}")
+println(f"Contributors: {project.contributors}")
+println(f"Object support: {project.features.objects}")
+
+println("\n✅ Objects and arrays demo completed!")
+println("Try in REPL: Create your own objects and access their fields!")

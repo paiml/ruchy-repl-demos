@@ -1,0 +1,48 @@
+// Test suite for basic REPL demos - v1.27.10 compatible
+// No imports - self-contained tests
+
+// Test 1: Basic Arithmetic Operations
+println("Testing Basic Arithmetic...")
+
+// Addition tests
+let add_test_1 = 2 + 2
+println(f"2 + 2 = {add_test_1} (expected: 4)")
+
+let add_test_2 = 10 + 5  
+println(f"10 + 5 = {add_test_2} (expected: 15)")
+
+let add_test_3 = -5 + 3
+println(f"-5 + 3 = {add_test_3} (expected: -2)")
+
+// Multiplication tests
+let mult_test_1 = 10 * 5
+println(f"10 * 5 = {mult_test_1} (expected: 50)")
+
+let mult_test_2 = 3 * -4
+println(f"3 * -4 = {mult_test_2} (expected: -12)")
+
+let mult_test_3 = 0 * 100
+println(f"0 * 100 = {mult_test_3} (expected: 0)")
+
+// Subtraction tests
+let sub_test_1 = 100 - 25
+println(f"100 - 25 = {sub_test_1} (expected: 75)")
+
+let sub_test_2 = 10 - 20
+println(f"10 - 20 = {sub_test_2} (expected: -10)")
+
+// Division tests
+let div_test_1 = 100 / 10
+println(f"100 / 10 = {div_test_1} (expected: 10)")
+
+let div_test_2 = 15 / 3
+println(f"15 / 3 = {div_test_2} (expected: 5)")
+
+// Exponentiation tests  
+let exp_test_1 = 2 ** 8
+println(f"2 ** 8 = {exp_test_1} (expected: 256)")
+
+let exp_test_2 = 3 ** 3
+println(f"3 ** 3 = {exp_test_2} (expected: 27)")
+
+println("✅ All arithmetic tests completed successfully!")

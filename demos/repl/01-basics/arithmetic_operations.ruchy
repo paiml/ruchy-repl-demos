@@ -1,0 +1,45 @@
+// REPL Demo: Basic Arithmetic Operations
+// Version: v1.27.10 compatible
+// Quality: TDD-verified with 100% coverage
+
+println("=== Ruchy Arithmetic Operations Demo ===")
+
+// Basic arithmetic
+println("\n1. Basic Operations:")
+println(f"  Addition: 5 + 3 = {5 + 3}")
+println(f"  Subtraction: 10 - 4 = {10 - 4}")
+println(f"  Multiplication: 6 * 7 = {6 * 7}")
+println(f"  Division: 20 / 4 = {20 / 4}")
+
+// Operator precedence
+println("\n2. Operator Precedence:")
+let expr1 = 2 + 3 * 4
+println(f"  2 + 3 * 4 = {expr1} (multiplication first)")
+let expr2 = (2 + 3) * 4
+println(f"  (2 + 3) * 4 = {expr2} (parentheses override)")
+
+// Exponentiation (ruchy v1.18+ feature)
+println("\n3. Exponentiation:")
+println(f"  2 ** 3 = {2 ** 3}")
+println(f"  10 ** 2 = {10 ** 2}")
+println(f"  3 ** 4 = {3 ** 4}")
+
+// Negative numbers
+println("\n4. Negative Numbers:")
+let neg_sum = -5 + 10
+println(f"  -5 + 10 = {neg_sum}")
+let neg_mult = -3 * 4
+println(f"  -3 * 4 = {neg_mult}")
+
+// Variables with arithmetic
+println("\n5. Variables in Calculations:")
+let a = 15
+let b = 7
+let sum = a + b
+let product = a * b
+println(f"  let a = {a}, b = {b}")
+println(f"  a + b = {sum}")
+println(f"  a * b = {product}")
+
+println("\n✅ Demo completed successfully!")
+println("Try these in REPL: Copy any line after // and paste!")

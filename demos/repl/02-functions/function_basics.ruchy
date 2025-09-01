@@ -1,0 +1,61 @@
+// REPL Demo: Function Basics
+// Version: v1.27.10 compatible  
+// Features: Function definition, parameters, return values
+
+println("=== Ruchy Function Basics Demo ===")
+
+// Simple function definition
+println("\n1. Simple Functions:")
+fun greet(name) {
+    f"Hello, {name}!"
+}
+println(f"  greet(\"Alice\") = {greet(\"Alice\")}")
+println(f"  greet(\"Bob\") = {greet(\"Bob\")}")
+
+// Functions with multiple parameters
+println("\n2. Multiple Parameters:")
+fun add(x, y) {
+    x + y
+}
+println(f"  add(5, 3) = {add(5, 3)}")
+println(f"  add(10, 7) = {add(10, 7)}")
+
+// Functions with calculations
+println("\n3. Mathematical Functions:")
+fun area_rectangle(width, height) {
+    width * height
+}
+let room_area = area_rectangle(12, 8)
+println(f"  area_rectangle(12, 8) = {room_area} sq ft")
+
+fun area_circle(radius) {
+    3 * radius * radius
+}
+let circle_area = area_circle(5)
+println(f"  area_circle(5) ≈ {circle_area} sq units (simplified π≈3)")
+
+// Recursive functions (if supported)
+println("\n4. Recursive Functions:")
+fun factorial(n) {
+    if n <= 1 {
+        1
+    } else {
+        n * factorial(n - 1)
+    }
+}
+println(f"  factorial(5) = {factorial(5)}")
+println(f"  factorial(6) = {factorial(6)}")
+
+// Functions as expressions
+println("\n5. Function Composition:")
+fun double(x) { x * 2 }
+fun add_one(x) { x + 1 }
+
+let value = 5
+let doubled = double(value)
+let final_result = add_one(doubled)
+println(f"  double(5) = {doubled}")
+println(f"  add_one(double(5)) = {final_result}")
+
+println("\n✅ Function demo completed!")
+println("Try in REPL: Define your own functions and call them!")

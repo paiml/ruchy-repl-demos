@@ -1,0 +1,83 @@
+// REPL Demo: Functional Programming with Closures
+// Version: v1.27.10 compatible
+// Features: Closures, higher-order functions, functional patterns
+
+println("=== Ruchy Functional Programming Demo ===")
+
+// Basic closures
+println("\n1. Basic Closures:")
+let double = |x| x * 2
+let triple = |x| x * 3
+let add_ten = |x| x + 10
+
+println(f"  double(5) = {double(5)}")
+println(f"  triple(4) = {triple(4)}")
+println(f"  add_ten(7) = {add_ten(7)}")
+
+// Closures with multiple parameters
+println("\n2. Multi-parameter Closures:")
+let add = |x, y| x + y
+let multiply = |x, y| x * y
+let power = |base, exp| base ** exp
+
+println(f"  add(3, 7) = {add(3, 7)}")
+println(f"  multiply(6, 4) = {multiply(6, 4)}")
+println(f"  power(2, 5) = {power(2, 5)}")
+
+// Array operations with closures
+println("\n3. Array Transformations:")
+let numbers = [1, 2, 3, 4, 5]
+println(f"  Original: {numbers}")
+
+let doubled = numbers.map(|x| x * 2)
+println(f"  Doubled: {doubled}")
+
+let squares = numbers.map(|x| x * x)  
+println(f"  Squared: {squares}")
+
+// Closure composition patterns
+println("\n4. Function Composition:")
+let increment = |x| x + 1
+let square = |x| x * x
+
+// Compose manually
+let value = 5
+let incremented = increment(value)
+let final_result = square(incremented)
+println(f"  square(increment(5)) = {final_result}")
+
+// Chain operations
+let chain_result = square(increment(3))
+println(f"  square(increment(3)) = {chain_result}")
+
+// Practical examples
+println("\n5. Practical Applications:")
+
+// Temperature converter
+let celsius_to_fahrenheit = |c| (c * 9 / 5) + 32
+let fahrenheit_to_celsius = |f| (f - 32) * 5 / 9
+
+println(f"  25°C = {celsius_to_fahrenheit(25)}°F")
+println(f"  77°F = {fahrenheit_to_celsius(77)}°C")
+
+// Discount calculator
+let apply_discount = |price, percent| price * (100 - percent) / 100
+let add_tax = |price, rate| price * (100 + rate) / 100
+
+let original_price = 100
+let discounted = apply_discount(original_price, 15)
+let final_price = add_tax(discounted, 8)
+println(f"  $100 with 15% discount + 8% tax = ${final_price}")
+
+// String transformers
+println("\n6. String Transformations:")
+let make_uppercase = |s| s.to_uppercase()
+let add_greeting = |name| f"Hello, {name}!"
+
+let name = "ruchy"
+let upper_name = make_uppercase(name)
+let greeting = add_greeting(upper_name)
+println(f"  {name} -> {upper_name} -> {greeting}")
+
+println("\n✅ Functional programming demo completed!")
+println("Try in REPL: Create your own closures and chain them together!")
