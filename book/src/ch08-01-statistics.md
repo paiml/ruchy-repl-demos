@@ -15,25 +15,16 @@ The Iris dataset, collected by botanist Edgar Anderson in 1936, remains the most
 ## The Dataset
 
 ```ruchy
-// Load the canonical Iris dataset (sample)
-let iris = [
-    // Setosa samples - small petals, distinctive
-    {species: "setosa", sepal_length: 5.1, sepal_width: 3.5, petal_length: 1.4, petal_width: 0.2},
-    {species: "setosa", sepal_length: 4.9, sepal_width: 3.0, petal_length: 1.4, petal_width: 0.2},
-    {species: "setosa", sepal_length: 4.7, sepal_width: 3.2, petal_length: 1.3, petal_width: 0.2},
-    
-    // Versicolor samples - medium petals  
-    {species: "versicolor", sepal_length: 7.0, sepal_width: 3.2, petal_length: 4.7, petal_width: 1.4},
-    {species: "versicolor", sepal_length: 6.4, sepal_width: 3.2, petal_length: 4.5, petal_width: 1.5},
-    {species: "versicolor", sepal_length: 6.9, sepal_width: 3.1, petal_length: 4.9, petal_width: 1.5},
-    
-    // Virginica samples - large petals
-    {species: "virginica", sepal_length: 6.3, sepal_width: 3.3, petal_length: 6.0, petal_width: 2.5},
-    {species: "virginica", sepal_length: 5.8, sepal_width: 2.7, petal_length: 5.1, petal_width: 1.9},
-    {species: "virginica", sepal_length: 7.1, sepal_width: 3.0, petal_length: 5.9, petal_width: 2.1}
+// Create the canonical Iris dataset using DataFrame (production: df.from_csv())
+let iris_df = df![
+    species => ["setosa", "setosa", "setosa", "versicolor", "versicolor", "versicolor", "virginica", "virginica", "virginica"],
+    sepal_length => [5.1, 4.9, 4.7, 7.0, 6.4, 6.9, 6.3, 5.8, 7.1],
+    sepal_width => [3.5, 3.0, 3.2, 3.2, 3.2, 3.1, 3.3, 2.7, 3.0],
+    petal_length => [1.4, 1.4, 1.3, 4.7, 4.5, 4.9, 6.0, 5.1, 5.9],
+    petal_width => [0.2, 0.2, 0.2, 1.4, 1.5, 1.5, 2.5, 1.9, 2.1]
 ];
 
-println(f"Dataset loaded: {iris.len()} samples");
+println(f"DataFrame loaded: {iris_df.height()} samples");
 ```
 
 ## Basic Statistics
@@ -41,15 +32,17 @@ println(f"Dataset loaded: {iris.len()} samples");
 Computing fundamental statistics is the first step in any data analysis:
 
 ```ruchy
-// Extract sepal lengths for analysis
-let sepal_lengths = iris.map(|row| row.sepal_length);
-let avg_sepal_length = sepal_lengths.sum() / sepal_lengths.len();
-let min_sepal_length = match sepal_lengths.min() { Some(x) => x, None => 0.0 };
-let max_sepal_length = match sepal_lengths.max() { Some(x) => x, None => 0.0 };
+// Professional statistical analysis using DataFrame operations
+let sepal_stats = iris_df
+    .select(["sepal_length"])
+    .agg([
+        mean("sepal_length").alias("avg_sepal_length"),
+        min("sepal_length").alias("min_sepal_length"),
+        max("sepal_length").alias("max_sepal_length")
+    ]);
 
-println(f"Sepal Length Statistics:");
-println(f"  Average: {avg_sepal_length:.2f} cm");
-println(f"  Range: {min_sepal_length:.1f} - {max_sepal_length:.1f} cm");
+println(f"Sepal Length Statistics (DataFrame):");
+println(sepal_stats);
 ```
 
 **Expected Output:**
@@ -64,23 +57,18 @@ Sepal Length Statistics:
 Group data by species to reveal biological patterns:
 
 ```ruchy
-// Filter by species and compute averages
-let setosa_flowers = iris.filter(|row| row.species == "setosa");
-let setosa_avg_sepal = setosa_flowers.map(|row| row.sepal_length).sum() / setosa_flowers.len();
-let setosa_avg_petal = setosa_flowers.map(|row| row.petal_length).sum() / setosa_flowers.len();
+// Professional species analysis using DataFrame groupby operations
+let species_stats = iris_df
+    .groupby(["species"])
+    .agg([
+        mean("sepal_length").alias("avg_sepal_length"),
+        mean("petal_length").alias("avg_petal_length"),
+        count("species").alias("flower_count")
+    ])
+    .sort("avg_petal_length");
 
-let versicolor_flowers = iris.filter(|row| row.species == "versicolor");
-let versicolor_avg_sepal = versicolor_flowers.map(|row| row.sepal_length).sum() / versicolor_flowers.len();
-let versicolor_avg_petal = versicolor_flowers.map(|row| row.petal_length).sum() / versicolor_flowers.len();
-
-let virginica_flowers = iris.filter(|row| row.species == "virginica");
-let virginica_avg_sepal = virginica_flowers.map(|row| row.sepal_length).sum() / virginica_flowers.len();
-let virginica_avg_petal = virginica_flowers.map(|row| row.petal_length).sum() / virginica_flowers.len();
-
-println("Average measurements by species:");
-println(f"Setosa:     Sepal={setosa_avg_sepal:.2f}cm,     Petal={setosa_avg_petal:.2f}cm");
-println(f"Versicolor: Sepal={versicolor_avg_sepal:.2f}cm, Petal={versicolor_avg_petal:.2f}cm");
-println(f"Virginica:  Sepal={virginica_avg_sepal:.2f}cm,  Petal={virginica_avg_petal:.2f}cm");
+println("Average measurements by species (DataFrame):");
+println(species_stats);
 ```
 
 **Key Insight:** Setosa has dramatically smaller petals (1.37cm vs 4.7cm+ for others)
@@ -90,21 +78,24 @@ println(f"Virginica:  Sepal={virginica_avg_sepal:.2f}cm,  Petal={virginica_avg_p
 Create new derived features to gain insights:
 
 ```ruchy
-// Engineer new features from existing measurements
-let analyzed_iris = iris.map(|row| {
-    let petal_ratio = row.petal_length / row.petal_width;
-    let sepal_ratio = row.sepal_length / row.sepal_width;
-    
-    {
-        ...row,
-        petal_ratio: petal_ratio,
-        sepal_ratio: sepal_ratio,
-        size_category: if row.petal_length > 4.0 { "large" } else { "small" }
-    }
-});
+// Professional feature engineering using DataFrame operations
+let engineered_iris = iris_df
+    .with_columns([
+        (col("petal_length") / col("petal_width")).alias("petal_ratio"),
+        (col("sepal_length") / col("sepal_width")).alias("sepal_ratio"),
+        when(col("petal_length").gt(4.0))
+            .then(lit("large"))
+            .otherwise(lit("small"))
+            .alias("size_category")
+    ]);
 
-println(f"Sample with engineered features:");
-println(f"Species: {analyzed_iris[0].species}, Petal ratio: {analyzed_iris[0].petal_ratio:.2f}, Size: {analyzed_iris[0].size_category}");
+// Show sample of engineered features
+let feature_sample = engineered_iris
+    .select(["species", "petal_ratio", "sepal_ratio", "size_category"])
+    .head(3);
+
+println("Sample with engineered features (DataFrame):");
+println(feature_sample);
 ```
 
 ## Pattern Discovery
@@ -112,16 +103,22 @@ println(f"Species: {analyzed_iris[0].species}, Petal ratio: {analyzed_iris[0].pe
 Use filtering to discover biological patterns:
 
 ```ruchy
-// Discover patterns in petal sizes
-let large_petals = iris.filter(|row| row.petal_length > 4.0);
-let small_petals = iris.filter(|row| row.petal_length <= 4.0);
+// Pattern discovery using DataFrame filtering and analysis
+let petal_analysis = iris_df
+    .with_columns([
+        when(col("petal_length").gt(4.0))
+            .then(lit("Large_Petals"))
+            .otherwise(lit("Small_Petals"))
+            .alias("petal_size_category")
+    ])
+    .groupby(["petal_size_category"])
+    .agg([
+        count("species").alias("flower_count"),
+        collect_list("species").alias("species_list")
+    ]);
 
-println(f"Flowers with large petals (>4cm): {large_petals.len()}");
-println(f"Flowers with small petals (≤4cm): {small_petals.len()}");
-
-// Show which species have large petals
-let large_petal_species = large_petals.map(|row| row.species);
-println(f"Large petal species: {large_petal_species}");
+println("Petal size pattern analysis (DataFrame):");
+println(petal_analysis);
 ```
 
 **Discovery:** All large petal flowers are versicolor or virginica - never setosa!
@@ -131,23 +128,35 @@ println(f"Large petal species: {large_petal_species}");
 Build a simple classifier based on our insights:
 
 ```ruchy
-// Classification rule: If petal_length > 2.5, then NOT setosa
+// Professional classification using DataFrame operations
 println("Classification Rule: If petal_length > 2.5, then NOT setosa");
 
-var correct_predictions = 0;
-let total_predictions = iris.len();
+// Create predictions using DataFrame operations
+let classification_results = iris_df
+    .with_columns([
+        when(col("petal_length").gt(2.5))
+            .then(lit("not_setosa"))
+            .otherwise(lit("setosa"))
+            .alias("predicted"),
+        when(col("species").eq(lit("setosa")))
+            .then(lit("setosa"))
+            .otherwise(lit("not_setosa"))
+            .alias("actual"),
+    ])
+    .with_columns([
+        (col("predicted").eq(col("actual"))).alias("correct")
+    ]);
 
-for flower in iris {
-    let prediction = if flower.petal_length > 2.5 { "not_setosa" } else { "setosa" };
-    let actual = if flower.species == "setosa" { "setosa" } else { "not_setosa" };
-    
-    if prediction == actual {
-        correct_predictions = correct_predictions + 1;
-    }
-}
+// Calculate accuracy using DataFrame aggregation
+let model_accuracy = classification_results
+    .agg([
+        sum("correct").alias("correct_predictions"),
+        count("correct").alias("total_predictions"),
+        (sum("correct").cast(Float64) / count("correct").cast(Float64) * 100.0).alias("accuracy_pct")
+    ]);
 
-let accuracy = (correct_predictions * 100) / total_predictions;
-println(f"Simple rule accuracy: {accuracy}% ({correct_predictions}/{total_predictions})");
+println("Classification accuracy (DataFrame):");
+println(model_accuracy);
 ```
 
 **Result:** 100% accuracy on this sample! Petal length perfectly separates setosa from other species.

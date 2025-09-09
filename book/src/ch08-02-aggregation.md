@@ -15,26 +15,19 @@ The Titanic disaster dataset provides a compelling introduction to demographic a
 ## The Dataset
 
 ```ruchy
-// Load Titanic passenger data (representative sample)
-let passengers = [
-    // First class passengers - higher survival rates
-    {passenger_id: 1, survived: 1, pclass: 1, name: "Cumings, Mrs. John Bradley", sex: "female", age: 38, fare: 71.28, embarked: "C"},
-    {passenger_id: 4, survived: 1, pclass: 1, name: "Futrelle, Mrs. Jacques Heath", sex: "female", age: 35, fare: 53.10, embarked: "S"},
-    {passenger_id: 7, survived: 0, pclass: 1, name: "McCarthy, Mr. Timothy J", sex: "male", age: 54, fare: 51.86, embarked: "S"},
-    
-    // Second class passengers - mixed outcomes
-    {passenger_id: 10, survived: 1, pclass: 2, name: "Nasser, Mrs. Nicholas", sex: "female", age: 14, fare: 30.07, embarked: "C"},
-    {passenger_id: 12, survived: 1, pclass: 2, name: "Bonnell, Miss. Caroline", sex: "female", age: 58, fare: 26.55, embarked: "S"},
-    {passenger_id: 16, survived: 0, pclass: 2, name: "Hewlett, Mrs. (Mary D Kingcome)", sex: "female", age: 55, fare: 16.00, embarked: "S"},
-    
-    // Third class passengers - lower survival rates  
-    {passenger_id: 3, survived: 1, pclass: 3, name: "Heikkinen, Miss. Laina", sex: "female", age: 26, fare: 7.92, embarked: "S"},
-    {passenger_id: 5, survived: 0, pclass: 3, name: "Allen, Mr. William Henry", sex: "male", age: 35, fare: 8.05, embarked: "S"},
-    {passenger_id: 8, survived: 0, pclass: 3, name: "Palsson, Master. Gosta Leonard", sex: "male", age: 2, fare: 21.08, embarked: "S"}
+// Create Titanic dataset using DataFrame (production: df.from_csv())
+let titanic_df = df![
+    passenger_id => [1, 4, 7, 10, 12, 16, 3, 5, 8],
+    survived => [1, 1, 0, 1, 1, 0, 1, 0, 0],
+    pclass => [1, 1, 1, 2, 2, 2, 3, 3, 3],
+    sex => ["female", "female", "male", "female", "female", "female", "female", "male", "male"],
+    age => [38, 35, 54, 14, 58, 55, 26, 35, 2],
+    fare => [71.28, 53.10, 51.86, 30.07, 26.55, 16.00, 7.92, 8.05, 21.08],
+    embarked => ["C", "S", "S", "C", "S", "S", "S", "S", "S"]
 ];
 
-println(f"Titanic dataset loaded: {passengers.len()} passengers");
-println("Features: passenger_id, survived, pclass, name, sex, age, fare, embarked");
+println(f"Titanic DataFrame loaded: {titanic_df.height()} passengers");
+println(f"Features: {titanic_df.width()} columns - passenger_id, survived, pclass, sex, age, fare, embarked");
 ```
 
 ## Overall Survival Analysis
@@ -42,17 +35,17 @@ println("Features: passenger_id, survived, pclass, name, sex, age, fare, embarke
 Start with basic survival statistics:
 
 ```ruchy
-// Calculate overall survival statistics
-let survivors = passengers.filter(|p| p.survived == 1);
-let casualties = passengers.filter(|p| p.survived == 0);
+// Professional survival analysis using DataFrame operations
+let survival_overview = titanic_df
+    .agg([
+        count("survived").alias("total_passengers"),
+        sum("survived").alias("survivors"),
+        (count("survived") - sum("survived")).alias("casualties"),
+        (sum("survived").cast(Float64) / count("survived").cast(Float64) * 100.0).alias("survival_rate_pct")
+    ]);
 
-let survival_rate = (survivors.len() * 100) / passengers.len();
-let casualty_rate = 100 - survival_rate;
-
-println(f"Titanic Disaster Overview:");
-println(f"Total passengers (sample): {passengers.len()}");
-println(f"Survivors: {survivors.len()} ({survival_rate}%)");
-println(f"Casualties: {casualties.len()} ({casualty_rate}%)");
+println("Titanic Disaster Overview (DataFrame Analysis):");
+println(survival_overview);
 ```
 
 **Historical Context:** In our sample, 56% survived, but historically only 32% of all passengers survived.
@@ -62,22 +55,18 @@ println(f"Casualties: {casualties.len()} ({casualty_rate}%)");
 Analyze the famous maritime protocol:
 
 ```ruchy
-// Gender-based survival analysis
-let female_passengers = passengers.filter(|p| p.sex == "female");
-let male_passengers = passengers.filter(|p| p.sex == "male");
+// Professional gender analysis using DataFrame groupby
+let gender_survival = titanic_df
+    .groupby(["sex"])
+    .agg([
+        count("survived").alias("total_passengers"),
+        sum("survived").alias("survivors"),
+        (sum("survived").cast(Float64) / count("survived").cast(Float64) * 100.0).alias("survival_rate_pct")
+    ])
+    .sort("survival_rate_pct", descending: true);
 
-let female_survivors = female_passengers.filter(|p| p.survived == 1);
-let male_survivors = male_passengers.filter(|p| p.survived == 1);
-
-let female_survival_rate = (female_survivors.len() * 100) / female_passengers.len();
-let male_survival_rate = (male_survivors.len() * 100) / male_passengers.len();
-
-println(f"Gender Survival Analysis:");
-println(f"Female passengers: {female_passengers.len()}");
-println(f"Female survivors: {female_survivors.len()} ({female_survival_rate}% survival rate)");
-println(f"Male passengers: {male_passengers.len()}");  
-println(f"Male survivors: {male_survivors.len()} ({male_survival_rate}% survival rate)");
-println(f"Gender survival gap: {female_survival_rate - male_survival_rate} percentage points");
+println("Gender Survival Analysis (DataFrame):");
+println(gender_survival);
 ```
 
 **Historical Insight:** The "women and children first" protocol was followed - women had dramatically higher survival rates.
@@ -87,23 +76,19 @@ println(f"Gender survival gap: {female_survival_rate - male_survival_rate} perce
 Examine how passenger class affected survival:
 
 ```ruchy
-// Class-based survival analysis
-let first_class = passengers.filter(|p| p.pclass == 1);
-let second_class = passengers.filter(|p| p.pclass == 2);
-let third_class = passengers.filter(|p| p.pclass == 3);
+// Professional class analysis using DataFrame operations
+let class_survival = titanic_df
+    .groupby(["pclass"])
+    .agg([
+        count("survived").alias("total_passengers"),
+        sum("survived").alias("survivors"),
+        (sum("survived").cast(Float64) / count("survived").cast(Float64) * 100.0).alias("survival_rate_pct"),
+        mean("fare").alias("avg_fare")
+    ])
+    .sort("pclass");
 
-let first_survivors = first_class.filter(|p| p.survived == 1);
-let second_survivors = second_class.filter(|p| p.survived == 1);
-let third_survivors = third_class.filter(|p| p.survived == 1);
-
-let first_survival_rate = (first_survivors.len() * 100) / first_class.len();
-let second_survival_rate = (second_survivors.len() * 100) / second_class.len();
-let third_survival_rate = (third_survivors.len() * 100) / third_class.len();
-
-println(f"Class Survival Analysis:");
-println(f"First Class:  {first_survivors.len()}/{first_class.len()} survived ({first_survival_rate}%)");
-println(f"Second Class: {second_survivors.len()}/{second_class.len()} survived ({second_survival_rate}%)");
-println(f"Third Class:  {third_survivors.len()}/{third_class.len()} survived ({third_survival_rate}%)");
+println("Class Survival Analysis (DataFrame):");
+println(class_survival);
 ```
 
 **Social Insight:** Higher passenger class correlated with better access to lifeboats and survival.
