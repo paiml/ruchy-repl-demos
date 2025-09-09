@@ -29,16 +29,8 @@ preferred-dark-theme = "coal"
 smart-punctuation = true
 mathjax-support = false
 copy-fonts = true
-# additional-css = [
-#     "book/theme/ruchy-demos.css", 
-#     "book/theme/repl-highlight.css",
-#     "book/theme/one-liner-patterns.css"
-# ]
-# additional-js = [
-#     "book/theme/ruchy-repl.js",
-#     "book/theme/one-liner-runner.js", 
-#     "book/theme/demo-validator.js"
-# ]
+additional-css = ["book/theme/ruchy.css"]
+additional-js = ["book/theme/highlight-ruchy.js"]
 git-repository-url = "https://github.com/paiml/ruchy-repl-demos"
 git-repository-icon = "fa-github"
 edit-url-template = "https://github.com/paiml/ruchy-repl-demos/edit/main/{path}"
