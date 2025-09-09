@@ -9,6 +9,12 @@
 
 **✅ PRODUCTION READY: 100% success rate with enterprise-grade quality validation**
 
+## 📚 [**Read the Interactive Book →**](https://paiml.github.io/ruchy-repl-demos/)
+
+*Complete documentation with copy-paste examples, data science tutorials, and progressive learning paths*
+
+---
+
 ## 🎯 What This Is
 
 The **definitive demonstration suite** for the Ruchy programming language:
@@ -19,6 +25,8 @@ The **definitive demonstration suite** for the Ruchy programming language:
 - **Latest Features**: v1.89.0 with advanced analytics and correlation analysis ✅
 
 ## ⚡ Quick Start
+
+**📖 Prefer interactive learning?** → **[Open the Book](https://paiml.github.io/ruchy-repl-demos/)** for step-by-step tutorials with copy-paste examples!
 
 ```bash
 # Install latest Ruchy (v1.89.0)
@@ -111,6 +119,8 @@ for wine in wines {
 - **Progressive Complexity**: From basic stats (Iris) to multi-feature correlation (Wine)
 - **Real-World Impact**: Historical insights (Titanic), market applications (Wine Quality)
 - **Perfect for Learning**: Canonical examples that every data scientist recognizes
+
+📖 **Want full tutorials?** → [**Chapter 8: Data Science Analytics**](https://paiml.github.io/ruchy-repl-demos/ch08-00-data-analysis-tdd.html) in the interactive book!
 
 ## ✅ Working Examples (Latest Ruchy)
 
