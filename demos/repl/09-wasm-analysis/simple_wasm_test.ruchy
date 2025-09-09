@@ -1,0 +1,21 @@
+// Simple Ruchy program to test WASM compilation
+println("Hello from Ruchy WASM!");
+
+fun add(a, b) {
+    a + b
+}
+
+fun fibonacci(n) {
+    if n <= 1 {
+        n
+    } else {
+        fibonacci(n - 1) + fibonacci(n - 2)
+    }
+}
+
+// Test the functions
+let result1 = add(5, 3);
+let result2 = fibonacci(10);
+
+println(f"5 + 3 = {result1}");
+println(f"fibonacci(10) = {result2}");

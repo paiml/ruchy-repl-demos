@@ -6,6 +6,8 @@ WebAssembly (WASM) represents the future of high-performance web applications an
 
 This chapter demonstrates how to analyze WASM code using professional analysis tools and integrate with notebook environments for interactive exploration.
 
+> **⚠️ Implementation Status (v1.90.0)**: While Ruchy includes a `ruchy wasm` command with comprehensive options, the actual WASM compilation is not yet implemented. This chapter focuses on **analyzing existing WASM modules** rather than compiling Ruchy to WASM. See [GitHub Issue #19](https://github.com/paiml/ruchy/issues/19) for implementation status.
+
 ## What You'll Learn
 
 - WebAssembly binary and text format analysis
