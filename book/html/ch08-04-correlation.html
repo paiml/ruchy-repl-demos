@@ -1,0 +1,508 @@
+<!DOCTYPE HTML>
+<html lang="en" class="rust sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Feature Correlation: Wine Quality - Ruchy REPL &amp; One-Liner Demos</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Test-driven collection of Ruchy REPL sessions and one-liners - every example is tested">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="book/theme/ruchy.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "rust";
+            const default_dark_theme = "coal";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Ruchy REPL &amp; One-Liner Demos</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/paiml/ruchy-repl-demos" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/paiml/ruchy-repl-demos/edit/main/book/src/ch08-04-correlation.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="84-feature-correlation-wine-quality-dataset"><a class="header" href="#84-feature-correlation-wine-quality-dataset">8.4 Feature Correlation: Wine Quality Dataset</a></h1>
+<p><strong>Advanced Analytics: Predicting Quality Through Chemistry</strong></p>
+<p>The Wine Quality dataset represents the pinnacle of feature correlation analysis in data science. With 11 chemical features predicting wine quality scores, it demonstrates how multiple variables interact to determine outcomes - perfect for understanding correlation, feature importance, and prediction modeling.</p>
+<h2 id="what-youll-learn"><a class="header" href="#what-youll-learn">What You’ll Learn</a></h2>
+<ul>
+<li>Multi-feature correlation analysis</li>
+<li>Chemical feature interpretation</li>
+<li>Quality prediction modeling</li>
+<li>Feature ranking by importance</li>
+<li>Domain knowledge integration</li>
+<li>Advanced filtering and aggregation</li>
+</ul>
+<h2 id="the-dataset"><a class="header" href="#the-dataset">The Dataset</a></h2>
+<pre><code class="language-ruchy">// Wine Quality dataset: 11 chemical features + quality score
+let wines = [
+    // Red wines with various quality levels
+    {wine_type: "red", fixed_acidity: 7.4, volatile_acidity: 0.7, citric_acid: 0.0, residual_sugar: 1.9, chlorides: 0.076, free_sulfur_dioxide: 11, total_sulfur_dioxide: 34, density: 0.9978, ph: 3.51, sulphates: 0.56, alcohol: 9.4, quality: 5},
+    {wine_type: "red", fixed_acidity: 7.8, volatile_acidity: 0.88, citric_acid: 0.0, residual_sugar: 2.6, chlorides: 0.098, free_sulfur_dioxide: 25, total_sulfur_dioxide: 67, density: 0.9968, ph: 3.2, sulphates: 0.68, alcohol: 9.8, quality: 5},
+    {wine_type: "red", fixed_acidity: 6.2, volatile_acidity: 0.21, citric_acid: 0.29, residual_sugar: 1.6, chlorides: 0.039, free_sulfur_dioxide: 24, total_sulfur_dioxide: 92, density: 0.99114, ph: 3.27, sulphates: 0.5, alcohol: 11.2, quality: 7},
+    
+    // White wines - different chemical profiles
+    {wine_type: "white", fixed_acidity: 7.0, volatile_acidity: 0.27, citric_acid: 0.36, residual_sugar: 20.7, chlorides: 0.045, free_sulfur_dioxide: 45, total_sulfur_dioxide: 170, density: 0.1001, ph: 3.0, sulphates: 0.45, alcohol: 8.8, quality: 6},
+    {wine_type: "white", fixed_acidity: 6.3, volatile_acidity: 0.3, citric_acid: 0.34, residual_sugar: 1.6, chlorides: 0.049, free_sulfur_dioxide: 14, total_sulfur_dioxide: 132, density: 0.994, ph: 3.3, sulphates: 0.49, alcohol: 9.5, quality: 6},
+    
+    // Premium quality wine (quality 8)
+    {wine_type: "white", fixed_acidity: 7.7, volatile_acidity: 0.64, citric_acid: 0.21, residual_sugar: 2.2, chlorides: 0.077, free_sulfur_dioxide: 32, total_sulfur_dioxide: 133, density: 0.9906, ph: 3.27, sulphates: 0.45, alcohol: 12.0, quality: 8}
+];
+
+println(f"Wine Quality dataset: {wines.len()} wines with 11 chemical features");
+println("Quality scale: 0-10 (most wines score 5-7)");
+</code></pre>
+<h2 id="quality-distribution-analysis"><a class="header" href="#quality-distribution-analysis">Quality Distribution Analysis</a></h2>
+<p>Start by understanding the quality distribution:</p>
+<pre><code class="language-ruchy">// Analyze quality score distribution
+let quality_scores = wines.map(|w| w.quality);
+let avg_quality = quality_scores.sum() / quality_scores.len();
+let min_quality = match quality_scores.min() { Some(x) =&gt; x, None =&gt; 0 };
+let max_quality = match quality_scores.max() { Some(x) =&gt; x, None =&gt; 0 };
+
+println(f"Quality Distribution:");
+println(f"Average quality: {avg_quality:.1f}/10");
+println(f"Quality range: {min_quality} - {max_quality}");
+
+// Categorize wines by quality
+let low_quality = wines.filter(|w| w.quality &lt;= 5);
+let medium_quality = wines.filter(|w| w.quality == 6);  
+let high_quality = wines.filter(|w| w.quality &gt;= 7);
+
+println(f"Quality categories:");
+println(f"Low (≤5): {low_quality.len()} wines");
+println(f"Medium (6): {medium_quality.len()} wines");
+println(f"High (≥7): {high_quality.len()} wines");
+</code></pre>
+<h2 id="alcohol-content-correlation"><a class="header" href="#alcohol-content-correlation">Alcohol Content Correlation</a></h2>
+<p>Analyze the strongest predictor of wine quality:</p>
+<pre><code class="language-ruchy">// Alcohol vs Quality correlation
+let high_quality_alcohol = high_quality.map(|w| w.alcohol);
+let low_quality_alcohol = low_quality.map(|w| w.alcohol);
+
+let avg_high_alcohol = high_quality_alcohol.sum() / high_quality_alcohol.len();
+let avg_low_alcohol = low_quality_alcohol.sum() / low_quality_alcohol.len();
+
+println(f"Alcohol Content Analysis:");
+println(f"High quality wines avg alcohol: {avg_high_alcohol:.1f}%");
+println(f"Low quality wines avg alcohol: {avg_low_alcohol:.1f}%");
+println(f"Alcohol correlation: {avg_high_alcohol - avg_low_alcohol:.1f} percentage point difference");
+
+// Create alcohol-based segments
+let high_alcohol_wines = wines.filter(|w| w.alcohol &gt; 10.5);
+let low_alcohol_wines = wines.filter(|w| w.alcohol &lt;= 10.5);
+
+let high_alcohol_avg_quality = high_alcohol_wines.map(|w| w.quality).sum() / high_alcohol_wines.len();
+let low_alcohol_avg_quality = low_alcohol_wines.map(|w| w.quality).sum() / low_alcohol_wines.len();
+
+println(f"Segmentation:");
+println(f"High alcohol wines (&gt;10.5%): Avg quality {high_alcohol_avg_quality:.2f}");
+println(f"Low alcohol wines (≤10.5%): Avg quality {low_alcohol_avg_quality:.2f}");
+</code></pre>
+<p><strong>Key Finding:</strong> Higher alcohol content strongly correlates with higher wine quality.</p>
+<h2 id="sulphates-impact-analysis"><a class="header" href="#sulphates-impact-analysis">Sulphates Impact Analysis</a></h2>
+<p>Examine sulphates as quality predictors:</p>
+<pre><code class="language-ruchy">// Sulphates vs Quality analysis
+let high_sulphate_wines = wines.filter(|w| w.sulphates &gt; 0.5);
+let low_sulphate_wines = wines.filter(|w| w.sulphates &lt;= 0.5);
+
+let high_sulphate_avg_quality = high_sulphate_wines.map(|w| w.quality).sum() / high_sulphate_wines.len();
+let low_sulphate_avg_quality = low_sulphate_wines.map(|w| w.quality).sum() / low_sulphate_wines.len();
+
+println(f"Sulphates Impact:");
+println(f"High sulphates (&gt;0.5): Avg quality {high_sulphate_avg_quality:.2f}");
+println(f"Low sulphates (≤0.5): Avg quality {low_sulphate_avg_quality:.2f}");
+println("Wine chemistry: Sulphates act as preservatives and antioxidants");
+</code></pre>
+<p><strong>Domain Knowledge:</strong> Sulphates prevent wine spoilage and preserve flavor compounds.</p>
+<h2 id="volatile-acidity-the-quality-killer"><a class="header" href="#volatile-acidity-the-quality-killer">Volatile Acidity: The Quality Killer</a></h2>
+<p>Analyze volatile acidity as a wine fault indicator:</p>
+<pre><code class="language-ruchy">// Volatile acidity impact on quality
+let low_volatile_acidity = wines.filter(|w| w.volatile_acidity &lt;= 0.4);
+let high_volatile_acidity = wines.filter(|w| w.volatile_acidity &gt; 0.4);
+
+let low_va_avg_quality = low_volatile_acidity.map(|w| w.quality).sum() / low_volatile_acidity.len();
+let high_va_avg_quality = if high_volatile_acidity.len() &gt; 0 { 
+    high_volatile_acidity.map(|w| w.quality).sum() / high_volatile_acidity.len() 
+} else { 0 };
+
+println(f"Volatile Acidity Analysis:");
+println(f"Low volatile acidity (≤0.4): Avg quality {low_va_avg_quality:.2f}");
+println(f"High volatile acidity (&gt;0.4): Avg quality {high_va_avg_quality:.2f}");
+println("Wine faults: High volatile acidity indicates spoilage or poor fermentation");
+</code></pre>
+<p><strong>Critical Insight:</strong> Volatile acidity above 0.6 typically indicates wine defects.</p>
+<h2 id="ph-and-acidity-balance"><a class="header" href="#ph-and-acidity-balance">pH and Acidity Balance</a></h2>
+<p>Explore the relationship between pH and wine quality:</p>
+<pre><code class="language-ruchy">// pH analysis across wine types
+let ph_values = wines.map(|w| w.ph);
+let avg_ph = ph_values.sum() / ph_values.len();
+
+println(f"pH Analysis:");
+println(f"Average wine pH: {avg_ph:.2f} (acidic, as expected)");
+println("Wine chemistry: pH 3.0-3.8 is ideal for stability and taste");
+
+// Fixed acidity by wine type
+let red_wines = wines.filter(|w| w.wine_type == "red");
+let white_wines = wines.filter(|w| w.wine_type == "white");
+
+let red_avg_acidity = red_wines.map(|w| w.fixed_acidity).sum() / red_wines.len();
+let white_avg_acidity = white_wines.map(|w| w.fixed_acidity).sum() / white_wines.len();
+
+println(f"Acidity by type:");
+println(f"Red wines avg acidity: {red_avg_acidity:.2f}");
+println(f"White wines avg acidity: {white_avg_acidity:.2f}");
+</code></pre>
+<h2 id="sweetness-categorization"><a class="header" href="#sweetness-categorization">Sweetness Categorization</a></h2>
+<p>Analyze residual sugar patterns:</p>
+<pre><code class="language-ruchy">// Sweetness analysis
+let dry_wines = wines.filter(|w| w.residual_sugar &lt;= 4.0);      // Dry
+let off_dry_wines = wines.filter(|w| w.residual_sugar &gt; 4.0 &amp;&amp; w.residual_sugar &lt;= 12.0); // Off-dry  
+let sweet_wines = wines.filter(|w| w.residual_sugar &gt; 12.0);    // Sweet
+
+println(f"Sweetness Categories:");
+println(f"Dry wines (≤4g sugar): {dry_wines.len()}");
+println(f"Off-dry wines (4-12g sugar): {off_dry_wines.len()}");
+println(f"Sweet wines (&gt;12g sugar): {sweet_wines.len()}");
+
+// Quality by sweetness
+let dry_avg_quality = if dry_wines.len() &gt; 0 { dry_wines.map(|w| w.quality).sum() / dry_wines.len() } else { 0 };
+let sweet_avg_quality = if sweet_wines.len() &gt; 0 { sweet_wines.map(|w| w.quality).sum() / sweet_wines.len() } else { 0 };
+
+println(f"Quality by sweetness:");
+println(f"Dry wines average quality: {dry_avg_quality:.2f}");
+println(f"Sweet wines average quality: {sweet_avg_quality:.2f}");
+</code></pre>
+<h2 id="multi-feature-prediction-model"><a class="header" href="#multi-feature-prediction-model">Multi-Feature Prediction Model</a></h2>
+<p>Build a comprehensive quality predictor using multiple features:</p>
+<pre><code class="language-ruchy">// Advanced prediction model using multiple features
+println("Multi-Feature Quality Prediction Model:");
+println("Prediction rules:");
+println("1. High quality: alcohol &gt; 10.0 AND sulphates &gt; 0.45 AND volatile_acidity &lt; 0.6");
+println("2. Medium quality: 2 of 3 conditions met");
+println("3. Low quality: ≤1 condition met");
+
+var correct_predictions = 0;
+let total_predictions = wines.len();
+
+for wine in wines {
+    let alcohol_good = wine.alcohol &gt; 10.0;
+    let sulphates_good = wine.sulphates &gt; 0.45;
+    let acidity_good = wine.volatile_acidity &lt; 0.6;
+    
+    let conditions_met = (if alcohol_good { 1 } else { 0 }) +
+                        (if sulphates_good { 1 } else { 0 }) +
+                        (if acidity_good { 1 } else { 0 });
+    
+    let predicted_high_quality = conditions_met &gt;= 2;
+    let actual_high_quality = wine.quality &gt;= 6;
+    
+    if predicted_high_quality == actual_high_quality {
+        correct_predictions = correct_predictions + 1;
+    }
+}
+
+let prediction_accuracy = (correct_predictions * 100) / total_predictions;
+println(f"Model accuracy: {prediction_accuracy}% ({correct_predictions}/{total_predictions})");
+</code></pre>
+<h2 id="feature-engineering-wine-profiles"><a class="header" href="#feature-engineering-wine-profiles">Feature Engineering: Wine Profiles</a></h2>
+<p>Create composite scores and wine profiles:</p>
+<pre><code class="language-ruchy">// Engineer wine quality profiles
+let wine_profiles = wines.map(|w| {
+    let alcohol_tier = if w.alcohol &gt; 11.0 { "high" } else if w.alcohol &gt; 9.5 { "medium" } else { "low" };
+    let acidity_balance = if w.fixed_acidity &gt; 7.5 { "acidic" } else if w.fixed_acidity &gt; 6.5 { "balanced" } else { "mild" };
+    let sweetness_level = if w.residual_sugar &gt; 10.0 { "sweet" } else if w.residual_sugar &gt; 3.0 { "off_dry" } else { "dry" };
+    
+    // Composite quality score
+    let wine_score = 
+        (if w.alcohol &gt; 10.0 { 2 } else { 0 }) +
+        (if w.sulphates &gt; 0.5 { 2 } else { 0 }) +
+        (if w.volatile_acidity &lt; 0.4 { 1 } else { 0 }) +
+        (if w.ph &gt; 3.0 &amp;&amp; w.ph &lt; 3.5 { 1 } else { 0 });
+    
+    {
+        wine_type: w.wine_type,
+        actual_quality: w.quality,
+        alcohol_tier: alcohol_tier,
+        acidity_balance: acidity_balance,
+        sweetness_level: sweetness_level,
+        composite_score: wine_score
+    }
+});
+
+println(f"Wine Profile Examples:");
+for i in 0..2 {
+    let profile = wine_profiles[i];
+    println(f"Wine {i + 1}: {profile.wine_type}, Quality={profile.actual_quality}, Alcohol={profile.alcohol_tier}, Score={profile.composite_score}/6");
+}
+</code></pre>
+<h2 id="feature-importance-ranking"><a class="header" href="#feature-importance-ranking">Feature Importance Ranking</a></h2>
+<p>Rank features by their correlation with quality:</p>
+<pre><code class="language-ruchy">println(f"Feature Importance Ranking (from wine chemistry research):");
+println("1. 🥇 Alcohol Content: Strongest quality predictor");
+println("2. 🥈 Volatile Acidity: Wine fault indicator (inverse correlation)");
+println("3. 🥉 Sulphates: Preservation and antioxidant properties");
+println("4. pH Balance: Acidity-alkalinity equilibrium");
+println("5. Fixed Acidity: Tartaric acid levels");
+println("6. Citric Acid: Freshness and preservative");
+println("7. Residual Sugar: Sweetness level");
+println("8. Chlorides: Salt content");
+println("9. Free/Total SO2: Preservative levels");
+println("10. Density: Alcohol and sugar content indicator");
+</code></pre>
+<h2 id="domain-insights"><a class="header" href="#domain-insights">Domain Insights</a></h2>
+<p><strong>Winemaking Recommendations:</strong></p>
+<pre><code class="language-ruchy">println(f"🍷 WINEMAKING QUALITY FACTORS:");
+println("• Target alcohol: 10-12% for premium wines");
+println("• Monitor volatile acidity: Keep below 0.4 g/L");
+println("• Optimize sulphates: 0.5-0.7 g/L range");  
+println("• Balance pH: 3.0-3.5 for stability");
+println("• Control sweetness: Most quality wines are dry to off-dry");
+
+println(f"🚨 QUALITY RED FLAGS:");
+println("• Volatile acidity &gt; 0.6: Likely wine defects");
+println("• Alcohol &lt; 9%: May lack body and complexity");
+println("• pH &gt; 3.8: Potential bacterial spoilage risk");
+println("• Excessive sulfur dioxide: Over-preservation");
+</code></pre>
+<h2 id="key-takeaways"><a class="header" href="#key-takeaways">Key Takeaways</a></h2>
+<ol>
+<li><strong>Alcohol dominance</strong>: Strongest single predictor of wine quality</li>
+<li><strong>Volatile acidity</strong>: Critical fault indicator - low is essential</li>
+<li><strong>Sulphates matter</strong>: Natural preservatives improve stability</li>
+<li><strong>pH balance</strong>: Critical for taste and preservation</li>
+<li><strong>Multiple features</strong>: Best predictions use 3+ chemical properties</li>
+</ol>
+<h2 id="next-steps"><a class="header" href="#next-steps">Next Steps</a></h2>
+<ul>
+<li>Try the <a href="../../demos/repl/08-data-science/wine_quality_demo.ruchy">complete Wine Quality demo</a></li>
+<li>Explore advanced ML: Random Forest, SVM classification</li>
+<li>Study <a href="ch08-03-visualization.html">Boston Housing regression analysis</a></li>
+<li>Review <a href="ch08-01-statistics.html">statistical fundamentals with Iris</a></li>
+</ul>
+<hr />
+<p><strong>Complete Demo File:</strong> <a href="../../demos/repl/08-data-science/wine_quality_demo.ruchy"><code>wine_quality_demo.ruchy</code></a></p>
+<p><em>Every code snippet is tested and verified working. Copy-paste directly into your Ruchy REPL.</em></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch08-03-visualization.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="ch09-01-wasm-analysis.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch08-03-visualization.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="ch09-01-wasm-analysis.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="ace.js"></script>
+        <script src="mode-rust.js"></script>
+        <script src="editor.js"></script>
+        <script src="theme-dawn.js"></script>
+        <script src="theme-tomorrow_night.js"></script>
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="book/theme/highlight-ruchy.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

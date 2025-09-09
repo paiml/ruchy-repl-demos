@@ -67,26 +67,29 @@
   - [Regression Analysis: Boston Housing](ch08-03-visualization.md)
   - [Feature Correlation: Wine Quality](ch08-04-correlation.md)
 
+### WebAssembly Analysis
+- [Chapter 9: WASM Analysis](ch09-01-wasm-analysis.md)
+
 ### File Operations
-- [Chapter 9: File Operations](ch09-00-file-operations-tdd.md)
+- [Chapter 10: File Operations](ch09-00-file-operations-tdd.md)
   - [Reading and Writing](ch09-01-read-write.md)
   - [File Processing](ch09-02-processing.md)
   - [Batch Operations](ch09-03-batch-ops.md)
 
 ### Mathematical Calculations
-- [Chapter 10: Math Calculations](ch10-00-math-calculations-tdd.md)
+- [Chapter 11: Math Calculations](ch10-00-math-calculations-tdd.md)
   - [Basic Mathematics](ch10-01-basic-math.md)
   - [Number Theory](ch10-02-number-theory.md)
   - [Advanced Calculations](ch10-03-advanced-math.md)
 
 ### System Scripting
-- [Chapter 11: System Scripting](ch11-00-system-scripting-tdd.md)
+- [Chapter 12: System Scripting](ch11-00-system-scripting-tdd.md)
   - [System Information](ch11-01-system-info.md)
   - [Process Management](ch11-02-processes.md)
   - [Network Operations](ch11-03-network.md)
 
 ### Functional Chains
-- [Chapter 12: Functional Chains](ch12-00-functional-chains-tdd.md)
+- [Chapter 13: Functional Chains](ch12-00-functional-chains-tdd.md)
   - [Chain Composition](ch12-01-composition.md)
   - [Data Transformation](ch12-02-transformation.md)
   - [Advanced Pipelines](ch12-03-advanced-pipelines.md)
@@ -95,9 +98,9 @@
 
 ## Part III: Testing & Quality
 
-- [Chapter 13: Testing Your Code](ch13-00-testing-tdd.md)
-- [Chapter 14: Performance Optimization](ch14-00-performance-tdd.md)
-- [Chapter 15: Best Practices](ch15-00-best-practices-tdd.md)
+- [Chapter 14: Testing Your Code](ch13-00-testing-tdd.md)
+- [Chapter 15: Performance Optimization](ch14-00-performance-tdd.md)
+- [Chapter 16: Best Practices](ch15-00-best-practices-tdd.md)
 
 ---
 
