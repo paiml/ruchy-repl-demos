@@ -39,8 +39,8 @@ println("• Quality score (0-10, with most wines scoring 5-7)");
 println("\n2. Wine Quality Distribution Analysis:");
 let quality_scores = wines.map(|w| w.quality);
 let avg_quality = quality_scores.sum() / quality_scores.len();
-let min_quality = quality_scores.min();
-let max_quality = quality_scores.max();
+let min_quality = match quality_scores.min() { Some(x) => x, None => 0 };
+let max_quality = match quality_scores.max() { Some(x) => x, None => 0 };
 
 println(f"Average wine quality: {avg_quality:.1f}/10");
 println(f"Quality range: {min_quality:.0f} - {max_quality:.0f}");

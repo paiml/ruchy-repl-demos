@@ -44,8 +44,8 @@ println(f"Samples per species: {iris.len() / 3} (in full dataset: 50 each)");
 println("\n3. Basic Statistics:");
 let sepal_lengths = iris.map(|row| row.sepal_length);
 let avg_sepal_length = sepal_lengths.sum() / sepal_lengths.len();
-let min_sepal_length = sepal_lengths.min();
-let max_sepal_length = sepal_lengths.max();
+let min_sepal_length = match sepal_lengths.min() { Some(x) => x, None => 0.0 };
+let max_sepal_length = match sepal_lengths.max() { Some(x) => x, None => 0.0 };
 
 println(f"Sepal Length Statistics:");
 println(f"  Average: {avg_sepal_length:.2f} cm");

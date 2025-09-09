@@ -41,8 +41,8 @@ println("• medv: Median home value (target variable) in $1000s");
 println("\n2. Housing Price Distribution:");
 let prices = housing.map(|h| h.medv);
 let avg_price = prices.sum() / prices.len();
-let min_price = prices.min();
-let max_price = prices.max();
+let min_price = match prices.min() { Some(x) => x, None => 0.0 };
+let max_price = match prices.max() { Some(x) => x, None => 0.0 };
 let price_range = max_price - min_price;
 
 println(f"Average home price: ${avg_price:.1f}k (1970s dollars)");
