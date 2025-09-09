@@ -1,0 +1,177 @@
+// REPL Demo: Titanic Survival Analysis - Real-World Data Science
+// Dataset: RMS Titanic passenger data (891 passengers)  
+// Skills: Data cleaning, survival analysis, feature engineering, hypothesis testing
+
+println("=== Titanic Survival Analysis - Real-World Data Science ===");
+
+// Simulate the famous Titanic dataset (normally loaded from CSV)
+// In production: let titanic = load_csv("datasets/titanic.csv")
+println("\n1. Loading Titanic Dataset:");
+let titanic = [
+    // First class passengers
+    {passenger_id: 1, survived: 1, pclass: 1, name: "Cumings, Mrs. John Bradley", sex: "female", age: 38, fare: 71.2833, embarked: "C"},
+    {passenger_id: 2, survived: 1, pclass: 1, name: "Futrelle, Mrs. Jacques Heath", sex: "female", age: 35, fare: 53.1000, embarked: "S"},
+    {passenger_id: 4, survived: 1, pclass: 1, name: "Allen, Mr. William Henry", sex: "male", age: 35, fare: 8.0500, embarked: "S"},
+    {passenger_id: 6, survived: 0, pclass: 1, name: "McCarthy, Mr. Timothy J", sex: "male", age: 54, fare: 51.8625, embarked: "S"},
+    
+    // Second class passengers  
+    {passenger_id: 10, survived: 1, pclass: 2, name: "Nasser, Mrs. Nicholas", sex: "female", age: 14, fare: 30.0708, embarked: "C"},
+    {passenger_id: 16, survived: 1, pclass: 2, name: "Hewlett, Mrs. (Mary D Kingcome)", sex: "female", age: 55, fare: 16.0000, embarked: "S"},
+    {passenger_id: 18, survived: 0, pclass: 2, name: "Williams, Mr. Charles Eugene", sex: "male", age: 23, fare: 13.0000, embarked: "S"},
+    {passenger_id: 21, survived: 0, pclass: 2, name: "Fynney, Mr. Joseph J", sex: "male", age: 35, fare: 26.0000, embarked: "S"},
+    
+    // Third class passengers
+    {passenger_id: 5, survived: 0, pclass: 3, name: "Allen, Mr. William Henry", sex: "male", age: 35, fare: 8.0500, embarked: "S"},
+    {passenger_id: 7, survived: 0, pclass: 3, name: "Palsson, Master. Gosta Leonard", sex: "male", age: 2, fare: 21.0750, embarked: "S"},
+    {passenger_id: 8, survived: 1, pclass: 3, name: "Johnson, Mrs. Oscar W", sex: "female", age: 27, fare: 11.1333, embarked: "S"},
+    {passenger_id: 9, survived: 1, pclass: 3, name: "Nasser, Mrs. Nicholas", sex: "female", age: 14, fare: 30.0708, embarked: "C"},
+    {passenger_id: 11, survived: 1, pclass: 3, name: "Sandstrom, Miss. Marguerite Rut", sex: "female", age: 4, fare: 16.7000, embarked: "S"},
+    {passenger_id: 12, survived: 1, pclass: 3, name: "Bonnell, Miss. Elizabeth", sex: "female", age: 58, fare: 26.5500, embarked: "S"},
+    {passenger_id: 15, survived: 0, pclass: 3, name: "Vestrom, Miss. Hulda Amanda Adolfina", sex: "female", age: 14, fare: 7.8542, embarked: "S"}
+];
+
+println(f"Dataset loaded: {titanic.len()} passengers (subset of full 891-passenger dataset)");
+println(f"Features: passenger_id, survived, pclass, name, sex, age, fare, embarked");
+
+// 2. Dataset Overview - Understanding the tragedy
+println("\n2. The Titanic Disaster Overview:");
+let survivors = titanic.filter(|p| p.survived == 1);
+let casualties = titanic.filter(|p| p.survived == 0);
+let survival_rate = (survivors.len() * 100) / titanic.len();
+
+println(f"Total passengers (sample): {titanic.len()}");
+println(f"Survivors: {survivors.len()}");  
+println(f"Casualties: {casualties.len()}");
+println(f"Survival rate: {survival_rate}%");
+println("Historical note: In the full dataset, only 38.4% survived");
+
+// 3. Survival by Gender - "Women and children first"
+println("\n3. Survival by Gender Analysis:");
+let female_passengers = titanic.filter(|p| p.sex == "female");
+let male_passengers = titanic.filter(|p| p.sex == "male");
+
+let female_survivors = female_passengers.filter(|p| p.survived == 1);
+let male_survivors = male_passengers.filter(|p| p.survived == 1);
+
+let female_survival_rate = (female_survivors.len() * 100) / female_passengers.len();
+let male_survival_rate = (male_survivors.len() * 100) / male_passengers.len();
+
+println(f"Female passengers: {female_passengers.len()}, Survivors: {female_survivors.len()} ({female_survival_rate}%)");
+println(f"Male passengers: {male_passengers.len()}, Survivors: {male_survivors.len()} ({male_survival_rate}%)");
+println("Historical: Women had 74.2% survival rate vs men at 18.9%");
+
+// 4. Survival by Class - Economic inequality in disaster
+println("\n4. Survival by Passenger Class:");
+let first_class = titanic.filter(|p| p.pclass == 1);
+let second_class = titanic.filter(|p| p.pclass == 2);
+let third_class = titanic.filter(|p| p.pclass == 3);
+
+let first_survivors = first_class.filter(|p| p.survived == 1);
+let second_survivors = second_class.filter(|p| p.survived == 1);
+let third_survivors = third_class.filter(|p| p.survived == 1);
+
+let first_survival_rate = (first_survivors.len() * 100) / first_class.len();
+let second_survival_rate = (second_survivors.len() * 100) / second_class.len();
+let third_survival_rate = (third_survivors.len() * 100) / third_class.len();
+
+println(f"1st Class: {first_class.len()} passengers, {first_survivors.len()} survived ({first_survival_rate}%)");
+println(f"2nd Class: {second_class.len()} passengers, {second_survivors.len()} survived ({second_survival_rate}%)");
+println(f"3rd Class: {third_class.len()} passengers, {third_survivors.len()} survived ({third_survival_rate}%)");
+println("Pattern: Higher class = higher survival rate");
+
+// 5. Age Analysis - Children's survival priority
+println("\n5. Age-Based Survival Analysis:");
+let children = titanic.filter(|p| p.age < 16);
+let adults = titanic.filter(|p| p.age >= 16);
+
+let child_survivors = children.filter(|p| p.survived == 1);  
+let adult_survivors = adults.filter(|p| p.survived == 1);
+
+let child_survival_rate = (child_survivors.len() * 100) / children.len();
+let adult_survival_rate = (adult_survivors.len() * 100) / adults.len();
+
+println(f"Children (<16): {children.len()} passengers, {child_survivors.len()} survived ({child_survival_rate}%)");
+println(f"Adults (≥16): {adults.len()} passengers, {adult_survivors.len()} survived ({adult_survival_rate}%)");
+
+// 6. Fare Analysis - Could money buy survival?
+println("\n6. Economic Analysis - Fare vs Survival:");
+let survivor_fares = survivors.map(|p| p.fare);
+let casualty_fares = casualties.map(|p| p.fare);
+
+let avg_survivor_fare = survivor_fares.sum() / survivor_fares.len();
+let avg_casualty_fare = casualty_fares.sum() / casualty_fares.len();
+
+println(f"Average fare paid by survivors: ${avg_survivor_fare:.2f}");
+println(f"Average fare paid by casualties: ${avg_casualty_fare:.2f}");
+println(f"Fare difference: ${(avg_survivor_fare - avg_casualty_fare):.2f}");
+
+// 7. Feature Engineering - Creating survival predictors
+println("\n7. Feature Engineering - Creating Predictive Features:");
+let engineered_data = titanic.map(|p| {
+    let is_child = p.age < 16;
+    let is_female = p.sex == "female";
+    let is_first_class = p.pclass == 1;
+    let high_fare = p.fare > 30.0;
+    
+    // Create privilege score (0-4 based on advantageous factors)
+    let privilege_score = 
+        (if is_female { 1 } else { 0 }) +
+        (if is_child { 1 } else { 0 }) +
+        (if is_first_class { 1 } else { 0 }) +
+        (if high_fare { 1 } else { 0 });
+    
+    {
+        ...p,
+        is_child: is_child,
+        is_female: is_female,  
+        is_first_class: is_first_class,
+        high_fare: high_fare,
+        privilege_score: privilege_score
+    }
+});
+
+println("Sample engineered features:");
+println(f"Passenger 1: privilege_score={engineered_data[0].privilege_score}, survived={engineered_data[0].survived}");
+println(f"Passenger 2: privilege_score={engineered_data[1].privilege_score}, survived={engineered_data[1].survived}");
+
+// 8. Simple Survival Prediction Rule
+println("\n8. Building a Simple Survival Predictor:");
+println("Rule: Survive if (female OR child OR first_class)");
+
+var correct_predictions = 0;
+for passenger in engineered_data {
+    let predicted_survival = if passenger.is_female || passenger.is_child || passenger.is_first_class { 1 } else { 0 };
+    let actual_survival = passenger.survived;
+    
+    if predicted_survival == actual_survival {
+        correct_predictions = correct_predictions + 1;
+    }
+}
+
+let accuracy = (correct_predictions * 100) / engineered_data.len();
+println(f"Prediction accuracy: {accuracy}% ({correct_predictions}/{engineered_data.len()})");
+
+// 9. Insights and Patterns
+println("\n9. Key Insights from Analysis:");
+println("🚨 SOCIAL INEQUALITY IN DISASTER:");
+println("   • Gender mattered: Women much more likely to survive");
+println("   • Class mattered: 1st class had highest survival rates");  
+println("   • Age mattered: Children prioritized in evacuation");
+println("   • Money mattered: Higher fares correlated with survival");
+
+println("\n📊 DATA SCIENCE LESSONS:");
+println("   • Real-world data tells human stories");
+println("   • Multiple factors interact to determine outcomes");
+println("   • Feature engineering reveals hidden patterns");
+println("   • Simple rules can be surprisingly effective");
+
+println("\n✅ Titanic Analysis Complete!");
+println("\n📚 What You Learned:");
+println("• Survival analysis and rate calculations");
+println("• Categorical data analysis (gender, class)");
+println("• Numerical data analysis (age, fare)");  
+println("• Feature engineering for prediction");
+println("• Building and evaluating simple classifiers");
+println("• Drawing insights from tragic historical data");
+println("\n🚀 Next Steps: Try with the full 891-passenger dataset!");
+println("   Or explore advanced ML algorithms for better predictions!");

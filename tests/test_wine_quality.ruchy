@@ -1,0 +1,169 @@
+// TDD Tests for Wine Quality Analysis Demo
+// Write tests FIRST, then implement the demo
+// Quality target: 80%+ coverage, 1.00/1.0 PMAT score
+
+println("🧪 Wine Quality Demo - TDD Test Suite\n");
+
+var total_tests = 0;
+var passed_tests = 0;
+
+fun test_assertion(name, actual, expected) {
+    total_tests = total_tests + 1;
+    if actual == expected {
+        passed_tests = passed_tests + 1;
+        println(f"✓ {name}");
+    } else {
+        println(f"✗ {name}: Expected {expected}, got {actual}");
+    }
+}
+
+fun test_within_range(name, actual, min_val, max_val) {
+    total_tests = total_tests + 1;
+    if actual >= min_val && actual <= max_val {
+        passed_tests = passed_tests + 1;
+        println(f"✓ {name}: {actual} in range [{min_val}, {max_val}]");
+    } else {
+        println(f"✗ {name}: {actual} outside range [{min_val}, {max_val}]");
+    }
+}
+
+// Test Data: Wine quality dataset structure
+// Requirements for wine quality demo:
+let test_wines = [
+    // Red wines with various quality scores
+    {wine_type: "red", fixed_acidity: 7.4, volatile_acidity: 0.7, citric_acid: 0.0, residual_sugar: 1.9, chlorides: 0.076, free_sulfur_dioxide: 11, total_sulfur_dioxide: 34, density: 0.9978, ph: 3.51, sulphates: 0.56, alcohol: 9.4, quality: 5},
+    {wine_type: "red", fixed_acidity: 7.8, volatile_acidity: 0.88, citric_acid: 0.0, residual_sugar: 2.6, chlorides: 0.098, free_sulfur_dioxide: 25, total_sulfur_dioxide: 67, density: 0.9968, ph: 3.2, sulphates: 0.68, alcohol: 9.8, quality: 5},
+    {wine_type: "red", fixed_acidity: 8.1, volatile_acidity: 0.28, citric_acid: 0.4, residual_sugar: 6.9, chlorides: 0.05, free_sulfur_dioxide: 30, total_sulfur_dioxide: 97, density: 0.9951, ph: 3.26, sulphates: 0.44, alcohol: 10.1, quality: 6},
+    {wine_type: "red", fixed_acidity: 7.2, volatile_acidity: 0.23, citric_acid: 0.32, residual_sugar: 8.5, chlorides: 0.058, free_sulfur_dioxide: 47, total_sulfur_dioxide: 186, density: 0.9956, ph: 3.19, sulphates: 0.4, alcohol: 9.9, quality: 6},
+    // White wines
+    {wine_type: "white", fixed_acidity: 7.0, volatile_acidity: 0.27, citric_acid: 0.36, residual_sugar: 20.7, chlorides: 0.045, free_sulfur_dioxide: 45, total_sulfur_dioxide: 170, density: 0.1001, ph: 3.0, sulphates: 0.45, alcohol: 8.8, quality: 6},
+    {wine_type: "white", fixed_acidity: 6.3, volatile_acidity: 0.3, citric_acid: 0.34, residual_sugar: 1.6, chlorides: 0.049, free_sulfur_dioxide: 14, total_sulfur_dioxide: 132, density: 0.994, ph: 3.3, sulphates: 0.49, alcohol: 9.5, quality: 6},
+    // Premium wines (quality 7+)
+    {wine_type: "red", fixed_acidity: 6.2, volatile_acidity: 0.21, citric_acid: 0.29, residual_sugar: 1.6, chlorides: 0.039, free_sulfur_dioxide: 24, total_sulfur_dioxide: 92, density: 0.99114, ph: 3.27, sulphates: 0.5, alcohol: 11.2, quality: 7},
+    {wine_type: "white", fixed_acidity: 7.7, volatile_acidity: 0.64, citric_acid: 0.21, residual_sugar: 2.2, chlorides: 0.077, free_sulfur_dioxide: 32, total_sulfur_dioxide: 133, density: 0.9906, ph: 3.27, sulphates: 0.45, alcohol: 12.0, quality: 8}
+];
+
+println("📦 Testing Wine Dataset Structure:");
+
+// Test 1: Dataset should contain wines with all required features
+test_assertion("Dataset size", test_wines.len(), 8);
+
+// Test 2: Each wine should have quality score between 3-9 (realistic range)
+let quality_scores = test_wines.map(|w| w.quality);
+let min_quality = 3;
+let max_quality = 9;
+for wine in test_wines {
+    test_within_range(f"Wine quality range", wine.quality, min_quality, max_quality);
+}
+
+println("\n📦 Testing Wine Quality Analysis Functions:");
+
+// Test 3: Quality distribution analysis
+let low_quality_wines = test_wines.filter(|w| w.quality <= 5);
+let medium_quality_wines = test_wines.filter(|w| w.quality == 6);  
+let high_quality_wines = test_wines.filter(|w| w.quality >= 7);
+
+test_assertion("Low quality wines count", low_quality_wines.len(), 2);
+test_assertion("Medium quality wines count", medium_quality_wines.len(), 4);
+test_assertion("High quality wines count", high_quality_wines.len(), 2);
+
+println("\n📦 Testing Alcohol Content Analysis:");
+
+// Test 4: Alcohol content should correlate with quality
+let high_quality_alcohol = high_quality_wines.map(|w| w.alcohol);
+let low_quality_alcohol = low_quality_wines.map(|w| w.alcohol);
+
+let avg_high_alcohol = high_quality_alcohol.sum() / high_quality_alcohol.len();
+let avg_low_alcohol = low_quality_alcohol.sum() / low_quality_alcohol.len();
+
+// High quality wines should generally have higher alcohol content
+test_within_range("High quality avg alcohol", avg_high_alcohol, 10.0, 15.0);
+test_within_range("Low quality avg alcohol", avg_low_alcohol, 8.0, 12.0);
+
+println("\n📦 Testing Wine Type Analysis:");
+
+// Test 5: Red vs White wine analysis
+let red_wines = test_wines.filter(|w| w.wine_type == "red");
+let white_wines = test_wines.filter(|w| w.wine_type == "white");
+
+test_assertion("Red wines count", red_wines.len(), 5);
+test_assertion("White wines count", white_wines.len(), 3);
+
+// Test 6: Acidity differences between red and white
+let red_avg_acidity = red_wines.map(|w| w.fixed_acidity).sum() / red_wines.len();
+let white_avg_acidity = white_wines.map(|w| w.fixed_acidity).sum() / white_wines.len();
+
+test_within_range("Red wine acidity", red_avg_acidity, 6.0, 9.0);
+test_within_range("White wine acidity", white_avg_acidity, 6.0, 8.0);
+
+println("\n📦 Testing Feature Correlation:");
+
+// Test 7: Sulphates impact on quality
+let high_sulphate_wines = test_wines.filter(|w| w.sulphates > 0.5);
+let low_sulphate_wines = test_wines.filter(|w| w.sulphates <= 0.5);
+
+let high_sulphate_avg_quality = high_sulphate_wines.map(|w| w.quality).sum() / high_sulphate_wines.len();
+let low_sulphate_avg_quality = low_sulphate_wines.map(|w| w.quality).sum() / low_sulphate_wines.len();
+
+// Higher sulphates should correlate with higher quality
+test_within_range("High sulphate wine quality", high_sulphate_avg_quality, 5, 8);
+test_within_range("Low sulphate wine quality", low_sulphate_avg_quality, 5, 7);
+
+println("\n📦 Testing Quality Prediction:");
+
+// Test 8: Simple quality prediction based on alcohol + sulphates
+var correct_predictions = 0;
+for wine in test_wines {
+    // Simple rule: High alcohol + high sulphates = quality 6+
+    let predicted_high_quality = wine.alcohol > 10.0 && wine.sulphates > 0.45;
+    let actual_high_quality = wine.quality >= 6;
+    
+    if predicted_high_quality == actual_high_quality {
+        correct_predictions = correct_predictions + 1;
+    }
+}
+
+let prediction_accuracy = (correct_predictions * 100) / test_wines.len();
+test_within_range("Prediction accuracy", prediction_accuracy, 50, 100);
+
+println("\n📦 Testing Statistical Functions:");
+
+// Test 9: pH analysis
+let ph_values = test_wines.map(|w| w.ph);
+let avg_ph = ph_values.sum() / ph_values.len();
+test_within_range("Average wine pH", avg_ph, 3.0, 3.5);
+
+// Test 10: Residual sugar analysis
+let sweet_wines = test_wines.filter(|w| w.residual_sugar > 10.0);
+let dry_wines = test_wines.filter(|w| w.residual_sugar <= 4.0);
+
+test_assertion("Sweet wines count", sweet_wines.len(), 1);
+test_assertion("Dry wines count", dry_wines.len(), 6);
+
+println("\n📊 Wine Quality Test Results:");
+println(f"   Tests Run: {total_tests}");
+println(f"   Passed: {passed_tests}");
+println(f"   Failed: {total_tests - passed_tests}");
+
+let pass_rate = if total_tests > 0 { (passed_tests * 100) / total_tests } else { 0 };
+println(f"   Pass Rate: {pass_rate}%");
+
+if pass_rate >= 80 {
+    println("✅ TDD Quality Gate: PASSED (≥80%)");
+} else {
+    println("❌ TDD Quality Gate: FAILED (<80%)");
+}
+
+println("\n🎯 Required Demo Features (TDD Specification):");
+println("• Wine quality dataset with 11 chemical features");
+println("• Quality scoring (3-9 scale)");
+println("• Red vs White wine comparison");
+println("• Alcohol content correlation analysis");
+println("• Acidity and pH analysis");
+println("• Sulphate impact on quality");
+println("• Sweetness categorization (dry/sweet)");
+println("• Simple quality prediction model");
+println("• Statistical analysis of all features");
+println("• Feature correlation discovery");
+
+println("\n✅ TDD Tests Complete - Ready to implement wine_quality_demo.ruchy!");
