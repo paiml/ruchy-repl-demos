@@ -61,10 +61,11 @@
   - [Text Analysis](ch07-03-text-analysis.md)
 
 ### Data Analysis
-- [Chapter 8: Data Analysis](ch08-00-data-analysis-tdd.md)
-  - [Statistical Functions](ch08-01-statistics.md)
-  - [Data Aggregation](ch08-02-aggregation.md)
-  - [Data Visualization](ch08-03-visualization.md)
+- [Chapter 8: Data Science Analytics](ch08-00-data-analysis-tdd.md)
+  - [Statistical Analysis: Iris Dataset](ch08-01-statistics.md)
+  - [Demographic Analysis: Titanic Dataset](ch08-02-aggregation.md)
+  - [Regression Analysis: Boston Housing](ch08-03-visualization.md)
+  - [Feature Correlation: Wine Quality](ch08-04-correlation.md)
 
 ### File Operations
 - [Chapter 9: File Operations](ch09-00-file-operations-tdd.md)
