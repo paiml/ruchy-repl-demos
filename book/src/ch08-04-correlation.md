@@ -301,13 +301,13 @@ println("• Excessive sulfur dioxide: Over-preservation");
 
 ## Next Steps
 
-- Try the [complete Wine Quality demo](../demos/repl/08-data-science/wine_quality_demo.ruchy)
+- Try the [complete Wine Quality demo](../../demos/repl/08-data-science/wine_quality_demo.ruchy)
 - Explore advanced ML: Random Forest, SVM classification
 - Study [Boston Housing regression analysis](ch08-03-visualization.md)
 - Review [statistical fundamentals with Iris](ch08-01-statistics.md)
 
 ---
 
-**Complete Demo File:** [`wine_quality_demo.ruchy`](../demos/repl/08-data-science/wine_quality_demo.ruchy)
+**Complete Demo File:** [`wine_quality_demo.ruchy`](../../demos/repl/08-data-science/wine_quality_demo.ruchy)
 
 *Every code snippet is tested and verified working. Copy-paste directly into your Ruchy REPL.*

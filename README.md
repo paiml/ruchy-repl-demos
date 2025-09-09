@@ -190,10 +190,10 @@ add(3, 4)                        // Returns: 7
 **Test Verification:** Basic closure functionality verified. Advanced iterator methods need testing.
 
 ## 📊 One-Liner Examples (100% Working)  
-**Test File:** [tests/test_oneliners.ruchy](./tests/test_oneliners.ruchy)
+**Test Files:** [tests/test_basics.ruchy](./tests/test_basics.ruchy) | [tests/test_functions.ruchy](./tests/test_functions.ruchy) | [tests/test_data_science.ruchy](./tests/test_data_science.ruchy)
 
 ### Math Calculations ✅  
-**Test Reference:** [Lines 53-54](./tests/test_oneliners.ruchy#L53-L54)
+**Test Reference:** [tests/test_functions.ruchy:32-39](./tests/test_functions.ruchy#L32-L39)
 ```bash
 // TRY THIS - Working factorial one-liner:
 ruchy -e 'fun factorial(n) { (1..=n).product() }; factorial(5)'
@@ -206,7 +206,7 @@ ruchy -e 'fun factorial(n) { (1..=n).product() }; factorial(10)'
 **Test Verification:** Function correctness verified in test suite.
 
 ### Text Processing ✅  
-**Test Reference:** [Lines 20-31](./tests/test_oneliners.ruchy#L20-L31)
+**Test Reference:** [tests/test_basics.ruchy:6-33](./tests/test_basics.ruchy#L6-L33)
 ```bash
 // TRY IN REPL - String operations:
 "hello".to_uppercase()         // Returns: "HELLO"
@@ -222,7 +222,7 @@ ruchy -e '"  spaced  ".trim()'
 **Test Verification:** All string operations verified in test suite.
 
 ### Data Analysis ✅  
-**Test Reference:** [Lines 72-100](./tests/test_oneliners.ruchy#L72-L100)
+**Test Reference:** [tests/test_data_science.ruchy:1-50](./tests/test_data_science.ruchy#L1-L50)
 ```bash
 // TRY IN REPL - Statistical calculations (VERIFIED):
 let nums = [1, 2, 3, 4, 5]

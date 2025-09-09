@@ -53,6 +53,45 @@ jobs:
         make test || echo "⚠️ Some tests may require specific Ruchy version"
         echo "✅ Test validation complete"
 
+    - name: Validate all links
+      run: |
+        echo "🔗 Validating all documentation links..."
+        
+        # Install markdown-link-check if not available
+        if ! command -v markdown-link-check >/dev/null 2>&1; then
+          echo "📦 Installing markdown-link-check..."
+          npm install -g markdown-link-check
+        fi
+        
+        # Check README.md
+        echo "📄 Checking README.md links..."
+        if ! markdown-link-check README.md --config .markdown-link-check.json; then
+          echo "❌ Broken links found in README.md - failing build"
+          exit 1
+        fi
+        
+        # Check all book chapter links
+        echo "📚 Checking book chapter links..."
+        failed_files=0
+        total_files=0
+        
+        find book/src -name "*.md" | while read -r file; do
+          total_files=$((total_files + 1))
+          echo "Checking: $file"
+          if ! markdown-link-check "$file" --config .markdown-link-check.json 2>/dev/null; then
+            echo "❌ Broken links found in: $file"
+            failed_files=$((failed_files + 1))
+          fi
+        done
+        
+        if [ "$failed_files" -gt 0 ]; then
+          echo "❌ Link validation failed: $failed_files files with broken links"
+          echo "🔧 Run 'make fix-links' locally to auto-fix common issues"
+          exit 1
+        fi
+        
+        echo "✅ All documentation links verified successfully"
+
     - name: Build book with mdBook  
       run: |
         echo "📚 Building Ruchy REPL & One-Liner Demos book..."

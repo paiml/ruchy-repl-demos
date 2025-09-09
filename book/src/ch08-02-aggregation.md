@@ -230,12 +230,12 @@ This analysis reveals how social hierarchies influenced survival in crisis situa
 
 ## Next Steps
 
-- Explore the [full Titanic demo](../demos/repl/08-data-science/titanic_survival_demo.ruchy)
+- Explore the [full Titanic demo](../../demos/repl/08-data-science/titanic_survival_demo.ruchy)
 - Learn about [regression with Boston housing](ch08-03-visualization.md)  
 - Master [feature correlation with wine quality](ch08-04-correlation.md)
 
 ---
 
-**Complete Demo File:** [`titanic_survival_demo.ruchy`](../demos/repl/08-data-science/titanic_survival_demo.ruchy)
+**Complete Demo File:** [`titanic_survival_demo.ruchy`](../../demos/repl/08-data-science/titanic_survival_demo.ruchy)
 
 *Every code snippet is tested and verified working. Copy-paste directly into your Ruchy REPL.*

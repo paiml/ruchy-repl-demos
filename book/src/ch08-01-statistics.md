@@ -161,7 +161,7 @@ println(f"Simple rule accuracy: {accuracy}% ({correct_predictions}/{total_predic
 
 ## Next Steps
 
-- Try the [full Iris demo](../demos/repl/08-data-science/iris_analysis_demo.ruchy)
+- Try the [full Iris demo](../../demos/repl/08-data-science/iris_analysis_demo.ruchy)
 - Explore [Titanic survival analysis](ch08-02-aggregation.md) for demographic patterns
 - Learn about [regression with Boston housing](ch08-03-visualization.md)
 

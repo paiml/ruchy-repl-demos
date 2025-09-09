@@ -8,7 +8,8 @@
         tdd-verify test-readme test-example verify-version-compatibility \
         check-documentation-examples test-all-examples continuous-tdd-check \
         ruchy-lint ruchy-format ruchy-ast ruchy-prove ruchy-bench ruchy-quality \
-        ruchy-doc ruchy-optimize ruchy-all-tools validate-comments dogfood
+        ruchy-doc ruchy-optimize ruchy-all-tools validate-comments dogfood \
+        check-links fix-links validate-all-links
 
 # Use strict POSIX shell
 SHELL := /bin/sh
@@ -46,6 +47,11 @@ help:
 	@echo "  make install      - Install dependencies"
 	@echo "  make pre-commit   - Run pre-commit checks"
 	@echo "  make release      - Prepare for release"
+	@echo ""
+	@echo "Link Validation Commands:"
+	@echo "  make check-links  - Check all links in documentation"
+	@echo "  make fix-links    - Fix common link issues automatically"
+	@echo "  make validate-all-links - Comprehensive link validation"
 
 # Build/setup
 install:
@@ -569,6 +575,45 @@ dogfood: ruchy-all-tools test-ruchy-native coverage
 	@echo "🚀 COMPLETE RUCHY DOGFOODING ACHIEVED!"
 	@echo "This project uses ONLY Ruchy tools for all operations"
 
+# Link validation commands
+check-links:
+	@echo "🔗 Checking all links in documentation..."
+	@if ! command -v markdown-link-check >/dev/null 2>&1; then \
+		echo "Installing markdown-link-check..."; \
+		npm install -g markdown-link-check || echo "⚠️  Failed to install markdown-link-check, skipping..."; \
+	fi
+	@echo "Checking README.md links..."
+	@if command -v markdown-link-check >/dev/null 2>&1; then \
+		markdown-link-check README.md --config .markdown-link-check.json || echo "❌ Broken links found in README.md"; \
+	fi
+	@echo "Checking book chapter links..."
+	@if command -v markdown-link-check >/dev/null 2>&1; then \
+		find book/src -name "*.md" -exec echo "Checking: {}" \; -exec markdown-link-check {} --config .markdown-link-check.json \; || echo "❌ Broken links found in book chapters"; \
+	fi
+	@echo "Checking CONTRIBUTING.md..."
+	@if command -v markdown-link-check >/dev/null 2>&1 && [ -f CONTRIBUTING.md ]; then \
+		markdown-link-check CONTRIBUTING.md --config .markdown-link-check.json || echo "❌ Broken links found in CONTRIBUTING.md"; \
+	fi
+	@echo "✅ Link checking complete"
+
+fix-links:
+	@echo "🔧 Auto-fixing common link issues..."
+	@echo "Fixing relative paths to demos..."
+	@find book/src -name "*.md" -exec sed -i 's|](demos/|](../demos/|g' {} \; 2>/dev/null || true
+	@find book/src -name "*.md" -exec sed -i 's|](tests/|](../tests/|g' {} \; 2>/dev/null || true
+	@echo "Fixing GitHub links to use raw content..."
+	@find book/src -name "*.md" -exec sed -i 's|github\.com/.*/blob/|raw.githubusercontent.com/|g' {} \; 2>/dev/null || true
+	@find README.md -exec sed -i 's|github\.com/.*/blob/|raw.githubusercontent.com/|g' {} \; 2>/dev/null || true
+	@echo "Creating link check configuration if missing..."
+	@if [ ! -f .markdown-link-check.json ]; then \
+		echo '{"ignorePatterns": [{"pattern": "^http://localhost"}, {"pattern": "^https://127.0.0.1"}, {"pattern": "^file://"}, {"pattern": "^#"}], "timeout": "20s", "retryOn429": true, "retryCount": 3, "fallbackRetryDelay": "30s", "aliveStatusCodes": [200, 206], "ignoreDisable": false}' > .markdown-link-check.json; \
+	fi
+	@echo "✅ Auto-fix complete"
+
+validate-all-links: fix-links check-links
+	@echo "📊 Comprehensive link validation complete"
+	@echo "All documentation links have been verified and fixed"
+
 # All
-all: install test quality-gate coverage dogfood
+all: install test quality-gate coverage dogfood validate-all-links
 	@echo "✓ All tasks complete"

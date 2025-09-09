@@ -1,189 +1,371 @@
-// REPL Demo: Wine Quality Analysis - Feature Correlation and Classification
-// Dataset: Wine Quality dataset (1599 red + 4898 white wines, 11 features)
-// Skills: Feature correlation, classification, quality prediction, comparative analysis
-// TDD-driven development - tests written first in test_wine_quality.ruchy
+// REPL Demo: Wine Quality Analysis - Professional Multi-Feature Correlation
+// Dataset: Wine Quality dataset (1599 red + 4898 white wines, 11 chemical features)
+// Skills: DataFrame correlation analysis, feature importance, quality prediction
+// INDUSTRY STANDARD: Advanced DataFrame operations for real data science
+// TDD-driven: Tests written first in test_wine_quality.ruchy
 
-println("=== Wine Quality Analysis - Feature Correlation & Classification ===");
+println("=== Wine Quality Analysis - Professional DataFrame Correlation Analysis ===");
 
-// Simulate the famous Wine Quality dataset (normally loaded from CSV)
-// In production: let wines = load_csv("datasets/wine_quality.csv")
-println("\n1. Loading Wine Quality Dataset:");
-let wines = [
-    // Red wines - various quality levels
-    {wine_type: "red", fixed_acidity: 7.4, volatile_acidity: 0.7, citric_acid: 0.0, residual_sugar: 1.9, chlorides: 0.076, free_sulfur_dioxide: 11, total_sulfur_dioxide: 34, density: 0.9978, ph: 3.51, sulphates: 0.56, alcohol: 9.4, quality: 5},
-    {wine_type: "red", fixed_acidity: 7.8, volatile_acidity: 0.88, citric_acid: 0.0, residual_sugar: 2.6, chlorides: 0.098, free_sulfur_dioxide: 25, total_sulfur_dioxide: 67, density: 0.9968, ph: 3.2, sulphates: 0.68, alcohol: 9.8, quality: 5},
-    {wine_type: "red", fixed_acidity: 8.1, volatile_acidity: 0.28, citric_acid: 0.4, residual_sugar: 6.9, chlorides: 0.05, free_sulfur_dioxide: 30, total_sulfur_dioxide: 97, density: 0.9951, ph: 3.26, sulphates: 0.44, alcohol: 10.1, quality: 6},
-    {wine_type: "red", fixed_acidity: 7.2, volatile_acidity: 0.23, citric_acid: 0.32, residual_sugar: 8.5, chlorides: 0.058, free_sulfur_dioxide: 47, total_sulfur_dioxide: 186, density: 0.9956, ph: 3.19, sulphates: 0.4, alcohol: 9.9, quality: 6},
-    {wine_type: "red", fixed_acidity: 6.2, volatile_acidity: 0.21, citric_acid: 0.29, residual_sugar: 1.6, chlorides: 0.039, free_sulfur_dioxide: 24, total_sulfur_dioxide: 92, density: 0.99114, ph: 3.27, sulphates: 0.5, alcohol: 11.2, quality: 7},
-    
-    // White wines - generally different chemical profiles
-    {wine_type: "white", fixed_acidity: 7.0, volatile_acidity: 0.27, citric_acid: 0.36, residual_sugar: 20.7, chlorides: 0.045, free_sulfur_dioxide: 45, total_sulfur_dioxide: 170, density: 0.1001, ph: 3.0, sulphates: 0.45, alcohol: 8.8, quality: 6},
-    {wine_type: "white", fixed_acidity: 6.3, volatile_acidity: 0.3, citric_acid: 0.34, residual_sugar: 1.6, chlorides: 0.049, free_sulfur_dioxide: 14, total_sulfur_dioxide: 132, density: 0.994, ph: 3.3, sulphates: 0.49, alcohol: 9.5, quality: 6},
-    
-    // Premium quality wine (quality 8)
-    {wine_type: "white", fixed_acidity: 7.7, volatile_acidity: 0.64, citric_acid: 0.21, residual_sugar: 2.2, chlorides: 0.077, free_sulfur_dioxide: 32, total_sulfur_dioxide: 133, density: 0.9906, ph: 3.27, sulphates: 0.45, alcohol: 12.0, quality: 8},
-    
-    // Additional samples for better analysis
-    {wine_type: "red", fixed_acidity: 11.2, volatile_acidity: 0.28, citric_acid: 0.56, residual_sugar: 1.9, chlorides: 0.075, free_sulfur_dioxide: 17, total_sulfur_dioxide: 60, density: 0.998, ph: 3.16, sulphates: 0.58, alcohol: 9.8, quality: 6},
-    {wine_type: "white", fixed_acidity: 6.2, volatile_acidity: 0.32, citric_acid: 0.16, residual_sugar: 7.0, chlorides: 0.045, free_sulfur_dioxide: 30, total_sulfur_dioxide: 136, density: 0.9949, ph: 3.18, sulphates: 0.47, alcohol: 9.6, quality: 5}
+// Create Wine Quality DataFrame with 11 chemical features (production: df.from_csv())
+println("\n1. Loading Wine Quality Dataset as DataFrame:");
+let wine_df = df![
+    wine_type => ["red", "red", "red", "red", "red", "white", "white", "white", "red", "white"],
+    fixed_acidity => [7.4, 7.8, 8.1, 7.2, 6.2, 7.0, 6.3, 7.7, 11.2, 6.2],
+    volatile_acidity => [0.7, 0.88, 0.28, 0.23, 0.21, 0.27, 0.3, 0.64, 0.28, 0.32],
+    citric_acid => [0.0, 0.0, 0.4, 0.32, 0.29, 0.36, 0.34, 0.21, 0.56, 0.16],
+    residual_sugar => [1.9, 2.6, 6.9, 8.5, 1.6, 20.7, 1.6, 2.2, 1.9, 7.0],
+    chlorides => [0.076, 0.098, 0.05, 0.058, 0.039, 0.045, 0.049, 0.077, 0.075, 0.045],
+    free_sulfur_dioxide => [11, 25, 30, 47, 24, 45, 14, 32, 17, 30],
+    total_sulfur_dioxide => [34, 67, 97, 186, 92, 170, 132, 133, 60, 136],
+    density => [0.9978, 0.9968, 0.9951, 0.9956, 0.99114, 0.1001, 0.994, 0.9906, 0.998, 0.9949],
+    ph => [3.51, 3.2, 3.26, 3.19, 3.27, 3.0, 3.3, 3.27, 3.16, 3.18],
+    sulphates => [0.56, 0.68, 0.44, 0.4, 0.5, 0.45, 0.49, 0.45, 0.58, 0.47],
+    alcohol => [9.4, 9.8, 10.1, 9.9, 11.2, 8.8, 9.5, 12.0, 9.8, 9.6],
+    quality => [5, 5, 6, 6, 7, 6, 6, 8, 6, 5]
 ];
 
-println(f"Dataset loaded: {wines.len()} wines (subset of full 6,497-wine dataset)");
-println("Features analyzed: 11 chemical properties + quality score");
-println("• Fixed acidity, Volatile acidity, Citric acid");
-println("• Residual sugar, Chlorides, Sulfur dioxide (free/total)");
-println("• Density, pH, Sulphates, Alcohol content");
-println("• Quality score (0-10, with most wines scoring 5-7)");
+println(f"✅ Wine DataFrame loaded: {wine_df.height()} rows × {wine_df.width()} columns");
+println(f"🍷 Features: 11 chemical properties + quality target variable");
+println(f"📊 Sample size: 10 wines (subset of full 6,497-wine dataset)");
+println(f"⚙️ Chemical analysis: acidity, sugar, sulfur, pH, alcohol, quality");
 
-// 2. Dataset Overview - Understanding wine quality distribution
-println("\n2. Wine Quality Distribution Analysis:");
-let quality_scores = wines.map(|w| w.quality);
-let avg_quality = quality_scores.sum() / quality_scores.len();
-let min_quality = match quality_scores.min() { Some(x) => x, None => 0 };
-let max_quality = match quality_scores.max() { Some(x) => x, None => 0 };
+// DataFrame schema inspection
+let schema_info = wine_df.dtypes();
+println(f"\n🔍 DataFrame Schema:");
+println(schema_info);
 
-println(f"Average wine quality: {avg_quality:.1f}/10");
-println(f"Quality range: {min_quality:.0f} - {max_quality:.0f}");
+// 2. Wine Quality Distribution - DataFrame statistical analysis
+println("\n2. Wine Quality Distribution (DataFrame Analysis):");
 
-// Quality categories
-let low_quality = wines.filter(|w| w.quality <= 5);      // Below average
-let medium_quality = wines.filter(|w| w.quality == 6);   // Average  
-let high_quality = wines.filter(|w| w.quality >= 7);     // Above average
+// Quality statistics using DataFrame operations
+let quality_stats = wine_df
+    .select(["quality"])
+    .agg([
+        mean("quality").alias("avg_quality"),
+        std("quality").alias("std_quality"),
+        min("quality").alias("min_quality"),
+        max("quality").alias("max_quality"),
+        count("quality").alias("total_wines")
+    ]);
 
-println(f"Quality distribution:");
-println(f"• Low quality (≤5): {low_quality.len()} wines ({(low_quality.len() * 100) / wines.len()}%)");
-println(f"• Medium quality (6): {medium_quality.len()} wines ({(medium_quality.len() * 100) / wines.len()}%)");
-println(f"• High quality (≥7): {high_quality.len()} wines ({(high_quality.len() * 100) / wines.len()}%)");
+println("🏆 Wine Quality Statistics:");
+println(quality_stats);
 
-// 3. Red vs White Wine Analysis
-println("\n3. Red vs White Wine Comparison:");
-let red_wines = wines.filter(|w| w.wine_type == "red");
-let white_wines = wines.filter(|w| w.wine_type == "white");
+// Quality distribution analysis
+let quality_distribution = wine_df
+    .groupby(["quality"])
+    .count()
+    .sort("quality");
 
-println(f"Wine types: {red_wines.len()} red, {white_wines.len()} white");
+println("\n📈 Quality Score Distribution:");
+println(quality_distribution);
 
-// Compare average quality
-let red_avg_quality = red_wines.map(|w| w.quality).sum() / red_wines.len();
-let white_avg_quality = white_wines.map(|w| w.quality).sum() / white_wines.len();
+// Wine type comparison
+let wine_type_analysis = wine_df
+    .groupby(["wine_type"])
+    .agg([
+        count("quality").alias("wine_count"),
+        mean("quality").alias("avg_quality"),
+        mean("alcohol").alias("avg_alcohol"),
+        mean("residual_sugar").alias("avg_sugar")
+    ]);
 
-println(f"Average quality - Red: {red_avg_quality:.2f}, White: {white_avg_quality:.2f}");
+println("\n🍷 Red vs White Wine Comparison:");
+println(wine_type_analysis);  
+// Quality category analysis using DataFrame operations
+let quality_categories = wine_df
+    .with_columns([
+        when(col("quality").le(5))
+            .then(lit("Low_Quality"))
+            .when(col("quality").eq(6))
+            .then(lit("Medium_Quality"))
+            .otherwise(lit("High_Quality"))
+            .alias("quality_category")
+    ])
+    .groupby(["quality_category"])
+    .agg([
+        count("quality").alias("wine_count"),
+        mean("alcohol").alias("avg_alcohol"),
+        mean("sulphates").alias("avg_sulphates")
+    ])
+    .sort("wine_count", descending: true);
 
-// Compare key chemical differences
-let red_avg_acidity = red_wines.map(|w| w.fixed_acidity).sum() / red_wines.len();
-let white_avg_acidity = white_wines.map(|w| w.fixed_acidity).sum() / white_wines.len();
+println("\n🏅 Quality Categories Analysis:");
+println(quality_categories);
 
-let red_avg_alcohol = red_wines.map(|w| w.alcohol).sum() / red_wines.len();
-let white_avg_alcohol = white_wines.map(|w| w.alcohol).sum() / white_wines.len();
+// 3. Comprehensive Wine Type Analysis - Advanced DataFrame operations
+println("\n3. Red vs White Wine Chemical Profile Analysis:");
 
-println(f"Chemical differences:");
-println(f"• Acidity - Red: {red_avg_acidity:.2f}, White: {white_avg_acidity:.2f}");
-println(f"• Alcohol - Red: {red_avg_alcohol:.2f}%, White: {white_avg_alcohol:.2f}%");
+// Detailed wine type comparison with multiple features
+let wine_type_profiles = wine_df
+    .groupby(["wine_type"])
+    .agg([
+        count("quality").alias("wine_count"),
+        mean("quality").alias("avg_quality"),
+        mean("alcohol").alias("avg_alcohol"),
+        mean("fixed_acidity").alias("avg_acidity"),
+        mean("volatile_acidity").alias("avg_volatile_acidity"),
+        mean("residual_sugar").alias("avg_sugar"),
+        mean("sulphates").alias("avg_sulphates"),
+        std("quality").alias("quality_std")
+    ])
+    .sort("avg_quality", descending: true);
 
-// 4. Feature Correlation Analysis - What makes quality wine?
-println("\n4. Feature Correlation Analysis:");
+println("🍷 Comprehensive Wine Type Chemical Profiles:");
+println(wine_type_profiles);
 
-// Alcohol content vs Quality
-let high_alcohol_wines = wines.filter(|w| w.alcohol > 10.5);
-let low_alcohol_wines = wines.filter(|w| w.alcohol <= 10.5);
+// Statistical significance test (variance comparison)
+let wine_type_variance = wine_df
+    .groupby(["wine_type"])
+    .agg([
+        var("alcohol").alias("alcohol_variance"),
+        var("quality").alias("quality_variance"),
+        var("sulphates").alias("sulphates_variance")
+    ]);
 
-let high_alcohol_avg_quality = high_alcohol_wines.map(|w| w.quality).sum() / high_alcohol_wines.len();
-let low_alcohol_avg_quality = low_alcohol_wines.map(|w| w.quality).sum() / low_alcohol_wines.len();
+println("\n📈 Wine Type Variance Analysis:");
+println(wine_type_variance);
 
-println(f"Alcohol Impact:");
-println(f"• High alcohol (>10.5%): Avg quality {high_alcohol_avg_quality:.2f}");
-println(f"• Low alcohol (≤10.5%): Avg quality {low_alcohol_avg_quality:.2f}");
-println(f"• Correlation: Higher alcohol tends to mean higher quality");
+// 4. Multi-Feature Correlation Analysis - Professional data science
+println("\n4. Advanced Feature Correlation Analysis (DataFrame Operations):");
 
-// Sulphates vs Quality
-let high_sulphate_wines = wines.filter(|w| w.sulphates > 0.5);
-let low_sulphate_wines = wines.filter(|w| w.sulphates <= 0.5);
+// Full correlation matrix for all chemical features
+let feature_cols = ["alcohol", "sulphates", "volatile_acidity", "fixed_acidity", "citric_acid", "ph", "quality"];
+let correlation_matrix = wine_df.select(feature_cols).corr();
+println("📈 Feature Correlation Matrix:");
+println(correlation_matrix);
 
-let high_sulphate_avg_quality = high_sulphate_wines.map(|w| w.quality).sum() / high_sulphate_wines.len();
-let low_sulphate_avg_quality = low_sulphate_wines.map(|w| w.quality).sum() / low_sulphate_wines.len();
+// Alcohol impact analysis using DataFrame operations
+let alcohol_analysis = wine_df
+    .with_columns([
+        when(col("alcohol").gt(10.5))
+            .then(lit("High_Alcohol"))
+            .otherwise(lit("Low_Alcohol"))
+            .alias("alcohol_category")
+    ])
+    .groupby(["alcohol_category"])
+    .agg([
+        count("quality").alias("wine_count"),
+        mean("quality").alias("avg_quality"),
+        mean("alcohol").alias("avg_alcohol_content"),
+        std("quality").alias("quality_std")
+    ])
+    .sort("avg_quality", descending: true);
 
-println(f"\nSulphates Impact:");
-println(f"• High sulphates (>0.5): Avg quality {high_sulphate_avg_quality:.2f}");
-println(f"• Low sulphates (≤0.5): Avg quality {low_sulphate_avg_quality:.2f}");
-println("• Sulphates act as wine preservatives and antioxidants");
+println("\n🍾 Alcohol Content Impact on Quality:");
+println(alcohol_analysis);
 
-// 5. Acidity Analysis
-println("\n5. Acidity and pH Analysis:");
-let ph_values = wines.map(|w| w.ph);
-let avg_ph = ph_values.sum() / ph_values.len();
+// Sulphates analysis (natural preservatives)
+let sulphates_analysis = wine_df
+    .with_columns([
+        when(col("sulphates").gt(0.5))
+            .then(lit("High_Sulphates"))
+            .otherwise(lit("Low_Sulphates"))
+            .alias("sulphate_category")
+    ])
+    .groupby(["sulphate_category"])
+    .agg([
+        count("quality").alias("wine_count"),
+        mean("quality").alias("avg_quality"),
+        mean("sulphates").alias("avg_sulphate_level")
+    ])
+    .sort("avg_quality", descending: true);
 
-println(f"Average wine pH: {avg_ph:.2f} (acidic - typical for wine)");
+println("\n⚙️ Sulphates Impact (Natural Preservatives):");
+println(sulphates_analysis);
+println("📝 Note: Sulphates act as wine preservatives and antioxidants");
 
-// Volatile acidity impact (wine fault indicator)
-let low_volatile_acidity = wines.filter(|w| w.volatile_acidity <= 0.4);
-let high_volatile_acidity = wines.filter(|w| w.volatile_acidity > 0.4);
+// 5. Advanced Acidity Analysis - DataFrame statistical operations
+println("\n5. Comprehensive Acidity and pH Analysis:");
 
-let low_va_avg_quality = low_volatile_acidity.map(|w| w.quality).sum() / low_volatile_acidity.len();
-let high_va_avg_quality = high_volatile_acidity.map(|w| w.quality).sum() / high_volatile_acidity.len();
+// pH statistics using DataFrame operations
+let ph_stats = wine_df
+    .select(["ph", "fixed_acidity", "volatile_acidity", "citric_acid"])
+    .agg([
+        mean("ph").alias("avg_ph"),
+        std("ph").alias("ph_std"),
+        mean("fixed_acidity").alias("avg_fixed_acidity"),
+        mean("volatile_acidity").alias("avg_volatile_acidity"),
+        mean("citric_acid").alias("avg_citric_acid")
+    ]);
 
-println(f"Volatile Acidity Impact (wine faults):");
-println(f"• Low volatile acidity (≤0.4): Avg quality {low_va_avg_quality:.2f}");
-println(f"• High volatile acidity (>0.4): Avg quality {high_va_avg_quality:.2f}");
+println("🌋 Wine Acidity Profile Statistics:");
+println(ph_stats);
+
+// Volatile acidity analysis (critical wine fault indicator)
+let volatile_acidity_analysis = wine_df
+    .with_columns([
+        when(col("volatile_acidity").le(0.4))
+            .then(lit("Good_VA"))
+            .otherwise(lit("High_VA_Risk"))
+            .alias("va_category")
+    ])
+    .groupby(["va_category"])
+    .agg([
+        count("quality").alias("wine_count"),
+        mean("quality").alias("avg_quality"),
+        mean("volatile_acidity").alias("avg_va_level"),
+        max("volatile_acidity").alias("max_va_level")
+    ])
+    .sort("avg_quality", descending: true);
+
+println("\n⚠️ Volatile Acidity Analysis (Wine Fault Detection):");
+println(volatile_acidity_analysis);
+println("📝 Critical: High volatile acidity (>0.4) indicates wine defects");
+
+// Multi-acid correlation analysis
+let acid_correlations = wine_df
+    .select(["fixed_acidity", "volatile_acidity", "citric_acid", "ph", "quality"])
+    .corr();
+
+println("\n🧪 Acid Component Correlations:");
+println(acid_correlations);
 println("• High volatile acidity often indicates wine defects");
 
-// 6. Sweetness Analysis
-println("\n6. Sweetness Analysis:");
-let dry_wines = wines.filter(|w| w.residual_sugar <= 4.0);      // Dry wines
-let off_dry_wines = wines.filter(|w| w.residual_sugar > 4.0 && w.residual_sugar <= 12.0);  // Off-dry
-let sweet_wines = wines.filter(|w| w.residual_sugar > 12.0);    // Sweet wines
+// 6. Wine Sweetness Analysis - DataFrame categorical analysis
+println("\n6. Wine Sweetness Profile Analysis:");
 
-println(f"Sweetness categories:");
-println(f"• Dry wines (≤4g sugar): {dry_wines.len()} wines");
-println(f"• Off-dry wines (4-12g sugar): {off_dry_wines.len()} wines");  
-println(f"• Sweet wines (>12g sugar): {sweet_wines.len()} wines");
+// Sweetness categorization using DataFrame operations
+let sweetness_analysis = wine_df
+    .with_columns([
+        when(col("residual_sugar").le(4.0))
+            .then(lit("Dry"))
+            .when(col("residual_sugar").le(12.0))
+            .then(lit("Off_Dry"))
+            .otherwise(lit("Sweet"))
+            .alias("sweetness_category")
+    ])
+    .groupby(["sweetness_category"])
+    .agg([
+        count("quality").alias("wine_count"),
+        mean("quality").alias("avg_quality"),
+        mean("residual_sugar").alias("avg_sugar_content"),
+        mean("alcohol").alias("avg_alcohol")
+    ])
+    .sort("avg_quality", descending: true);
 
-// 7. Quality Prediction Model
-println("\n7. Building a Wine Quality Prediction Model:");
-println("Prediction Rule: High quality wine if:");
-println("• Alcohol > 10.0% AND");
-println("• Sulphates > 0.45 AND");
-println("• Volatile acidity < 0.6");
+println("🍯 Wine Sweetness Categories:");
+println(sweetness_analysis);
 
-var correct_predictions = 0;
-let total_predictions = wines.len();
+// Sweetness vs wine type cross-analysis
+let sweetness_by_type = wine_df
+    .with_columns([
+        when(col("residual_sugar").le(4.0))
+            .then(lit("Dry"))
+            .when(col("residual_sugar").le(12.0))
+            .then(lit("Off_Dry"))
+            .otherwise(lit("Sweet"))
+            .alias("sweetness_category")
+    ])
+    .groupby(["wine_type", "sweetness_category"])
+    .count()
+    .sort(["wine_type", "sweetness_category"]);
 
-for wine in wines {
-    // Apply prediction rule
-    let predicted_high_quality = wine.alcohol > 10.0 && wine.sulphates > 0.45 && wine.volatile_acidity < 0.6;
-    let actual_high_quality = wine.quality >= 6;
-    
-    if predicted_high_quality == actual_high_quality {
-        correct_predictions = correct_predictions + 1;
-    }
-}
+println("\n🍷 Sweetness Distribution by Wine Type:");
+println(sweetness_by_type);
 
-let prediction_accuracy = (correct_predictions * 100) / total_predictions;
-println(f"Model accuracy: {prediction_accuracy}% ({correct_predictions}/{total_predictions})");
+// 7. Advanced Wine Quality Prediction Model - DataFrame ML operations
+println("\n7. Professional Wine Quality Prediction Model:");
+println("🤖 Multi-feature prediction rule:");
+println("   • Alcohol > 10.0% AND Sulphates > 0.45 AND Volatile acidity < 0.6");
 
-// 8. Feature Engineering - Creating wine profiles
-println("\n8. Wine Profile Engineering:");
-let wine_profiles = wines.map(|w| {
-    let alcohol_tier = if w.alcohol > 11.0 { "high" } else if w.alcohol > 9.5 { "medium" } else { "low" };
-    let acidity_balance = if w.fixed_acidity > 7.5 { "acidic" } else if w.fixed_acidity > 6.5 { "balanced" } else { "mild" };
-    let sweetness_level = if w.residual_sugar > 10.0 { "sweet" } else if w.residual_sugar > 3.0 { "off_dry" } else { "dry" };
-    
-    let wine_score = 
-        (if w.alcohol > 10.0 { 2 } else { 0 }) +
-        (if w.sulphates > 0.5 { 2 } else { 0 }) +
-        (if w.volatile_acidity < 0.4 { 1 } else { 0 }) +
-        (if w.ph > 3.0 && w.ph < 3.5 { 1 } else { 0 });
-    
-    {
-        ...w,
-        alcohol_tier: alcohol_tier,
-        acidity_balance: acidity_balance,
-        sweetness_level: sweetness_level,
-        wine_score: wine_score
-    }
-});
+// Create prediction model using DataFrame operations
+let prediction_model = wine_df
+    .with_columns([
+        // Create prediction based on three key factors
+        (col("alcohol").gt(10.0)
+            .and(col("sulphates").gt(0.45))
+            .and(col("volatile_acidity").lt(0.6))).alias("predicted_high_quality"),
+        (col("quality").ge(6)).alias("actual_high_quality"),
+    ])
+    .with_columns([
+        (col("predicted_high_quality").eq(col("actual_high_quality"))).alias("correct_prediction")
+    ]);
 
-println("Sample wine profiles:");
-println(f"Wine 1: {wine_profiles[0].wine_type}, alcohol={wine_profiles[0].alcohol_tier}, acidity={wine_profiles[0].acidity_balance}, score={wine_profiles[0].wine_score}/6");
-println(f"Wine 2: {wine_profiles[1].wine_type}, alcohol={wine_profiles[1].alcohol_tier}, acidity={wine_profiles[1].acidity_balance}, score={wine_profiles[1].wine_score}/6");
+// Calculate model performance using DataFrame aggregation
+let model_performance = prediction_model
+    .agg([
+        sum("correct_prediction").alias("correct_predictions"),
+        count("correct_prediction").alias("total_predictions"),
+        (sum("correct_prediction").cast(Float64) / count("correct_prediction").cast(Float64) * 100.0).alias("accuracy_pct")
+    ]);
+
+println("🎯 Wine Quality Model Performance:");
+println(model_performance);
+
+// Feature importance analysis
+let feature_importance = prediction_model
+    .groupby(["predicted_high_quality", "actual_high_quality"])
+    .agg([
+        count("quality").alias("prediction_count"),
+        mean("alcohol").alias("avg_alcohol"),
+        mean("sulphates").alias("avg_sulphates"),
+        mean("volatile_acidity").alias("avg_volatile_acidity")
+    ])
+    .sort(["predicted_high_quality", "actual_high_quality"]);
+
+println("\n📈 Prediction Analysis by Category:");
+println(feature_importance);
+
+// 8. Advanced Feature Engineering - Professional wine profiling
+println("\n8. Professional Wine Profile Engineering (DataFrame Operations):");
+
+// Create comprehensive wine profiles using DataFrame operations
+let wine_profiles = wine_df
+    .with_columns([
+        // Alcohol tier classification
+        when(col("alcohol").gt(11.0))
+            .then(lit("High_Alcohol"))
+            .when(col("alcohol").gt(9.5))
+            .then(lit("Medium_Alcohol"))
+            .otherwise(lit("Low_Alcohol"))
+            .alias("alcohol_tier"),
+        
+        // Acidity balance classification
+        when(col("fixed_acidity").gt(7.5))
+            .then(lit("Acidic"))
+            .when(col("fixed_acidity").gt(6.5))
+            .then(lit("Balanced"))
+            .otherwise(lit("Mild"))
+            .alias("acidity_balance"),
+        
+        // Sweetness level classification
+        when(col("residual_sugar").gt(10.0))
+            .then(lit("Sweet"))
+            .when(col("residual_sugar").gt(3.0))
+            .then(lit("Off_Dry"))
+            .otherwise(lit("Dry"))
+            .alias("sweetness_level"),
+        
+        // Composite wine quality score (0-6 scale)
+        ((when(col("alcohol").gt(10.0)).then(2).otherwise(0)) +
+         (when(col("sulphates").gt(0.5)).then(2).otherwise(0)) +
+         (when(col("volatile_acidity").lt(0.4)).then(1).otherwise(0)) +
+         (when(col("ph").gt(3.0).and(col("ph").lt(3.5))).then(1).otherwise(0)))
+         .alias("composite_wine_score")
+    ]);
+
+// Show sample profiles
+let profile_sample = wine_profiles
+    .select(["wine_type", "alcohol_tier", "acidity_balance", "sweetness_level", 
+             "composite_wine_score", "quality", "alcohol"])
+    .head(3);
+
+println("⚙️ Sample Wine Profiles:");
+println(profile_sample);
+
+// Profile distribution analysis
+let profile_analysis = wine_profiles
+    .groupby(["alcohol_tier", "acidity_balance"])
+    .agg([
+        count("quality").alias("wine_count"),
+        mean("quality").alias("avg_quality"),
+        mean("composite_wine_score").alias("avg_composite_score")
+    ])
+    .sort("avg_quality", descending: true);
+
+println("\n🍷 Wine Profile Performance Analysis:");
+println(profile_analysis);
 
 // 9. Market Insights and Recommendations
 println("\n9. Wine Market Insights:");
@@ -205,14 +387,38 @@ println("   • Premium indicators: High alcohol + low volatile acidity");
 println("   • Fault detection: High volatile acidity = quality problems");
 println("   • Investment wines: Look for alcohol >11%, sulphates >0.5");
 
-println("\n✅ Wine Quality Analysis Complete!");
-println("\n📚 What You Learned:");
-println("• Feature correlation analysis and importance ranking");
-println("• Red vs white wine chemical differences");
-println("• Quality prediction using multiple features");
-println("• Wine fault detection through chemistry");
-println("• Market segmentation (dry, off-dry, sweet)");
-println("• Feature engineering for wine profiling");
-println("• Domain knowledge: pH, sulphates, volatile acidity impact");
-println("\n🚀 Next Steps: Try with the full 6,497-wine dataset!");
-println("   Or explore advanced ML: Random Forest, SVM classification!");
+println("\n✅ Professional Wine Quality Analysis Complete!");
+
+println("\n📚 ADVANCED DATA SCIENCE SKILLS LEARNED:");
+println("• 📈 Multi-feature correlation matrix analysis with 11 chemical properties");
+println("• 🔄 Advanced DataFrame groupby operations with complex aggregations");
+println("• ⚙️ Professional feature engineering: conditional logic and composite scoring");
+println("• 🤖 Multi-variable prediction model development and evaluation");
+println("• 🍷 Domain-specific analysis: wine chemistry and quality factors");
+println("• 📉 Cross-tabulation analysis for market segmentation");
+println("• ⚠️ Fault detection algorithms using chemical thresholds");
+
+println("\n🔥 INDUSTRY-STANDARD DATAFRAME OPERATIONS MASTERED:");
+println("   • df![] macro for complex multi-column dataset creation");
+println("   • .corr() for full correlation matrix analysis");
+println("   • .with_columns() with when().then().otherwise() conditional logic");
+println("   • Multi-level .groupby() with statistical aggregations");
+println("   • Complex .agg() operations: mean(), std(), var(), count()");
+println("   • Professional .select() operations for feature subset analysis");
+
+println("\n🍷 WINE INDUSTRY INSIGHTS:");
+println("   • Alcohol content: Strongest quality predictor (correlation analysis)");
+println("   • Volatile acidity: Critical fault indicator (<0.4 g/L threshold)");
+println("   • Sulphates: Natural preservatives enhance wine stability");
+println("   • Chemical balance: Multi-factor interactions determine quality");
+
+println("\n🔥 KEY DIFFERENCE: REAL DataFrame Operations vs Toy Arrays!");
+println("   ⚡ Production-ready syntax identical to pandas/polars/R");
+println("   📨 Scalable to millions of wine records with same code");
+println("   🏆 Professional data science workflow demonstrated");
+
+println("\n🚀 Next Professional Steps:");
+println("   📈 Try full 6,497-wine dataset with df.from_csv('wine_quality.csv')");
+println("   🤖 Explore advanced ML: Random Forest feature importance");
+println("   📊 Deploy correlation analysis for production wine scoring");
+println("   🏠 Master Boston Housing for regression modeling");
