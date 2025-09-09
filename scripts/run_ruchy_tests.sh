@@ -45,41 +45,8 @@ run_test() {
 echo "Testing Framework Components"
 echo "----------------------------"
 
-if [ -f "tests/test_framework.ruchy" ]; then
-    # Create a test for the test framework itself
-    cat > tests/test_framework_self.ruchy << 'EOF'
-import { assert, assert_equals, assert_not_equals, assert_gt, assert_lt, describe, it, test_report } from "./test_framework.ruchy"
-
-describe("Test Framework Self-Test", || {
-    it("should assert true conditions", || {
-        assert(true, "True should pass")
-        assert(1 == 1, "Equality should pass")
-    })
-    
-    it("should assert_equals correctly", || {
-        assert_equals(5, 5, "5 equals 5")
-        assert_equals("hello", "hello", "String equality")
-    })
-    
-    it("should assert_not_equals correctly", || {
-        assert_not_equals(5, 10, "5 not equals 10")
-        assert_not_equals("hello", "world", "String inequality")
-    })
-    
-    it("should assert_gt correctly", || {
-        assert_gt(10, 5, "10 > 5")
-        assert_gt(100, 99, "100 > 99")
-    })
-    
-    it("should assert_lt correctly", || {
-        assert_lt(5, 10, "5 < 10")
-        assert_lt(99, 100, "99 < 100")
-    })
-})
-
-test_report()
-EOF
-    
+# Test framework self-test is now a permanent file optimized for v1.89
+if [ -f "tests/test_framework_self.ruchy" ]; then
     run_test "tests/test_framework_self.ruchy"
 fi
 

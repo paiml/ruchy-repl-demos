@@ -314,10 +314,10 @@ Assignee: Claude
 ### Compatibility Matrix
 ```yaml
 ruchy_versions:
-  minimum: "1.18.0"
-  recommended: "1.18.0"
-  tested: ["1.17.0", "1.18.0"]
-  current: "1.18.0"
+  minimum: "1.30.1"      # Emergency release with tab completion fixes
+  recommended: "1.30.1"   # Latest stable with replay infrastructure
+  tested: ["1.30.0", "1.30.1"]
+  current: "1.30.1"      # Critical REPL fixes and replay converter improvements
   
 rust_versions:
   minimum: "1.70.0"

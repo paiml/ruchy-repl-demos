@@ -1,6 +1,6 @@
 # Ruchy REPL & One-Liner Demonstration Suite 🚀
 
-[![Ruchy Version](https://img.shields.io/badge/ruchy-v1.27.10-blue.svg)](https://github.com/paiml/ruchy)
+[![Ruchy Version](https://img.shields.io/badge/ruchy-v1.30.1-blue.svg)](https://github.com/paiml/ruchy)
 [![TDG Grade](https://img.shields.io/badge/TDG%20Grade-A--_%2887.6%29-success.svg)](./PROJECT_COMPLETION_SUMMARY.md)
 [![Success Rate](https://img.shields.io/badge/Success%20Rate-100%25-brightgreen.svg)](./SPRINT_S02_COMPLETION_REPORT.md)
 [![Total Demos](https://img.shields.io/badge/Total%20Demos-100-blue.svg)](./demos)
@@ -259,6 +259,7 @@ make test
 - [Sprint S02 Report](./SPRINT_S02_COMPLETION_REPORT.md) - 100 demos created
 - [Roadmap V2](./ROADMAP_V2.md) - Quality-driven development plan
 - [Development Guidelines](./CLAUDE.md) - TDD requirements and standards
+- [Chapter 6: REPL Replays](./chapters/06-REPL-Replays.md) - Interactive testing and assessment
 - [Version Reports](./VERIFICATION_REPORT_V1.27.10.md) - Latest features & quality tools
 
 ## 🏆 Achievement Highlights

@@ -1,0 +1,75 @@
+// Simple REPL Replay Demo - v1.27.10+
+// Demonstrates the concept of REPL replay functionality
+
+println("=== Ruchy REPL Replay Demo ===")
+println()
+
+// 1. Recording Concept
+println("1. Recording REPL Sessions:")
+println("   Command: ruchy repl --record my-session.replay")
+println("   This records all your interactive REPL inputs and outputs")
+println()
+
+// 2. Example Session Content
+println("2. What Gets Recorded:")
+println("   Input:  let x = 42")
+println("   Output: (no output)")
+println("   Input:  x * 2")
+println("   Output: 84")
+println()
+
+// Simulate the recorded behavior
+let x = 42
+println(f"   Live demo: x = {x}")
+println(f"   Live demo: x * 2 = {x * 2}")
+println()
+
+// 3. Basic Math Operations
+println("3. Mathematical Operations:")
+let a = 10
+let b = 5
+println(f"   {a} + {b} = {a + b}")
+println(f"   {a} - {b} = {a - b}")
+println(f"   {a} * {b} = {a * b}")
+println()
+
+// 4. Working with Arrays
+println("4. Array Operations:")
+let numbers = [1, 2, 3, 4, 5]
+println(f"   Array: {numbers}")
+println(f"   First element: {numbers[0]}")
+println(f"   Last element: {numbers[4]}")
+println()
+
+// 5. Simple Closures
+println("5. Closure Functions:")
+let double = |n| n * 2
+let add_ten = |n| n + 10
+println(f"   double(7) = {double(7)}")
+println(f"   add_ten(5) = {add_ten(5)}")
+println()
+
+// 6. Converting to Tests
+println("6. Converting Replays to Tests:")
+println("   ruchy replay-to-tests session.replay --output tests.rs")
+println("   This creates automated regression tests")
+println()
+
+// 7. Benefits
+println("7. Key Benefits:")
+println("   • Deterministic testing of interactive code")
+println("   • Automated regression test generation")
+println("   • Educational assessment capabilities")
+println("   • Documentation that stays up-to-date")
+println()
+
+// 8. Usage Examples
+println("8. Common Commands:")
+println("   ruchy repl --record demo.replay        # Record session")
+println("   ruchy replay demo.replay               # Replay session")
+println("   ruchy replay demo.replay --validate    # Verify determinism")
+println("   ruchy replay-to-tests demo.replay      # Generate tests")
+println()
+
+println("✅ REPL replay demo completed!")
+println("Try recording your own session: ruchy repl --record my-demo.replay")
