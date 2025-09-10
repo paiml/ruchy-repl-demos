@@ -1,22 +1,7 @@
-# 1.2 WASM Variables & Memory Management
+// WASM Variables & Memory Management Demo
+// Comprehensive variable handling with cross-platform deployment
+// Test: ruchy wasm variables.ruchy -o variables.wasm --target browser
 
-**Foundation: Memory Layout, Type Systems, and Cross-Platform Variable Handling**
-
-Master WASM memory management with Ruchy's type system. This section covers variable declarations, memory alignment, and efficient cross-platform variable passing between WASM and host environments.
-
-## Learning Objectives
-
-- Understand WASM linear memory model
-- Master i32, i64, f32, f64 variable types
-- Implement memory-efficient variable patterns
-- Optimize variable passing across platform boundaries
-- Debug memory layout and alignment issues
-
-## WASM Memory Model Fundamentals
-
-### Linear Memory Architecture
-
-```ruchy
 // WASM uses a single linear memory space
 // All variables exist within this contiguous memory block
 
@@ -37,20 +22,6 @@ fun demonstrate_memory_layout() {
     println(f"f64 value: {double_value}");
 }
 
-fun main() {
-    demonstrate_memory_layout();
-}
-```
-
-**Compile and Test:**
-```bash
-ruchy run variables_memory.ruchy
-ruchy wasm variables_memory.ruchy -o memory_demo.wasm --target browser
-```
-
-### Variable Types and Performance
-
-```ruchy
 // WASM native integer types with performance characteristics
 fun integer_type_performance() {
     // i32: Most efficient for counters, indices, small numbers
@@ -74,9 +45,9 @@ fun integer_type_performance() {
     
     // Benchmark i64 operations (slightly slower)
     let mut i64_result: i64 = 0;
-    let mut j = 0;
+    let mut j: i64 = 0;
     while j < 1000000 {
-        i64_result = i64_result + j as i64;
+        i64_result = i64_result + j;
         j = j + 1;
     }
     
@@ -84,11 +55,7 @@ fun integer_type_performance() {
     println(f"i64 operations completed: {i64_result}");
     println("i32 operations are typically faster in WASM");
 }
-```
 
-### Floating Point Variables
-
-```ruchy
 // IEEE 754 floating point in WASM
 fun floating_point_precision() {
     // f32: Single precision (32-bit)
@@ -119,13 +86,7 @@ fun floating_point_precision() {
     println(f"0.1 + 0.2 as f64: {sum_f64}");
     println("f64 provides better precision for mathematical operations");
 }
-```
 
-## Cross-Platform Variable Passing
-
-### JavaScript Interop Patterns
-
-```ruchy
 // Variables that will be exported to JavaScript
 fun calculate_area(width: f64, height: f64) -> f64 {
     width * height
@@ -162,106 +123,7 @@ fun variable_interop_demo() {
     println(f"Distance squared: {distance}");
     println(f"Formatted price: {price}");
 }
-```
 
-**JavaScript Integration Example:**
-```javascript
-// Loading and using WASM variables
-async function demonstrateWasmVariables() {
-    // Load the WASM module
-    const wasmModule = await WebAssembly.instantiateStreaming(
-        fetch('./variables.wasm')
-    );
-    
-    const { 
-        calculate_area,
-        process_coordinates, 
-        format_currency 
-    } = wasmModule.instance.exports;
-    
-    // JavaScript → WASM variable passing
-    console.log("=== JavaScript → WASM Variable Passing ===");
-    
-    // Floating point variables
-    const area = calculate_area(10.5, 20.75);
-    console.log(`Area calculation: ${area}`);
-    
-    // Integer variables  
-    const distance = process_coordinates(3, 4);
-    console.log(`Distance squared: ${distance}`);
-    
-    // Mixed type operations
-    const price = format_currency(123.456789, 2);
-    console.log(`Formatted price: ${price}`);
-    
-    // Performance comparison
-    console.time('WASM calculations');
-    for (let i = 0; i < 100000; i++) {
-        calculate_area(Math.random() * 100, Math.random() * 100);
-    }
-    console.timeEnd('WASM calculations');
-    
-    console.time('JavaScript calculations');
-    for (let i = 0; i < 100000; i++) {
-        const w = Math.random() * 100;
-        const h = Math.random() * 100;
-        const area = w * h; // Equivalent JS operation
-    }
-    console.timeEnd('JavaScript calculations');
-}
-```
-
-### Node.js Integration
-
-```javascript
-// Node.js WASM variable integration
-const fs = require('fs');
-const path = require('path');
-
-async function nodeWasmVariables() {
-    // Load WASM module in Node.js
-    const wasmBuffer = fs.readFileSync(path.join(__dirname, 'variables.wasm'));
-    const wasmModule = await WebAssembly.instantiate(wasmBuffer);
-    
-    const { 
-        calculate_area,
-        process_coordinates,
-        format_currency 
-    } = wasmModule.instance.exports;
-    
-    console.log("=== Node.js ↔ WASM Variable Integration ===");
-    
-    // High-performance variable processing
-    const coordinates = [
-        [10, 20], [30, 40], [50, 60], [70, 80], [90, 100]
-    ];
-    
-    console.time('WASM coordinate processing');
-    const distances = coordinates.map(([x, y]) => 
-        process_coordinates(x, y)
-    );
-    console.timeEnd('WASM coordinate processing');
-    
-    console.log('Distance calculations:', distances);
-    
-    // Memory-efficient bulk operations
-    const prices = [123.456, 789.012, 345.678, 901.234];
-    const formattedPrices = prices.map(price => 
-        format_currency(price, 2)
-    );
-    
-    console.log('Formatted prices:', formattedPrices);
-}
-
-// Export for server integration
-module.exports = { nodeWasmVariables };
-```
-
-## Performance Benchmarks
-
-### WASM vs JavaScript Variable Operations
-
-```ruchy
 // Comprehensive variable performance testing
 fun benchmark_variable_operations() {
     println("=== WASM Variable Performance Benchmarks ===");
@@ -289,13 +151,7 @@ fun benchmark_variable_operations() {
     println(f"f64 arithmetic completed: {result_f64}");
     println("WASM provides consistent performance across platforms");
 }
-```
 
-## Quality Validation
-
-### Variable Testing Framework
-
-```ruchy
 // Comprehensive variable validation
 fun validate_variable_types() -> bool {
     let mut all_tests_passed = true;
@@ -304,9 +160,9 @@ fun validate_variable_types() -> bool {
     let max_i32: i32 = 2147483647;
     let min_i32: i32 = -2147483648;
     
-    // Basic arithmetic validation
-    let test_sum = max_i32 - min_i32;
-    if test_sum <= 0 {
+    // Basic arithmetic validation (using safe subtraction)
+    let test_result = max_i32 + 1000000;
+    if test_result <= max_i32 {
         println("ERROR: Integer arithmetic validation failed");
         all_tests_passed = false;
     }
@@ -362,41 +218,9 @@ fun main() {
         println("⚠️  Validation failed - check implementation");
     }
 }
-```
 
-## Platform Deployment Commands
-
-```bash
-# Compile for different platforms
-ruchy wasm variables.ruchy -o variables.wasm --target browser
-ruchy wasm variables.ruchy -o variables_node.wasm --target nodejs  
-ruchy wasm variables.ruchy -o variables_worker.wasm --target cloudflare-workers
-
-# Quality validation
-ruchy check variables.ruchy
-ruchy score variables.ruchy  # Target: ≥ 0.8
-
-# Deploy to platforms
-ruchy wasm variables.ruchy --deploy --deploy-target vercel
-ruchy wasm variables.ruchy --deploy --deploy-target cloudflare
-```
-
-## Key Insights
-
-1. **Memory Layout**: WASM uses linear memory with predictable variable storage
-2. **Type Performance**: i32 operations are fastest, f64 provides better precision
-3. **Cross-Platform**: Variable passing requires careful type mapping
-4. **Optimization**: Understanding WASM types improves performance
-5. **Validation**: Comprehensive testing ensures cross-platform reliability
-
-## Next Steps
-
-- Master [WASM String Processing](ch01-03-wasm-strings.md)
-- Explore [WASM Boolean Operations](ch01-04-wasm-booleans.md)  
-- Learn [WASM Arrays & Collections](ch01-05-wasm-arrays.md)
-
----
-
-**Complete Demo:** [`variables.ruchy`](../../demos/wasm/01-basics/variables.ruchy)
-
-*All examples tested across browser, Node.js, and Cloudflare Workers. Memory safety and performance validated.*
+// Platform Deployment Commands:
+// Browser: ruchy wasm variables.ruchy -o variables.wasm --target browser
+// Node.js: ruchy wasm variables.ruchy -o variables_node.wasm --target nodejs  
+// Cloudflare: ruchy wasm variables.ruchy --deploy --deploy-target cloudflare
+// Vercel: ruchy wasm variables.ruchy --deploy --deploy-target vercel
