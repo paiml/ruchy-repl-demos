@@ -2,9 +2,9 @@
 # Test-driven documentation aligned with demo collection
 
 [book]
-title = "Ruchy REPL & One-Liner Demos"
+title = "Ruchy WebAssembly & REPL Mastery"
 authors = ["Claude Code", "PAIML Team"]
-description = "Test-driven collection of Ruchy REPL sessions and one-liners - every example is tested"
+description = "Production-ready WebAssembly development with Ruchy v2.1.0 - WASM-first approach with cross-platform deployment"
 language = "en"
 multilingual = false
 src = "book/src"
