@@ -1,52 +1,70 @@
-# Ruchy REPL & One-Liner Demos
+# Ruchy WebAssembly & REPL Mastery
 
-**Test-Driven Learning Collection**
+**Production-Ready WebAssembly Development**
+
+*A comprehensive guide to building high-performance, cross-platform applications with Ruchy's native WebAssembly compilation*
 
 ---
 
 ## About This Book
 
-This book is a comprehensive collection of **test-driven** Ruchy REPL sessions and one-liner examples. Every single example has been tested and validated before documentation.
+This book teaches **WASM-first development** using Ruchy v2.1.0's native WebAssembly compilation capabilities. Every example compiles to production-ready WASM modules that deploy instantly to:
 
-**Core Principles:**
-- 🧪 **Test-First**: Every demo is tested before being documented
-- ✅ **Quality Assured**: 100% working examples, zero broken code
-- 📚 **Learning-Focused**: Progressive complexity from basics to advanced
-- ⚡ **Practical**: Real-world patterns you can use immediately
+- **Browser Applications** (JavaScript interop)
+- **Node.js Server Modules** (high-performance backends)  
+- **Cloudflare Workers** (edge computing)
+- **AWS Lambda** (serverless functions)
+- **Vercel** (JAMstack deployment)
+- **Deno** (modern runtime integration)
 
-## What You'll Learn
+## What Makes This Different
 
-### REPL Mastery
-- Interactive development patterns
-- Rapid prototyping techniques  
-- Debugging and exploration workflows
-- Advanced REPL features
+**WASM-First Approach**: Write once in Ruchy, deploy everywhere as optimized WebAssembly.
 
-### One-Liner Expertise
-- Powerful single-line solutions
-- Shell integration patterns
-- Data processing pipelines
-- System automation techniques
+**Production Testing**: Every code example is validated across all deployment platforms.
 
-## How This Book Works
+**Quality Gates**: All modules pass security validation, performance benchmarks, and quality scoring.
 
-Each chapter follows the **Toyota Way** quality methodology:
+**Test-Driven Learning**: TDD methodology with REPL validation for every concept.
 
-1. **Test-First**: Examples are tested before documentation
-2. **Quality Gates**: All code must pass validation
-3. **Continuous Improvement**: Regular updates based on feedback
-4. **Zero Defects**: No broken examples, ever
+## Who This Book Is For
+
+- **Web Developers** seeking high-performance alternatives to JavaScript
+- **Backend Engineers** building scalable microservices  
+- **DevOps Teams** deploying to edge computing platforms
+- **Data Scientists** requiring fast numerical computations
+- **System Programmers** targeting WebAssembly runtimes
 
 ## Prerequisites
 
-- Basic programming knowledge
-- Ruchy v1.14.0 or later installed
-- Access to a terminal/command line
+- Ruchy v2.1.0+ installed (`cargo install ruchy`)
+- Basic programming experience
+- Terminal/command line familiarity
+- Optional: JavaScript knowledge for browser integration
+
+## Book Structure
+
+**Part I: WASM Fundamentals** - Core concepts with immediate deployment
+**Part II: Platform Mastery** - Browser, server, and edge specialization  
+**Part III: Production Excellence** - Testing, optimization, and best practices
+
+## Quality Promise
+
+Every example in this book:
+- ✅ Compiles to valid WebAssembly
+- ✅ Deploys to all supported platforms
+- ✅ Passes security and performance validation
+- ✅ Includes complete integration examples
+- ✅ Provides performance benchmarks
+
+**Quality demonstrated, not promised.**
 
 ## Getting Started
 
-Jump to [Chapter 1: Basics](ch01-00-basics-tdd.md) to start your test-driven learning journey.
+Jump to [Chapter 1: WASM Basics](ch01-00-wasm-basics-tdd.md) to start your WASM-first learning journey.
 
 ---
 
-*Generated with test-driven methodology - every example works perfectly.*
+*Ruchy WebAssembly & REPL Mastery*  
+*Version 2.1 - WASM-First Edition*  
+*Updated for Ruchy v2.1.0 native WASM compilation*

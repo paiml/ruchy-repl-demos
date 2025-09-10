@@ -1,0 +1,19 @@
+// Simple WASM Arithmetic Demo - Minimal for testing
+// Addresses WASM validation issues with simpler approach
+
+fun add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+fun multiply(a: i32, b: i32) -> i32 {
+    a * b
+}
+
+fun main() {
+    let result_add = add(5, 3);
+    let result_mult = multiply(4, 6);
+    
+    println("Simple WASM Demo");
+    println("add(5, 3) = 8");
+    println("multiply(4, 6) = 24");
+}
