@@ -1,22 +1,7 @@
-# 1.4 WASM Boolean Operations & Logic
+// WASM Boolean Operations & Logic Demo
+// Comprehensive boolean handling with cross-platform deployment
+// Test: ruchy wasm booleans.ruchy -o booleans.wasm --target browser
 
-**Foundation: Conditional Logic, Branch Optimization, and Cross-Platform Boolean Handling**
-
-Master WASM boolean operations with Ruchy's logical operators. This section covers boolean algebra, conditional compilation patterns, and efficient branching that optimizes for WebAssembly's stack-based execution model.
-
-## Learning Objectives
-
-- Master WASM boolean representation and operations
-- Implement branch-optimized conditional logic
-- Build conditional compilation patterns for cross-platform deployment
-- Optimize boolean expressions for WASM performance
-- Handle truthiness and type coercion across platform boundaries
-
-## WASM Boolean Fundamentals
-
-### Boolean Memory Representation
-
-```ruchy
 // WASM represents booleans as i32 values (0 = false, non-zero = true)
 // Optimized for WASM's stack-based execution model
 
@@ -37,11 +22,7 @@ fun demonstrate_boolean_representation() {
     println(f"true as i32: {truth_as_int}");
     println(f"false as i32: {false_as_int}");
 }
-```
 
-### Logical Operators and Short-Circuiting
-
-```ruchy
 // WASM-optimized boolean operations with short-circuit evaluation
 fun logical_operations_demo() {
     let a = true;
@@ -70,13 +51,7 @@ fun logical_operations_demo() {
     println(f"Complex AND: {complex_and}");
     println(f"Complex OR: {complex_or}");
 }
-```
 
-## Conditional Compilation Patterns
-
-### Branch Optimization for WASM
-
-```ruchy
 // WASM-optimized conditional patterns
 fun branch_optimized_conditions(value: i32) -> i32 {
     // Pattern 1: Early return optimization
@@ -137,11 +112,7 @@ fun conditional_compilation_demo() {
         println(f"Fast: {fast}, Size: {size} -> {algo}");
     }
 }
-```
 
-### Feature Flags and Platform Detection
-
-```ruchy
 // Cross-platform boolean configuration
 struct PlatformConfig {
     is_browser: bool,
@@ -199,13 +170,7 @@ fun platform_optimized_function(config: PlatformConfig, data: String) -> String 
         format!("DEFAULT: {}", data)
     }
 }
-```
 
-## Boolean Logic Algorithms
-
-### Truth Tables and Logic Gates
-
-```ruchy
 // WASM-optimized truth table operations
 fun boolean_logic_gates() {
     println("Boolean Logic Gates (WASM Optimized):");
@@ -246,11 +211,7 @@ fun demorgans_law_validation() {
         println(f"A={a}, B={b}: Law1={law1_valid}, Law2={law2_valid}");
     }
 }
-```
 
-### Boolean-Based Algorithms
-
-```ruchy
 // Efficient boolean search and filtering
 fun boolean_search(data: Vec<i32>, predicate: fn(i32) -> bool) -> Vec<i32> {
     let mut results = Vec::new();
@@ -307,13 +268,7 @@ fun boolean_algorithms_demo() {
     let even_and_prime = boolean_search(numbers, |n| is_even(n) && is_prime_simple(n));
     println(f"Even primes: {:?}", even_and_prime);
 }
-```
 
-## Cross-Platform Boolean Integration
-
-### JavaScript Boolean Interop
-
-```ruchy
 // Functions optimized for JavaScript boolean passing
 fun validate_input(input: String, min_length: i32, max_length: i32) -> bool {
     let length = input.len() as i32;
@@ -369,70 +324,17 @@ fun boolean_interop_demo() {
     let user_perms = vec![true, false, true, true, false]; // Binary: 11101 = 13
     let access_level = calculate_access_level(user_perms);
     println(f"Access level (binary flags): {access_level}");
-}
-```
-
-**JavaScript Integration Example:**
-```javascript
-// Browser boolean processing with WASM
-async function demonstrateWasmBooleans() {
-    const wasmModule = await WebAssembly.instantiateStreaming(
-        fetch('./booleans.wasm')
-    );
     
-    const { 
-        validate_input,
-        check_permissions,
-        calculate_access_level
-    } = wasmModule.instance.exports;
+    // Platform configuration demo
+    let platforms = ["browser", "nodejs", "cloudflare", "unknown"];
     
-    console.log("=== WASM Boolean Processing ===");
-    
-    // Input validation with WASM
-    const testInputs = [
-        { input: "valid@example.com", min: 5, max: 50 },
-        { input: "", min: 1, max: 10 },
-        { input: "abc", min: 5, max: 20 }
-    ];
-    
-    testInputs.forEach(({ input, min, max }) => {
-        const isValid = validate_input(input, min, max);
-        console.log(`Input "${input}" is ${isValid ? 'valid' : 'invalid'}`);
-    });
-    
-    // Permission checking
-    const userPermissions = [
-        { admin: true, owner: false, authenticated: true },
-        { admin: false, owner: true, authenticated: true },
-        { admin: false, owner: false, authenticated: false }
-    ];
-    
-    userPermissions.forEach(({ admin, owner, authenticated }) => {
-        const hasAccess = check_permissions(admin, owner, authenticated);
-        console.log(`User permissions → Access: ${hasAccess}`);
-    });
-    
-    // Performance comparison
-    console.time('WASM boolean operations');
-    for (let i = 0; i < 100000; i++) {
-        validate_input("test@example.com", 5, 50);
+    for platform in platforms {
+        let config = create_platform_config(platform.to_string());
+        let result = platform_optimized_function(config, "sample_data".to_string());
+        println(f"Platform {platform}: {result}");
     }
-    console.timeEnd('WASM boolean operations');
-    
-    console.time('JavaScript boolean operations');
-    for (let i = 0; i < 100000; i++) {
-        const input = "test@example.com";
-        const isValid = input.length >= 5 && input.length <= 50 && input.trim() !== "";
-    }
-    console.timeEnd('JavaScript boolean operations');
 }
-```
 
-## Quality Validation and Testing
-
-### Boolean Testing Framework
-
-```ruchy
 // Comprehensive boolean validation
 fun validate_boolean_operations() -> bool {
     let mut all_tests_passed = true;
@@ -482,6 +384,15 @@ fun validate_boolean_operations() -> bool {
         println("✅ Permission checking validation passed");
     }
     
+    // Branch optimization validation
+    let branch_result = branch_optimized_conditions(8);
+    if branch_result != 16 {  // 8 is even, 8 % 4 == 0, so 8 * 2 = 16
+        println("ERROR: Branch optimization validation failed");
+        all_tests_passed = false;
+    } else {
+        println("✅ Branch optimization validation passed");
+    }
+    
     all_tests_passed
 }
 
@@ -515,6 +426,17 @@ fun performance_boolean_benchmarks() {
     }
     
     println(f"Complex boolean expressions: {complex_count}/{iterations} true results");
+    
+    // Conditional branching benchmark
+    let mut branch_results = 0;
+    for i in 0..10000 {
+        let result = branch_optimized_conditions(i);
+        if result > 0 {
+            branch_results = branch_results + 1;
+        }
+    }
+    
+    println(f"Branch optimization: {branch_results}/10000 positive results");
     println("WASM boolean operations completed successfully");
 }
 
@@ -554,41 +476,9 @@ fun main() {
         println("⚠️  Validation failed - check implementation");
     }
 }
-```
 
-## Platform Deployment Commands
-
-```bash
-# Compile for different platforms
-ruchy wasm booleans.ruchy -o booleans.wasm --target browser
-ruchy wasm booleans.ruchy -o booleans_node.wasm --target nodejs
-ruchy wasm booleans.ruchy -o booleans_worker.wasm --target cloudflare-workers
-
-# Quality validation
-ruchy check booleans.ruchy
-ruchy score booleans.ruchy  # Target: ≥ 0.8
-
-# Deploy to platforms
-ruchy wasm booleans.ruchy --deploy --deploy-target vercel
-ruchy wasm booleans.ruchy --deploy --deploy-target cloudflare
-```
-
-## Key Insights
-
-1. **WASM Representation**: Booleans are i32 values (0/1) optimized for stack operations
-2. **Branch Optimization**: Conditional patterns that minimize WASM branching overhead
-3. **Short-Circuiting**: Logical operators provide efficient early termination
-4. **Cross-Platform**: Boolean logic remains consistent across deployment targets
-5. **Performance**: WASM boolean operations often 10-20% faster than JavaScript
-
-## Next Steps
-
-- Explore [WASM Arrays & Linear Memory](ch01-05-wasm-arrays.md)
-- Learn [WASM Function Exports](ch02-01-wasm-basic-functions.md)
-- Master [WASM Structs & Data](ch02-02-wasm-data-structures.md)
-
----
-
-**Complete Demo:** [`booleans.ruchy`](../../demos/wasm/01-basics/booleans.ruchy)
-
-*All boolean operations tested across browser, Node.js, and Cloudflare Workers. Logic validation and performance benchmarks included.*
+// Platform Deployment Commands:
+// Browser: ruchy wasm booleans.ruchy -o booleans.wasm --target browser
+// Node.js: ruchy wasm booleans.ruchy -o booleans_node.wasm --target nodejs  
+// Cloudflare: ruchy wasm booleans.ruchy --deploy --deploy-target cloudflare
+// Vercel: ruchy wasm booleans.ruchy --deploy --deploy-target vercel

@@ -1,22 +1,7 @@
-# 1.5 WASM Arrays & Linear Memory
+// WASM Arrays & Linear Memory Demo
+// Comprehensive array handling with cross-platform deployment
+// Test: ruchy wasm arrays.ruchy -o arrays.wasm --target browser
 
-**Foundation: Collections, Memory Layout, and High-Performance Data Structures**
-
-Master WASM arrays and linear memory management with Ruchy's collection types. This section covers array operations, memory-efficient data structures, and optimized collection processing that leverages WebAssembly's linear memory model.
-
-## Learning Objectives
-
-- Master WASM linear memory and array representation
-- Implement high-performance array operations
-- Build memory-efficient data structures for WASM
-- Optimize collection processing for cross-platform deployment
-- Handle dynamic arrays and fixed-size buffers
-
-## WASM Linear Memory Fundamentals
-
-### Array Memory Layout
-
-```ruchy
 // WASM arrays are stored in linear memory as contiguous data blocks
 // Layout: [length: i32][capacity: i32][data: T...]
 
@@ -27,7 +12,6 @@ fun demonstrate_array_memory() {
     
     // Dynamic arrays (heap allocated in WASM linear memory)
     let mut dynamic: Vec<i32> = vec![10, 20, 30];
-    let mut strings: Vec<String> = vec!["hello".to_string(), "world".to_string()];
     
     println("WASM Array Memory Layout:");
     println(f"Fixed array length: {numbers.len()}");
@@ -45,11 +29,7 @@ fun demonstrate_array_memory() {
         println(f"Index {index}: {value}");
     }
 }
-```
 
-### Linear Memory Optimization
-
-```ruchy
 // Memory-aligned data structures for WASM performance
 struct Point2D {
     x: f32,  // 4 bytes
@@ -94,13 +74,7 @@ fun linear_memory_optimization() {
     
     println("Memory layout optimized for WASM linear memory access");
 }
-```
 
-## High-Performance Array Operations
-
-### Core Array Algorithms
-
-```ruchy
 // WASM-optimized array algorithms
 fun array_sum(arr: &[i32]) -> i32 {
     let mut sum = 0;
@@ -172,11 +146,7 @@ fun core_array_operations() {
     println(f"Min: {min:?}");
     println(f"Search for 7: {search_result:?}");
 }
-```
 
-### Sorting Algorithms for WASM
-
-```ruchy
 // Memory-efficient sorting algorithms optimized for WASM
 fun bubble_sort(arr: &mut [i32]) {
     let len = arr.len();
@@ -285,13 +255,7 @@ fun sorting_algorithms_demo() {
     }
     println(f"Quick sort: {:?}", quick_data);
 }
-```
 
-## Dynamic Arrays and Collections
-
-### Vector Operations
-
-```ruchy
 // WASM-optimized dynamic array operations
 fun vector_operations_demo() {
     println("Dynamic Vector Operations:");
@@ -331,11 +295,7 @@ fun vector_operations_demo() {
     
     println(f"After 1000 pushes - len: {optimized.len()}, cap: {optimized.capacity()}");
 }
-```
 
-### Array Slicing and Views
-
-```ruchy
 // Memory-efficient array slicing for WASM
 fun array_slicing_demo() {
     println("Array Slicing and Memory Views:");
@@ -372,13 +332,7 @@ fun array_slicing_demo() {
         println(f"Chunk {:?} sum: {chunk_sum}");
     }
 }
-```
 
-## Multi-dimensional Arrays
-
-### 2D Array Operations
-
-```ruchy
 // 2D array representation in WASM linear memory
 struct Matrix {
     data: Vec<f64>,
@@ -428,6 +382,7 @@ fun matrix_operations_demo() {
     // Display matrix
     println("3x3 Matrix:");
     for row in 0..3 {
+        print("  ");
         for col in 0..3 {
             let val = matrix.get(row, col);
             print(f"{val:4.1} ");
@@ -448,6 +403,7 @@ fun matrix_operations_demo() {
     
     println("Matrix * 2:");
     for row in 0..3 {
+        print("  ");
         for col in 0..3 {
             let val = result.get(row, col);
             print(f"{val:4.1} ");
@@ -467,7 +423,7 @@ fun nested_array_demo() {
     for i in 0..4 {
         let mut row = Vec::new();
         for j in 0..4 {
-            row.push(i * 4 + j);
+            row.push((i * 4 + j) as i32);
         }
         grid.push(row);
     }
@@ -475,6 +431,7 @@ fun nested_array_demo() {
     // Display grid
     println("4x4 Grid:");
     for row in &grid {
+        print("  ");
         for &value in row {
             print(f"{value:3} ");
         }
@@ -491,13 +448,7 @@ fun nested_array_demo() {
     }
     println(f"Sum of column 2: {col_sum}");
 }
-```
 
-## Cross-Platform Array Integration
-
-### JavaScript Array Interop
-
-```ruchy
 // Functions optimized for JavaScript array passing
 fun process_numeric_array(arr: Vec<f64>) -> ProcessingResult {
     let length = arr.len();
@@ -581,64 +532,7 @@ fun cross_platform_array_demo() {
     let batch_sums = batch_process_arrays(batch_arrays);
     println(f"Batch sums: {:?}", batch_sums);
 }
-```
 
-**JavaScript Integration Example:**
-```javascript
-// Browser array processing with WASM
-async function demonstrateWasmArrays() {
-    const wasmModule = await WebAssembly.instantiateStreaming(
-        fetch('./arrays.wasm')
-    );
-    
-    const { 
-        process_numeric_array,
-        transform_array,
-        batch_process_arrays
-    } = wasmModule.instance.exports;
-    
-    console.log("=== WASM Array Processing ===");
-    
-    // Numeric array processing
-    const testData = [1.5, 2.7, 3.1, 4.8, 5.2, 6.9, 7.3, 8.1];
-    const result = process_numeric_array(testData);
-    
-    console.log('WASM processing result:', result);
-    
-    // Array transformations
-    const integers = [1, 2, 3, 4, 5, -1, -2];
-    
-    const doubled = transform_array(integers, "double");
-    const squared = transform_array(integers, "square");
-    const evenOnly = transform_array(integers, "filter_even");
-    
-    console.log('Transformations:', { doubled, squared, evenOnly });
-    
-    // Performance comparison
-    const largeArray = Array.from({length: 100000}, (_, i) => Math.random() * 100);
-    
-    console.time('WASM array processing');
-    for (let i = 0; i < 100; i++) {
-        process_numeric_array(largeArray);
-    }
-    console.timeEnd('WASM array processing');
-    
-    console.time('JavaScript array processing');
-    for (let i = 0; i < 100; i++) {
-        const sum = largeArray.reduce((a, b) => a + b, 0);
-        const avg = sum / largeArray.length;
-        const min = Math.min(...largeArray);
-        const max = Math.max(...largeArray);
-    }
-    console.timeEnd('JavaScript array processing');
-}
-```
-
-## Quality Validation and Testing
-
-### Array Testing Framework
-
-```ruchy
 // Comprehensive array validation
 fun validate_array_operations() -> bool {
     let mut all_tests_passed = true;
@@ -708,7 +602,7 @@ fun performance_array_benchmarks() {
     let large_array: Vec<i32> = (0..1000).collect();
     let mut sum_results = 0;
     
-    for _ in 0..iterations {
+    for _ in 0..100 {  // Reduced for performance
         sum_results = sum_results + array_sum(&large_array);
     }
     
@@ -733,7 +627,7 @@ fun performance_array_benchmarks() {
         for i in 0..100 {
             vec.push(i);
         }
-        vector_ops = vector_ops + vec.len();
+        vector_ops = vector_ops + vec.len() as i32;
     }
     
     println(f"Vector operations: {vector_ops} total elements processed");
@@ -782,41 +676,9 @@ fun main() {
         println("⚠️  Validation failed - check implementation");
     }
 }
-```
 
-## Platform Deployment Commands
-
-```bash
-# Compile for different platforms
-ruchy wasm arrays.ruchy -o arrays.wasm --target browser
-ruchy wasm arrays.ruchy -o arrays_node.wasm --target nodejs
-ruchy wasm arrays.ruchy -o arrays_worker.wasm --target cloudflare-workers
-
-# Quality validation
-ruchy check arrays.ruchy
-ruchy score arrays.ruchy  # Target: ≥ 0.8
-
-# Deploy to platforms
-ruchy wasm arrays.ruchy --deploy --deploy-target vercel
-ruchy wasm arrays.ruchy --deploy --deploy-target cloudflare
-```
-
-## Key Insights
-
-1. **Linear Memory**: WASM arrays use contiguous memory blocks for optimal performance
-2. **Memory Alignment**: Proper data structure alignment improves WASM execution speed
-3. **Zero-Copy Slicing**: Array views avoid unnecessary memory allocations
-4. **Batch Processing**: Vectorized operations leverage WASM's computational efficiency
-5. **Cross-Platform**: Array operations maintain consistency across deployment targets
-
-## Next Steps
-
-- Master [WASM Function Exports](ch02-01-wasm-basic-functions.md)
-- Explore [WASM Structs & Data](ch02-02-wasm-data-structures.md)
-- Learn [WASM Closures & Higher-Order Functions](ch02-03-wasm-closures.md)
-
----
-
-**Complete Demo:** [`arrays.ruchy`](../../demos/wasm/01-basics/arrays.ruchy)
-
-*All array operations tested across browser, Node.js, and Cloudflare Workers. Memory optimization and performance benchmarks included.*
+// Platform Deployment Commands:
+// Browser: ruchy wasm arrays.ruchy -o arrays.wasm --target browser
+// Node.js: ruchy wasm arrays.ruchy -o arrays_node.wasm --target nodejs  
+// Cloudflare: ruchy wasm arrays.ruchy --deploy --deploy-target cloudflare
+// Vercel: ruchy wasm arrays.ruchy --deploy --deploy-target vercel
