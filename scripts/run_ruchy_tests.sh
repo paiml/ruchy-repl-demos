@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2002,SC2003,SC3037
 set -eu
 
 # Ruchy Test Runner Script

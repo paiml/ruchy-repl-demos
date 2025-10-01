@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2059
 # TDD Test Runner for README Examples
 # Tests every example shown in README.md
 

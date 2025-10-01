@@ -9,7 +9,10 @@
         check-documentation-examples test-all-examples continuous-tdd-check \
         ruchy-lint ruchy-format ruchy-ast ruchy-prove ruchy-bench ruchy-quality \
         ruchy-doc ruchy-optimize ruchy-all-tools validate-comments dogfood \
-        check-links fix-links validate-all-links
+        check-links fix-links validate-all-links \
+        quality-gates quality-gate-strict install-hooks update-integration \
+        test-regression analyze-satd analyze-satd-zero kaizen help-toyota-way \
+        coverage-report
 
 # Use strict POSIX shell
 SHELL := /bin/sh
@@ -19,7 +22,7 @@ SHELL := /bin/sh
 help:
 	@echo "Ruchy REPL & One-Liner Demos - Development Commands"
 	@echo ""
-	@echo "Core Commands:"
+	@echo "🎯 Core Commands:"
 	@echo "  make test         - Run all tests"
 	@echo "  make demos-repl   - Run all REPL demonstrations"
 	@echo "  make demos-oneliner - Run all one-liner demonstrations"
@@ -27,7 +30,7 @@ help:
 	@echo "  make quality-gate - Run full quality gate checks"
 	@echo "  make clean        - Clean generated files"
 	@echo ""
-	@echo "Test Commands:"
+	@echo "🧪 Test Commands:"
 	@echo "  make test-repl    - Test all REPL demos"
 	@echo "  make test-oneliner - Test all one-liner demos"
 	@echo "  make test-repl-basics - Test basic REPL demos"
@@ -36,19 +39,34 @@ help:
 	@echo "  make test-oneliner-math - Test math one-liners"
 	@echo "  make coverage     - Generate test coverage report"
 	@echo ""
-	@echo "Quality Commands:"
+	@echo "🔒 Quality Commands (Toyota Way):"
 	@echo "  make verify       - Verify syntax of all demos"
 	@echo "  make lint         - Check for quality issues"
+	@echo "  make quality-gates - Run MANDATORY quality gates (STRICT)"
+	@echo "  make quality-gate-strict - ZERO tolerance enforcement"
+	@echo "  make analyze-satd - Analyze technical debt (TODO/FIXME)"
+	@echo "  make analyze-satd-zero - Enforce ZERO SATD policy"
 	@echo "  make benchmark    - Run performance benchmarks"
 	@echo "  make tdd-verify   - Run TDD verification (MANDATORY)"
 	@echo "  make test-readme  - Test all README examples"
 	@echo ""
-	@echo "Development Commands:"
+	@echo "⚙️  Development Commands:"
 	@echo "  make install      - Install dependencies"
+	@echo "  make install-hooks - Install git pre-commit hooks"
 	@echo "  make pre-commit   - Run pre-commit checks"
 	@echo "  make release      - Prepare for release"
 	@echo ""
-	@echo "Link Validation Commands:"
+	@echo "📊 Reporting & Integration:"
+	@echo "  make update-integration - Update INTEGRATION.md"
+	@echo "  make coverage-report - Comprehensive coverage analysis"
+	@echo "  make test-regression - Detect test regressions"
+	@echo "  make test-all-examples - Test ALL examples"
+	@echo ""
+	@echo "🌸 Toyota Way Commands:"
+	@echo "  make kaizen       - Run continuous improvement cycle"
+	@echo "  make help-toyota-way - Show Toyota Way philosophy"
+	@echo ""
+	@echo "🔗 Link Validation Commands:"
 	@echo "  make check-links  - Check all links in documentation"
 	@echo "  make fix-links    - Fix common link issues automatically"
 	@echo "  make validate-all-links - Comprehensive link validation"
@@ -375,9 +393,9 @@ continuous-tdd-check:
 		sleep 3600; \
 	done
 
-# Quality gates - MUST use Ruchy native testing
+# Quality gates - Legacy (preserved for compatibility)
 quality-gate: verify-version-compatibility test-ruchy-native coverage lint verify benchmark
-	@echo "Running quality gate checks (Ruchy native)..."
+	@echo "Running legacy quality gate checks (Ruchy native)..."
 	@echo "✓ Checking test coverage..."
 	@./scripts/run_ruchy_tests.sh | grep "Quality gate: PASSED" || (echo "✗ Tests failed quality gate"; exit 1)
 	@echo "✓ Checking for TODO/FIXME comments..."
@@ -398,6 +416,7 @@ quality-gate: verify-version-compatibility test-ruchy-native coverage lint verif
 		exit 1; \
 	fi
 	@echo "✓ All quality gates passed (using Ruchy native testing)"
+	@echo "ℹ️  Note: Use 'make quality-gates' for comprehensive validation"
 
 lint: shellcheck ruchy-lint
 	@echo "✓ All linting checks passed"
@@ -448,6 +467,12 @@ coverage:
 	@echo ""
 	@echo "✓ Coverage report generated"
 
+# Comprehensive coverage report
+coverage-report:
+	@echo "📊 Running comprehensive coverage analysis..."
+	@chmod +x scripts/coverage-report.sh
+	@./scripts/coverage-report.sh
+
 # Clean
 clean:
 	@echo "Cleaning generated files..."
@@ -456,9 +481,9 @@ clean:
 	@find . -name "*.out" -exec rm -f {} + 2>/dev/null || true
 	@echo "✓ Clean complete"
 
-# Pre-commit hook
-pre-commit: tdd-verify quality-gate
-	@echo "✓ Pre-commit checks passed"
+# Pre-commit hook (enhanced with new framework)
+pre-commit: tdd-verify quality-gates
+	@echo "✓ Pre-commit checks passed (enhanced validation)"
 
 # Release preparation
 release: quality-gate
@@ -614,6 +639,120 @@ validate-all-links: fix-links check-links
 	@echo "📊 Comprehensive link validation complete"
 	@echo "All documentation links have been verified and fixed"
 
+# Toyota Way quality gates (MANDATORY - BLOCKING)
+quality-gates:
+	@echo "🔒 Running MANDATORY quality gates..."
+	@chmod +x scripts/quality-gates.sh
+	@./scripts/quality-gates.sh
+
+# Strict quality gate with ZERO tolerance
+quality-gate-strict: quality-gates analyze-satd-zero
+	@echo "✅ STRICT quality gates passed - ZERO violations"
+
+# Install git hooks
+install-hooks:
+	@echo "🪝 Installing git hooks..."
+	@chmod +x scripts/install-hooks.sh
+	@./scripts/install-hooks.sh
+
+# Update INTEGRATION.md with latest test results
+update-integration: test-all-examples
+	@echo "📝 Updating INTEGRATION.md..."
+	@RUCHY_VERSION=$$(ruchy --version 2>/dev/null | cut -d' ' -f2 || echo "unknown"); \
+	TIMESTAMP=$$(date "+%B %d, %Y"); \
+	DEMO_COUNT=$$(find demos -name '*.repl' -o -name '*.sh' | wc -l); \
+	echo "Current Status:" > /tmp/integration_update.txt; \
+	echo "  Ruchy Version: $$RUCHY_VERSION" >> /tmp/integration_update.txt; \
+	echo "  Demo Count: $$DEMO_COUNT" >> /tmp/integration_update.txt; \
+	echo "  Last Updated: $$TIMESTAMP" >> /tmp/integration_update.txt; \
+	cat /tmp/integration_update.txt
+	@echo "✅ Integration status updated"
+
+# Detect test regressions
+test-regression:
+	@echo "📉 Checking for test regressions..."
+	@CURRENT_DEMOS=$$(find demos -name '*.repl' -o -name '*.sh' | wc -l); \
+	if [ "$$CURRENT_DEMOS" -lt 50 ]; then \
+		echo "❌ REGRESSION: Only $$CURRENT_DEMOS demos (minimum: 50)"; \
+		exit 1; \
+	else \
+		echo "✅ No regression: $$CURRENT_DEMOS demos"; \
+	fi
+
+# SATD analysis
+analyze-satd:
+	@echo "🔍 Analyzing Self-Admitted Technical Debt..."
+	@SATD_COUNT=0; \
+	for file in demos/repl/*/*.repl demos/one-liners/*/*.sh tests/*.ruchy; do \
+		if [ -f "$$file" ]; then \
+			count=$$(grep -c "TODO\|FIXME\|HACK\|XXX" "$$file" 2>/dev/null || echo "0"); \
+			SATD_COUNT=$$((SATD_COUNT + count)); \
+		fi; \
+	done; \
+	echo "Found $$SATD_COUNT SATD comments"; \
+	if [ "$$SATD_COUNT" -gt 0 ]; then \
+		grep -n "TODO\|FIXME\|HACK\|XXX" demos/repl/*/*.repl demos/one-liners/*/*.sh tests/*.ruchy 2>/dev/null | head -10; \
+	else \
+		echo "✅ ZERO SATD found"; \
+	fi
+
+# SATD ZERO tolerance enforcement
+analyze-satd-zero:
+	@echo "🚫 Enforcing ZERO SATD policy..."
+	@SATD_COUNT=0; \
+	for file in demos/repl/*/*.repl demos/one-liners/*/*.sh tests/*.ruchy; do \
+		if [ -f "$$file" ]; then \
+			count=$$(grep -c "TODO\|FIXME\|HACK\|XXX" "$$file" 2>/dev/null || echo "0"); \
+			SATD_COUNT=$$((SATD_COUNT + count)); \
+		fi; \
+	done; \
+	if [ "$$SATD_COUNT" -ne 0 ]; then \
+		echo "❌ Found $$SATD_COUNT SATD comments - ZERO tolerance violated!"; \
+		grep -n "TODO\|FIXME\|HACK\|XXX" demos/repl/*/*.repl demos/one-liners/*/*.sh tests/*.ruchy 2>/dev/null | head -10; \
+		exit 1; \
+	else \
+		echo "✅ ZERO SATD policy satisfied"; \
+	fi
+
+# Toyota Way Kaizen - Continuous Improvement
+kaizen: quality-gates
+	@echo "=== KAIZEN: 改善 - Continuous Improvement ==="
+	@echo "Following Toyota Way principles for zero-defect demos"
+	@echo ""
+	@echo "=== STEP 1: Genchi Genbutsu (現地現物) - Go and See ==="
+	@$(MAKE) analyze-satd
+	@echo ""
+	@echo "=== STEP 2: Jidoka (自働化) - Build Quality In ==="
+	@$(MAKE) quality-gate-strict || (echo "❌ Quality violations must be fixed" && exit 1)
+	@echo ""
+	@echo "=== STEP 3: Hansei (反省) - Reflect and Improve ==="
+	@echo "✅ KAIZEN COMPLETE - Continuous improvement achieved"
+
+# Toyota Way philosophy help
+help-toyota-way:
+	@echo "🌸 THE TOYOTA WAY - Zero Defect Philosophy"
+	@echo "=========================================="
+	@echo ""
+	@echo "🎌 Core Principles:"
+	@echo "  改善 Kaizen: Continuous incremental improvement"
+	@echo "  現地現物 Genchi Genbutsu: Go and see the actual code"
+	@echo "  自働化 Jidoka: Build quality in, don't inspect it in"
+	@echo "  反省 Hansei: Reflect and fix root causes"
+	@echo ""
+	@echo "🚫 ZERO TOLERANCE:"
+	@echo "  • NO TODO/FIXME/HACK comments (SATD)"
+	@echo "  • NO broken demos or examples"
+	@echo "  • NO uncommitted changes to quality gates"
+	@echo "  • NO warnings in linting"
+	@echo "  • NO empty demo files"
+	@echo ""
+	@echo "📊 Quality Gates (Enforced):"
+	@echo "  make quality-gates        - Run all quality gates"
+	@echo "  make quality-gate-strict  - Fail on ANY violation"
+	@echo "  make analyze-satd-zero    - Enforce ZERO SATD"
+	@echo ""
+	@echo "Remember: Quality is built-in, not bolted-on!"
+
 # All
-all: install test quality-gate coverage dogfood validate-all-links
+all: install install-hooks test quality-gates coverage dogfood validate-all-links
 	@echo "✓ All tasks complete"

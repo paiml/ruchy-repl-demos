@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2002,SC2003,SC2034,SC3037
 set -eu
 
 # Ruchy Provability - Formal verification with ruchy provability

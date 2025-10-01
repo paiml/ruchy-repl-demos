@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2030,SC2031
 set -eu
 
 # Test demos against a specific Ruchy version

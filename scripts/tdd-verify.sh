@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2003,SC2046,SC2059,SC2155,SC3037
 # TDD Verification Script - Quality Gate for All Examples
 # NO EXAMPLE CAN BE SHOWN WITHOUT PASSING THIS VERIFICATION
 

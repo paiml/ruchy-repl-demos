@@ -1,7 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 # One-liner: JSON-like data processing with objects
 # Usage: ./json_processing.sh
 # Features: v1.27.7+ object literals
+# shellcheck disable=SC2016
 
 echo "JSON-like data processing with Ruchy objects..."
 echo

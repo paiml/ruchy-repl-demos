@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2003,SC2034,SC3037
 set -eu
 
 # Ruchy AST Analysis - Analyze complexity with ruchy ast

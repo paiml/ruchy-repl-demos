@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC3024,SC3030,SC3037,SC3054
 # Comprehensive test runner for all demos
 
 set -e

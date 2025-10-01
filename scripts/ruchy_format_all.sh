@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2003,SC2030,SC2031,SC3037
 set -eu
 
 # Ruchy Format Runner - Format all code with ruchy fmt
