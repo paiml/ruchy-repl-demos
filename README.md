@@ -263,7 +263,7 @@ ruchy -e 'let nums = [1,2,3,4,5]; nums.sum() / nums.len()'
 ## ❌ Not Compatible with v1.18.0
 
 ### These Rust features don't work:
-```rust
+```text
 // ❌ Type annotations - NOT SUPPORTED
 fn add(x: i32, y: i32) -> i32 { x + y }
 
