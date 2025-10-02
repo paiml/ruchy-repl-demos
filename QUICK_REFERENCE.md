@@ -172,6 +172,39 @@ make quality-gate-strict
 # Fails on ANY violation
 ```
 
+## 🔧 Troubleshooting
+
+### Pre-commit Hook Not Running
+```bash
+# Verify hook is installed
+ls -la .git/hooks/pre-commit
+
+# Reinstall if missing
+make install-hooks
+```
+
+### Quality Gates Failing
+```bash
+# Check which gate failed
+make quality-gates
+
+# Run specific checks
+make shellcheck           # Check shell scripts
+make test-ruchy-native   # Run tests
+make analyze-satd        # Check for SATD comments
+```
+
+### ShellCheck Issues
+```bash
+# Check all scripts
+make shellcheck
+
+# Fix common issues:
+# - Use printf instead of echo -n
+# - Use expr for arithmetic in POSIX sh
+# - Add shellcheck disable directives for valid exceptions
+```
+
 ## 📊 Reporting
 
 ### Update INTEGRATION.md
