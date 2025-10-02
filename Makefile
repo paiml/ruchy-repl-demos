@@ -12,7 +12,7 @@
         check-links fix-links validate-all-links \
         quality-gates quality-gate-strict install-hooks update-integration \
         test-regression analyze-satd analyze-satd-zero kaizen help-toyota-way \
-        coverage-report
+        coverage-report test-wasm compare-wasm-native wasm-report quality-gates-wasm
 
 # Use strict POSIX shell
 SHELL := /bin/sh
@@ -752,6 +752,36 @@ help-toyota-way:
 	@echo "  make analyze-satd-zero    - Enforce ZERO SATD"
 	@echo ""
 	@echo "Remember: Quality is built-in, not bolted-on!"
+
+# ==============================================================================
+# WASM Compatibility Testing
+# ==============================================================================
+
+test-wasm:
+	@echo "🌐 Testing WASM Compatibility"
+	@chmod +x tests/wasm/scripts/run_wasm_tests.sh
+	@./tests/wasm/scripts/run_wasm_tests.sh
+
+compare-wasm-native:
+	@echo "⚖️  Comparing WASM vs Native"
+	@chmod +x tests/wasm/scripts/compare_native_wasm.sh
+	@./tests/wasm/scripts/compare_native_wasm.sh
+
+wasm-report:
+	@echo "📊 WASM Compatibility Report"
+	@echo "============================"
+	@echo ""
+	@echo "See: docs/specifications/wasm-mode.md"
+	@echo ""
+	@echo "To run WASM tests:"
+	@echo "  make test-wasm"
+	@echo "  make compare-wasm-native"
+	@echo ""
+	@echo "Results will be in:"
+	@echo "  tests/wasm/results/"
+
+quality-gates-wasm: quality-gates test-wasm
+	@echo "✅ Quality gates + WASM validation complete"
 
 # All
 all: install install-hooks test quality-gates coverage dogfood validate-all-links

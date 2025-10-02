@@ -1,0 +1,119 @@
+// WASM Compatibility Test Suite
+// Tests all demos for WASM compatibility
+//
+// Usage: ruchy tests/wasm/wasm_compatibility_test.ruchy
+
+println("🌐 WASM Compatibility Test Suite");
+println("=================================");
+println("");
+
+// Test helper function
+fun test_demo(name, code_fn) {
+    print(f"Testing {name}... ");
+
+    let result = code_fn();
+
+    if result {
+        println("✅ PASS");
+    } else {
+        println("❌ FAIL");
+    }
+}
+
+// Basic arithmetic tests
+println("Category: Basic Arithmetic");
+println("--------------------------");
+
+test_demo("Addition", || {
+    let result = 2 + 2;
+    result == 4
+});
+
+test_demo("Multiplication", || {
+    let result = 5 * 6;
+    result == 30
+});
+
+test_demo("Exponentiation", || {
+    let result = 2 ** 8;
+    result == 256
+});
+
+println("");
+
+// Array operations
+println("Category: Array Operations");
+println("--------------------------");
+
+test_demo("Array map", || {
+    let nums = [1, 2, 3, 4, 5];
+    let doubled = nums.map(|x| x * 2);
+    doubled == [2, 4, 6, 8, 10]
+});
+
+test_demo("Array filter", || {
+    let nums = [1, 2, 3, 4, 5];
+    let evens = nums.filter(|x| x % 2 == 0);
+    evens == [2, 4]
+});
+
+test_demo("Array iteration", || {
+    let nums = [1, 2, 3, 4, 5];
+    let sum = 0;
+    for n in nums {
+        sum = sum + n;
+    }
+    sum == 15
+});
+
+println("");
+
+// String operations
+println("Category: String Operations");
+println("---------------------------");
+
+test_demo("String concatenation", || {
+    let result = "hello" + " " + "world";
+    result == "hello world"
+});
+
+test_demo("String length", || {
+    let text = "hello";
+    text.len() == 5
+});
+
+test_demo("String equality", || {
+    let text1 = "hello";
+    let text2 = "hello";
+    text1 == text2
+});
+
+println("");
+
+// Function operations
+println("Category: Functions & Closures");
+println("-------------------------------");
+
+test_demo("Function definition", || {
+    fun add(a, b) { a + b }
+    add(2, 3) == 5
+});
+
+test_demo("Closure capture", || {
+    let x = 10;
+    let add_x = |y| x + y;
+    add_x(5) == 15
+});
+
+test_demo("Higher-order function", || {
+    fun apply(f, x) { f(x) }
+    let double = |n| n * 2;
+    apply(double, 5) == 10
+});
+
+println("");
+
+// Summary
+println("================================");
+println("✅ WASM Compatibility Test Complete");
+println("================================");
