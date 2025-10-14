@@ -58,7 +58,7 @@ help:
 	@echo "  make release      - Prepare for release"
 	@echo ""
 	@echo "📊 Reporting & Integration:"
-	@echo "  make update-integration - Update INTEGRATION.md"
+	@echo "  make update-integration - Auto-generate INTEGRATION.md (single source of truth)"
 	@echo "  make coverage-report - Comprehensive coverage analysis"
 	@echo "  make test-regression - Detect test regressions"
 	@echo "  make test-all-examples - Test ALL examples"
