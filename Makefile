@@ -63,11 +63,12 @@ help:
 	@echo "  make test-regression - Detect test regressions"
 	@echo "  make test-all-examples - Test ALL examples"
 	@echo ""
-	@echo "📓 Notebook & REPL Validation:"
-	@echo "  make test-notebook - Test all demos in notebook environment"
-	@echo "  make test-replay   - Test REPL demos via replay files"
-	@echo "  make dogfood-quick - Run essential Ruchy tools (fast)"
-	@echo "  make dogfood-full  - Run ALL 15 Ruchy tools (comprehensive)"
+	@echo "📓 Notebook & REPL Validation (Playwright E2E):"
+	@echo "  make test-notebook       - Run E2E tests in notebook (Playwright)"
+	@echo "  make test-notebook-smoke - Quick smoke test (< 30s)"
+	@echo "  make test-replay         - Test REPL demos via replay files"
+	@echo "  make dogfood-quick       - Run essential Ruchy tools (fast)"
+	@echo "  make dogfood-full        - Run ALL 15 Ruchy tools (comprehensive)"
 	@echo ""
 	@echo "🌸 Toyota Way Commands:"
 	@echo "  make kaizen       - Run continuous improvement cycle"
@@ -794,11 +795,20 @@ quality-gates-wasm: quality-gates test-wasm
 # Notebook & REPL Validation (Sprint 1)
 # ==============================================================================
 
-# Notebook validation (REPL-103)
+# Notebook validation (REPL-103) - Playwright E2E testing
 test-notebook:
-	@echo "📓 Testing demos in Ruchy notebook environment..."
-	@chmod +x scripts/test-notebook.sh
-	@./scripts/test-notebook.sh
+	@echo "📓 Testing demos in Ruchy notebook with Playwright E2E..."
+	@if [ ! -d "node_modules" ]; then \
+		echo "Installing Playwright dependencies..."; \
+		npm install; \
+		npx playwright install chromium; \
+	fi
+	@npm run test:notebook
+
+# Quick smoke test - verify notebook works
+test-notebook-smoke:
+	@echo "💨 Running notebook smoke test..."
+	@npm run test:smoke
 
 # REPL replay validation (REPL-104) - placeholder for future implementation
 test-replay:

@@ -1,0 +1,35 @@
+{
+  "name": "ruchy-repl-demos",
+  "version": "1.0.0",
+  "description": "REPL and one-liner demonstrations for Ruchy with E2E notebook testing",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:notebook": "playwright test tests/e2e/",
+    "test:smoke": "playwright test tests/e2e/00-smoke-test.spec.ts",
+    "test:repl-demos": "playwright test tests/e2e/01-repl-demos.spec.ts",
+    "playwright:install": "playwright install chromium",
+    "playwright:report": "playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paiml/ruchy-repl-demos.git"
+  },
+  "keywords": [
+    "ruchy",
+    "repl",
+    "demos",
+    "notebook",
+    "e2e",
+    "playwright",
+    "tdd"
+  ],
+  "author": "Noah Gift",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  }
+}
