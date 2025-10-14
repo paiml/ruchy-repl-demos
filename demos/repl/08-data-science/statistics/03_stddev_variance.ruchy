@@ -1,0 +1,209 @@
+// Statistical Demo 3: Standard Deviation and Variance - Measuring Spread
+// Concepts: Variance, standard deviation, dispersion, data spread
+// Use cases: Risk analysis, quality control, consistency measurement
+
+println("=== Standard Deviation and Variance: Measuring Data Spread ===\n");
+
+// 1. Variance - Average squared deviation from mean
+println("1. VARIANCE:");
+println("   Formula: Σ(x - mean)² / n");
+println("   Measures: How far values spread from the mean");
+
+let data1 = [10, 12, 14, 16, 18];
+let mean1 = data1.sum() / data1.len();
+
+// Calculate squared deviations
+let squared_devs = data1.map(|x| {
+    let dev = x - mean1;
+    dev * dev
+});
+
+let variance1 = squared_devs.sum() / squared_devs.len();
+
+println(f"\nData: {data1:?}");
+println(f"Mean: {mean1}");
+println(f"Squared deviations: {squared_devs:?}");
+println(f"Variance: {variance1}");
+
+// 2. Standard Deviation - Square root of variance
+println("\n2. STANDARD DEVIATION:");
+println("   Formula: √variance");
+println("   Measures: Average distance from mean (in original units)");
+
+let stddev1 = variance1.sqrt();
+println(f"\nVariance: {variance1}");
+println(f"Standard deviation: {stddev1:.2f}");
+println("\nWhy standard deviation?");
+println("  • Same units as original data");
+println("  • Easier to interpret than variance");
+println("  • Most commonly reported spread measure");
+
+// 3. Low vs High Variance
+println("\n3. LOW vs HIGH Variance:");
+
+// Low variance - consistent data
+let consistent_scores = [85, 87, 86, 85, 87];
+let mean_consistent = consistent_scores.sum() / consistent_scores.len();
+let var_consistent = consistent_scores
+    .map(|x| (x - mean_consistent) * (x - mean_consistent))
+    .sum() / consistent_scores.len();
+let std_consistent = var_consistent.sqrt();
+
+println(f"\nConsistent student (low variance):");
+println(f"Scores: {consistent_scores:?}");
+println(f"Mean: {mean_consistent}");
+println(f"Std dev: {std_consistent:.2f}");
+println("✓ Small std dev → Predictable, consistent performance");
+
+// High variance - inconsistent data
+let inconsistent_scores = [60, 95, 70, 100, 75];
+let mean_inconsistent = inconsistent_scores.sum() / inconsistent_scores.len();
+let var_inconsistent = inconsistent_scores
+    .map(|x| (x - mean_inconsistent) * (x - mean_inconsistent))
+    .sum() / inconsistent_scores.len();
+let std_inconsistent = var_inconsistent.sqrt();
+
+println(f"\nInconsistent student (high variance):");
+println(f"Scores: {inconsistent_scores:?}");
+println(f"Mean: {mean_inconsistent}");
+println(f"Std dev: {std_inconsistent:.2f}");
+println("⚠ Large std dev → Unpredictable, variable performance");
+
+// 4. Population vs Sample Standard Deviation
+println("\n4. POPULATION vs SAMPLE Standard Deviation:");
+println("   Population: Divide by n (when you have ALL data)");
+println("   Sample: Divide by (n-1) (when estimating from sample)");
+
+let sample_data = [23, 25, 27, 29, 31];
+let sample_mean = sample_data.sum() / sample_data.len();
+
+// Population std dev (biased)
+let pop_variance = sample_data
+    .map(|x| (x - sample_mean) * (x - sample_mean))
+    .sum() / sample_data.len();
+let pop_stddev = pop_variance.sqrt();
+
+// Sample std dev (unbiased) - Bessel's correction
+let sample_variance = sample_data
+    .map(|x| (x - sample_mean) * (x - sample_mean))
+    .sum() / (sample_data.len() - 1);
+let sample_stddev = sample_variance.sqrt();
+
+println(f"\nData: {sample_data:?}");
+println(f"Population std dev (÷{sample_data.len()}): {pop_stddev:.2f}");
+println(f"Sample std dev (÷{sample_data.len() - 1}): {sample_stddev:.2f}");
+println("Use sample std dev when estimating from sample!");
+
+// 5. 68-95-99.7 Rule (Empirical Rule)
+println("\n5. The 68-95-99.7 RULE (For Normal Distributions):");
+println("   • 68% of data within 1 std dev of mean");
+println("   • 95% of data within 2 std dev of mean");
+println("   • 99.7% of data within 3 std dev of mean");
+
+let heights_cm = [165, 168, 170, 172, 175, 168, 170, 173, 171, 169];
+let mean_height = heights_cm.sum() / heights_cm.len();
+let var_height = heights_cm
+    .map(|h| (h - mean_height) * (h - mean_height))
+    .sum() / heights_cm.len();
+let std_height = var_height.sqrt();
+
+let range_1std_low = mean_height - std_height;
+let range_1std_high = mean_height + std_height;
+let range_2std_low = mean_height - (2 * std_height);
+let range_2std_high = mean_height + (2 * std_height);
+
+println(f"\nHeights: {heights_cm:?}");
+println(f"Mean: {mean_height:.1f} cm");
+println(f"Std dev: {std_height:.2f} cm");
+println(f"\n68% of people: {range_1std_low:.1f} - {range_1std_high:.1f} cm (±1σ)");
+println(f"95% of people: {range_2std_low:.1f} - {range_2std_high:.1f} cm (±2σ)");
+
+// 6. Real-world application: Manufacturing quality control
+println("\n6. Real-World Example: Manufacturing Quality Control");
+
+let bolt_lengths_mm = [49.8, 50.1, 49.9, 50.2, 50.0, 49.9, 50.1, 50.0];
+let target = 50.0;
+let mean_length = bolt_lengths_mm.sum() / bolt_lengths_mm.len();
+let variance_length = bolt_lengths_mm
+    .map(|x| (x - mean_length) * (x - mean_length))
+    .sum() / bolt_lengths_mm.len();
+let std_length = variance_length.sqrt();
+
+println(f"\nBolt lengths: {bolt_lengths_mm:?} mm");
+println(f"Target length: {target} mm");
+println(f"Actual mean: {mean_length:.2f} mm");
+println(f"Standard deviation: {std_length:.3f} mm");
+
+// Quality control limits (±3 sigma)
+let upper_limit = mean_length + (3.0 * std_length);
+let lower_limit = mean_length - (3.0 * std_length);
+
+println(f"\nQuality control limits (±3σ):");
+println(f"  Lower: {lower_limit:.2f} mm");
+println(f"  Upper: {upper_limit:.2f} mm");
+println("\n✓ All bolts within limits → Process is in control");
+
+// 7. Coefficient of Variation (CV)
+println("\n7. COEFFICIENT OF VARIATION (CV):");
+println("   Formula: (std_dev / mean) × 100%");
+println("   Use: Compare variability across different scales");
+
+// Dataset 1: Small numbers, small std dev
+let dataset_a = [5, 6, 7, 8, 9];
+let mean_a = dataset_a.sum() / dataset_a.len();
+let std_a = dataset_a
+    .map(|x| (x - mean_a) * (x - mean_a))
+    .sum() / dataset_a.len();
+let std_a_val = std_a.sqrt();
+let cv_a = (std_a_val / mean_a) * 100.0;
+
+// Dataset 2: Large numbers, large std dev
+let dataset_b = [500, 600, 700, 800, 900];
+let mean_b = dataset_b.sum() / dataset_b.len();
+let std_b = dataset_b
+    .map(|x| (x - mean_b) * (x - mean_b))
+    .sum() / dataset_b.len();
+let std_b_val = std_b.sqrt();
+let cv_b = (std_b_val / mean_b) * 100.0;
+
+println(f"\nDataset A: {dataset_a:?}");
+println(f"  Mean: {mean_a}, Std dev: {std_a_val:.2f}, CV: {cv_a:.1f}%");
+
+println(f"\nDataset B: {dataset_b:?}");
+println(f"  Mean: {mean_b}, Std dev: {std_b_val:.2f}, CV: {cv_b:.1f}%");
+
+println(f"\nSame relative variability ({cv_a:.1f}% vs {cv_b:.1f}%)");
+println("CV allows fair comparison across different scales!");
+
+// 8. Practical interpretation
+println("\n8. PRACTICAL INTERPRETATION:");
+
+let response_times_ms = [120, 145, 135, 150, 140, 142, 138, 148];
+let mean_time = response_times_ms.sum() / response_times_ms.len();
+let var_time = response_times_ms
+    .map(|x| (x - mean_time) * (x - mean_time))
+    .sum() / response_times_ms.len();
+let std_time = var_time.sqrt();
+
+println(f"\nAPI response times: {response_times_ms:?} ms");
+println(f"Mean: {mean_time} ms");
+println(f"Std dev: {std_time:.1f} ms");
+println("\n💡 What this tells us:");
+println(f"  • Typical response: {mean_time} ms");
+println(f"  • Usually varies by ±{std_time:.1f} ms");
+println(f"  • Expect 95% of requests: {mean_time - (2.0 * std_time):.0f}-{mean_time + (2.0 * std_time):.0f} ms");
+println("  • Low std dev = Consistent performance ✓");
+
+println("\n✅ Standard Deviation and Variance Complete!");
+println("\n📚 Key Takeaways:");
+println("• Variance: Measures spread (squared units)");
+println("• Std dev: Measures spread (original units)");
+println("• Low std dev: Consistent, predictable data");
+println("• High std dev: Variable, spread out data");
+println("• Use sample std dev (÷n-1) when estimating");
+println("• CV allows comparison across different scales");
+println("\n🎯 Applications:");
+println("  ✓ Quality control (manufacturing)");
+println("  ✓ Risk analysis (finance)");
+println("  ✓ Performance consistency (sports, systems)");
+println("  ✓ Reliability measurement");

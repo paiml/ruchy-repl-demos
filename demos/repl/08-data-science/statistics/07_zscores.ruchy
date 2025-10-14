@@ -1,0 +1,202 @@
+// Statistical Demo 7: Z-Scores and Normalization - Standardization
+// Concepts: Z-scores, standard scores, normalization, standardization
+// Use cases: Comparing different scales, outlier detection, data preprocessing
+
+println("=== Z-Scores: Standardizing Data for Comparison ===\n");
+
+// 1. Z-Score Basics
+println("1. Z-SCORE (Standard Score):");
+println("   Formula: z = (x - mean) / std_dev");
+println("   Measures: How many standard deviations from the mean");
+
+let test_scores = [70, 75, 80, 85, 90, 95, 100];
+let mean = test_scores.sum() / test_scores.len();
+
+// Calculate std dev
+let variance = test_scores
+    .map(|x| (x - mean) * (x - mean))
+    .sum() / test_scores.len();
+let std_dev = variance.sqrt();
+
+println(f"\nTest scores: {test_scores:?}");
+println(f"Mean: {mean}");
+println(f"Std dev: {std_dev:.2f}");
+
+// Calculate z-scores
+println(f"\nZ-Scores:");
+for score in test_scores {
+    let z = (score - mean) / std_dev;
+    println(f"  Score {score}: z = {z:.2f}");
+}
+
+// 2. Interpreting Z-Scores
+println("\n2. INTERPRETING Z-Scores:");
+println("   z = 0: Exactly at the mean");
+println("   z = +1: One std dev above mean");
+println("   z = -1: One std dev below mean");
+println("   z > +2: Unusually high (top ~2.5%)");
+println("   z < -2: Unusually low (bottom ~2.5%)");
+
+let your_score = 95;
+let your_z = (your_score - mean) / std_dev;
+println(f"\nYour score: {your_score}");
+println(f"Your z-score: {your_z:.2f}");
+
+if your_z > 1.0 {
+    println("Above average performance!");
+} else if your_z < -1.0 {
+    println("Below average performance");
+} else {
+    println("Average performance");
+}
+
+// 3. Comparing Apples to Oranges
+println("\n3. COMPARING Different Scales:");
+
+// Math test: out of 100
+let math_score = 85;
+let math_mean = 75;
+let math_std = 10.0;
+let z_math = (math_score - math_mean) / math_std;
+
+// English test: out of 50
+let english_score = 42;
+let english_mean = 35;
+let english_std = 5.0;
+let z_english = (english_score - english_mean) / english_std;
+
+println(f"\nMath test:");
+println(f"  Score: {math_score}/100");
+println(f"  Class mean: {math_mean}, std: {math_std}");
+println(f"  Z-score: {z_math:.2f}");
+
+println(f"\nEnglish test:");
+println(f"  Score: {english_score}/50");
+println(f"  Class mean: {english_mean}, std: {english_std}");
+println(f"  Z-score: {z_english:.2f}");
+
+println(f"\n📊 Relative performance:");
+if z_math > z_english {
+    println("  Better at Math (higher z-score)");
+} else if z_english > z_math {
+    println("  Better at English (higher z-score)");
+} else {
+    println("  Equal relative performance");
+}
+println("  Z-scores allow fair comparison across different scales!");
+
+// 4. Outlier Detection
+println("\n4. OUTLIER DETECTION with Z-Scores:");
+
+let response_times = [120, 125, 130, 128, 135, 132, 129, 500];
+let rt_mean = response_times.sum() / response_times.len();
+let rt_var = response_times
+    .map(|x| (x - rt_mean) * (x - rt_mean))
+    .sum() / response_times.len();
+let rt_std = rt_var.sqrt();
+
+println(f"Response times: {response_times:?} ms");
+println(f"\nChecking for outliers (|z| > 2):");
+
+for time in response_times {
+    let z = (time - rt_mean) / rt_std;
+    let outlier = if z.abs() > 2.0 { "OUTLIER ⚠" } else { "Normal ✓" };
+    println(f"  {time}ms: z = {z:.2f} - {outlier}");
+}
+
+// 5. Standardization (Z-score normalization)
+println("\n5. STANDARDIZATION: Converting to Z-Scores");
+
+let heights_cm = [160, 165, 170, 175, 180];
+let h_mean = heights_cm.sum() / heights_cm.len();
+let h_var = heights_cm
+    .map(|h| (h - h_mean) * (h - h_mean))
+    .sum() / heights_cm.len();
+let h_std = h_var.sqrt();
+
+println(f"\nOriginal heights: {heights_cm:?} cm");
+println(f"Mean: {h_mean} cm, Std: {h_std:.2f} cm");
+
+let standardized = heights_cm.map(|h| (h - h_mean) / h_std);
+println(f"Standardized (z-scores): {standardized:?}");
+
+// Verify: mean ≈ 0, std ≈ 1
+let z_mean = standardized.sum() / standardized.len();
+println(f"\nAfter standardization:");
+println(f"  Mean: {z_mean:.3f} (should be ≈0)");
+println("  Std dev: 1.00 (by definition)");
+println("  ✓ Data now on standard scale!");
+
+// 6. Min-Max Normalization (Alternative)
+println("\n6. MIN-MAX Normalization (Alternative to Z-Score):");
+println("   Formula: (x - min) / (max - min)");
+println("   Result: Values scaled to [0, 1] range");
+
+let prices = [100, 200, 300, 400, 500];
+let min_price = prices.min().unwrap();
+let max_price = prices.max().unwrap();
+
+println(f"\nOriginal prices: {prices:?}");
+let normalized = prices.map(|p| (p - min_price) / (max_price - min_price));
+println(f"Min-Max normalized: {normalized:?}");
+println("  ✓ All values now between 0 and 1");
+
+// 7. When to use which
+println("\n7. WHEN TO USE Each Method:");
+
+println("\n  Z-SCORE Standardization:");
+println("    ✓ Machine learning preprocessing");
+println("    ✓ Comparing different measurements");
+println("    ✓ Outlier detection");
+println("    ✓ When data is normally distributed");
+
+println("\n  MIN-MAX Normalization:");
+println("    ✓ Neural networks (bounded activation)");
+println("    ✓ Image processing (0-255 → 0-1)");
+println("    ✓ When need specific range [0,1]");
+println("    ✓ Preserves exact relationships");
+
+// 8. Real-world: Student performance
+println("\n8. Real-World: Multi-Subject Performance Analysis");
+
+// Student scores on different subjects
+let history = 82; // out of 100
+let physics = 45; // out of 60
+let art = 38; // out of 50
+
+// Class statistics
+let hist_mean = 75; let hist_std = 8.0;
+let phys_mean = 40; let phys_std = 5.0;
+let art_mean = 35; let art_std = 4.0;
+
+// Calculate z-scores
+let z_hist = (history - hist_mean) / hist_std;
+let z_phys = (physics - phys_mean) / phys_std;
+let z_art = (art - art_mean) / art_std;
+
+println(f"\nStudent Performance:");
+println(f"  History: {history}/100 (z = {z_hist:.2f})");
+println(f"  Physics: {physics}/60 (z = {z_phys:.2f})");
+println(f"  Art: {art}/50 (z = {z_art:.2f})");
+
+// Find strongest subject
+let subjects = ["History", "Physics", "Art"];
+let z_scores_list = [z_hist, z_phys, z_art];
+let max_z = z_scores_list.max().unwrap();
+let best_idx = z_scores_list.iter().position(|z| z == max_z).unwrap();
+
+println(f"\n🏆 Strongest subject: {subjects[best_idx]}");
+println("   (Highest z-score = best relative performance)");
+
+println("\n✅ Z-Scores Complete!");
+println("\n📚 Key Takeaways:");
+println("• Z-score: Standardized measure of position");
+println("• Formula: (value - mean) / std_dev");
+println("• Allows comparing different scales fairly");
+println("• |z| > 2 typically indicates outliers");
+println("• Mean = 0, std = 1 after standardization");
+println("\n🎯 Applications:");
+println("  ✓ ML feature scaling");
+println("  ✓ Comparing test scores");
+println("  ✓ Outlier detection");
+println("  ✓ Portfolio risk analysis");

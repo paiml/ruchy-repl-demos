@@ -1,0 +1,264 @@
+// Statistical Demo 4: Correlation Analysis - Measuring Relationships
+// Concepts: Pearson correlation, linear relationships, correlation coefficient
+// Use cases: Feature selection, relationship analysis, prediction modeling
+
+println("=== Correlation: Measuring Relationships Between Variables ===\n");
+
+// 1. Pearson Correlation Coefficient
+println("1. PEARSON CORRELATION COEFFICIENT (r):");
+println("   Formula: Cov(X,Y) / (σX × σY)");
+println("   Range: -1 to +1");
+println("   Measures: Strength and direction of linear relationship");
+
+// Perfect positive correlation
+let x1 = [1, 2, 3, 4, 5];
+let y1 = [2, 4, 6, 8, 10]; // y = 2x
+
+let mean_x1 = x1.sum() / x1.len();
+let mean_y1 = y1.sum() / y1.len();
+
+// Calculate correlation
+let mut sum_xy = 0.0;
+let mut sum_x_sq = 0.0;
+let mut sum_y_sq = 0.0;
+
+for i in 0..x1.len() {
+    let dx = x1[i] - mean_x1;
+    let dy = y1[i] - mean_y1;
+    sum_xy = sum_xy + (dx * dy);
+    sum_x_sq = sum_x_sq + (dx * dx);
+    sum_y_sq = sum_y_sq + (dy * dy);
+}
+
+let correlation1 = sum_xy / (sum_x_sq.sqrt() * sum_y_sq.sqrt());
+
+println(f"\nX: {x1:?}");
+println(f"Y: {y1:?}");
+println(f"Correlation: {correlation1:.3f}");
+println("Perfect positive correlation (r = 1.0)");
+
+// 2. Negative Correlation
+println("\n2. NEGATIVE Correlation:");
+
+let study_hours = [1, 2, 3, 4, 5, 6, 7, 8];
+let errors_made = [20, 17, 15, 12, 10, 8, 6, 4];
+
+let mean_hours = study_hours.sum() / study_hours.len();
+let mean_errors = errors_made.sum() / errors_made.len();
+
+let mut sum_hrs_err = 0.0;
+let mut sum_hrs_sq = 0.0;
+let mut sum_err_sq = 0.0;
+
+for i in 0..study_hours.len() {
+    let dh = study_hours[i] - mean_hours;
+    let de = errors_made[i] - mean_errors;
+    sum_hrs_err = sum_hrs_err + (dh * de);
+    sum_hrs_sq = sum_hrs_sq + (dh * dh);
+    sum_err_sq = sum_err_sq + (de * de);
+}
+
+let corr_study = sum_hrs_err / (sum_hrs_sq.sqrt() * sum_err_sq.sqrt());
+
+println(f"Study hours: {study_hours:?}");
+println(f"Errors made: {errors_made:?}");
+println(f"Correlation: {corr_study:.3f}");
+println("Strong negative correlation: More study → Fewer errors");
+
+// 3. No Correlation
+println("\n3. NO Correlation:");
+
+let shoe_size = [7, 8, 9, 10, 11, 8, 9, 10];
+let iq_score = [110, 95, 130, 105, 115, 125, 100, 120];
+
+let mean_shoe = shoe_size.sum() / shoe_size.len();
+let mean_iq = iq_score.sum() / iq_score.len();
+
+let mut sum_shoe_iq = 0.0;
+let mut sum_shoe_sq = 0.0;
+let mut sum_iq_sq = 0.0;
+
+for i in 0..shoe_size.len() {
+    let ds = shoe_size[i] - mean_shoe;
+    let di = iq_score[i] - mean_iq;
+    sum_shoe_iq = sum_shoe_iq + (ds * di);
+    sum_shoe_sq = sum_shoe_sq + (ds * ds);
+    sum_iq_sq = sum_iq_sq + (di * di);
+}
+
+let corr_shoe_iq = sum_shoe_iq / (sum_shoe_sq.sqrt() * sum_iq_sq.sqrt());
+
+println(f"Shoe size: {shoe_size:?}");
+println(f"IQ score: {iq_score:?}");
+println(f"Correlation: {corr_shoe_iq:.3f}");
+println("Near zero: No meaningful relationship");
+
+// 4. Interpreting Correlation Strength
+println("\n4. INTERPRETING Correlation Strength:");
+println("   |r| = 0.00-0.19 → Very weak");
+println("   |r| = 0.20-0.39 → Weak");
+println("   |r| = 0.40-0.59 → Moderate");
+println("   |r| = 0.60-0.79 → Strong");
+println("   |r| = 0.80-1.00 → Very strong");
+
+// 5. Real-world: Advertising spend vs Sales
+println("\n5. Real-World Example: Advertising vs Sales");
+
+let ad_spend_k = [10, 15, 20, 25, 30, 35, 40];
+let sales_k = [50, 65, 75, 90, 100, 110, 125];
+
+let mean_ad = ad_spend_k.sum() / ad_spend_k.len();
+let mean_sales = sales_k.sum() / sales_k.len();
+
+let mut sum_ad_sales = 0.0;
+let mut sum_ad_sq = 0.0;
+let mut sum_sales_sq = 0.0;
+
+for i in 0..ad_spend_k.len() {
+    let da = ad_spend_k[i] - mean_ad;
+    let ds = sales_k[i] - mean_sales;
+    sum_ad_sales = sum_ad_sales + (da * ds);
+    sum_ad_sq = sum_ad_sq + (da * da);
+    sum_sales_sq = sum_sales_sq + (ds * ds);
+}
+
+let corr_ad_sales = sum_ad_sales / (sum_ad_sq.sqrt() * sum_sales_sq.sqrt());
+
+println(f"\nAdvertising spend ($k): {ad_spend_k:?}");
+println(f"Sales ($k): {sales_k:?}");
+println(f"Correlation: {corr_ad_sales:.3f}");
+println("\n💼 Business insight:");
+println("  • Very strong positive correlation (r ≈ 0.99)");
+println("  • Advertising investment drives sales");
+println("  • Predictable ROI relationship");
+
+// 6. Correlation vs Causation
+println("\n6. CORRELATION ≠ CAUSATION:");
+println("   Critical distinction!");
+
+let ice_cream_sales = [100, 150, 200, 250, 300];
+let drowning_incidents = [2, 3, 5, 6, 8];
+
+let mean_ice = ice_cream_sales.sum() / ice_cream_sales.len();
+let mean_drown = drowning_incidents.sum() / drowning_incidents.len();
+
+let mut sum_ice_drown = 0.0;
+let mut sum_ice_sq = 0.0;
+let mut sum_drown_sq = 0.0;
+
+for i in 0..ice_cream_sales.len() {
+    let di_ice = ice_cream_sales[i] - mean_ice;
+    let di_drown = drowning_incidents[i] - mean_drown;
+    sum_ice_drown = sum_ice_drown + (di_ice * di_drown);
+    sum_ice_sq = sum_ice_sq + (di_ice * di_ice);
+    sum_drown_sq = sum_drown_sq + (di_drown * di_drown);
+}
+
+let corr_spurious = sum_ice_drown / (sum_ice_sq.sqrt() * sum_drown_sq.sqrt());
+
+println(f"\nIce cream sales: {ice_cream_sales:?}");
+println(f"Drowning incidents: {drowning_incidents:?}");
+println(f"Correlation: {corr_spurious:.3f}");
+println("\n⚠ SPURIOUS CORRELATION:");
+println("  • High correlation exists");
+println("  • Ice cream does NOT cause drowning!");
+println("  • Hidden variable: Summer weather");
+println("  • Always question the causal mechanism");
+
+// 7. R-squared: Coefficient of Determination
+println("\n7. R-SQUARED (R²): Coefficient of Determination");
+println("   Formula: r²");
+println("   Meaning: % of variance explained by relationship");
+
+let temperature_c = [15, 20, 25, 30, 35];
+let ac_usage_kwh = [5, 10, 18, 28, 40];
+
+let mean_temp = temperature_c.sum() / temperature_c.len();
+let mean_ac = ac_usage_kwh.sum() / ac_usage_kwh.len();
+
+let mut sum_temp_ac = 0.0;
+let mut sum_temp_sq = 0.0;
+let mut sum_ac_sq = 0.0;
+
+for i in 0..temperature_c.len() {
+    let dt = temperature_c[i] - mean_temp;
+    let da = ac_usage_kwh[i] - mean_ac;
+    sum_temp_ac = sum_temp_ac + (dt * da);
+    sum_temp_sq = sum_temp_sq + (dt * dt);
+    sum_ac_sq = sum_ac_sq + (da * da);
+}
+
+let corr_temp_ac = sum_temp_ac / (sum_temp_sq.sqrt() * sum_ac_sq.sqrt());
+let r_squared = corr_temp_ac * corr_temp_ac;
+
+println(f"\nTemperature (°C): {temperature_c:?}");
+println(f"AC usage (kWh): {ac_usage_kwh:?}");
+println(f"Correlation (r): {corr_temp_ac:.3f}");
+println(f"R-squared (r²): {r_squared:.3f}");
+println(f"\nInterpretation:");
+let pct_explained = r_squared * 100.0;
+println(f"  • {pct_explained:.0f}% of AC usage variance explained by temperature");
+println(f"  • {100.0 - pct_explained:.0f}% due to other factors");
+
+// 8. Multiple correlations - Feature selection
+println("\n8. Feature Selection: Correlations with Target");
+
+let house_age = [5, 10, 15, 20, 25];
+let house_sqft = [2000, 1800, 1600, 1400, 1200];
+let house_price = [350, 320, 290, 260, 230];
+
+// Age vs Price
+let mean_age = house_age.sum() / house_age.len();
+let mean_price = house_price.sum() / house_price.len();
+
+let mut sum_age_price = 0.0;
+let mut sum_age_sq = 0.0;
+let mut sum_price_sq = 0.0;
+
+for i in 0..house_age.len() {
+    let da = house_age[i] - mean_age;
+    let dp = house_price[i] - mean_price;
+    sum_age_price = sum_age_price + (da * dp);
+    sum_age_sq = sum_age_sq + (da * da);
+    sum_price_sq = sum_price_sq + (dp * dp);
+}
+
+let corr_age_price = sum_age_price / (sum_age_sq.sqrt() * sum_price_sq.sqrt());
+
+// SqFt vs Price
+let mean_sqft = house_sqft.sum() / house_sqft.len();
+
+let mut sum_sqft_price = 0.0;
+let mut sum_sqft_sq = 0.0;
+let mut sum_price_sq2 = 0.0;
+
+for i in 0..house_sqft.len() {
+    let ds = house_sqft[i] - mean_sqft;
+    let dp = house_price[i] - mean_price;
+    sum_sqft_price = sum_sqft_price + (ds * dp);
+    sum_sqft_sq = sum_sqft_sq + (ds * ds);
+    sum_price_sq2 = sum_price_sq2 + (dp * dp);
+}
+
+let corr_sqft_price = sum_sqft_price / (sum_sqft_sq.sqrt() * sum_price_sq2.sqrt());
+
+println(f"\nPredicting house price:");
+println(f"Age vs Price: r = {corr_age_price:.3f} (negative - older = cheaper)");
+println(f"SqFt vs Price: r = {corr_sqft_price:.3f} (positive - bigger = pricier)");
+println("\n💡 Feature selection:");
+println("  • Both features correlate with price");
+println("  • Use both for better predictions");
+println("  • SqFt slightly stronger predictor");
+
+println("\n✅ Correlation Analysis Complete!");
+println("\n📚 Key Takeaways:");
+println("• Correlation measures linear relationship strength");
+println("• Range: -1 (perfect negative) to +1 (perfect positive)");
+println("• r = 0 means no linear relationship");
+println("• Correlation ≠ Causation (beware spurious correlations)");
+println("• R² tells % of variance explained");
+println("\n🎯 Applications:");
+println("  ✓ Feature selection for ML");
+println("  ✓ Understanding variable relationships");
+println("  ✓ Risk analysis (portfolio correlation)");
+println("  ✓ A/B testing and experiments");
