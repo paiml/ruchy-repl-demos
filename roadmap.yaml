@@ -1,0 +1,831 @@
+# Ruchy REPL & One-Liner Demos Implementation Roadmap
+# Test-Driven Demo Development with REPL and Notebook Validation
+
+meta:
+  project: Ruchy REPL & One-Liner Demos
+  approach: Test-Driven Demo Development (TDD + Interactive Verification)
+  repository: https://github.com/paiml/ruchy-repl-demos
+  compiler_repo: https://github.com/paiml/ruchy
+  quality_gates:
+    test_pass_rate: 1.00  # 100% of demos must work
+    coverage: 1.00         # 100% coverage of demo features
+    repl_verification: 1.00  # 100% REPL demos verified
+    notebook_verification: 1.00  # 100% notebook cell execution verified
+    satd_tolerance: 0      # No TODO/FIXME/HACK comments
+    comment_syntax: 1.00   # 100% correct comment syntax (// not #)
+  execution:
+    workflow: TEST-DEMO-REPL-NOTEBOOK-DOCUMENT
+    commit_strategy: atomic_per_sprint
+    validation: continuous_testing
+    ruchy_version_tracking: latest_version
+
+validation_commands:
+  test_all_demos:
+    command: "make test"
+    description: "Test all demos with native Ruchy test command"
+    passing_criteria: "100% pass rate"
+    output: "test-results.json"
+
+  test_repl_demos:
+    command: "make test-repl-integration"
+    description: "Verify REPL demos run interactively"
+    passing_criteria: "All REPL files execute without errors"
+
+  test_notebook_demos:
+    command: "make test-notebook"
+    description: "Test all demos in Ruchy notebook environment"
+    passing_criteria: "100% notebook cell execution success"
+
+  validate_comments:
+    command: "make validate-comments"
+    description: "Validate comment syntax (// not #)"
+    passing_criteria: "Zero violations"
+    blocking: true
+
+  dogfood_full:
+    command: "make dogfood"
+    description: "Run all Ruchy tools against demos"
+    passing_criteria: "All applicable tools pass"
+
+  quality_gates:
+    command: "make quality-gates"
+    description: "Run Toyota Way quality gates"
+    passing_criteria: "ZERO violations"
+    blocking: true
+
+current_status:
+  ruchy_version: "3.82.0"
+  total_demos: 106
+  repl_demos: 11
+  oneliner_demos: 95
+  success_rate: 1.00
+  tdd_coverage: 1.00
+  pmat_score: "A- (87.6/100)"
+  categories:
+    repl:
+      basics: 1
+      functions: 1
+      data_structures: 1
+      algorithms: 1
+      functional: 1
+      data_science: 4
+      advanced: 2
+    oneliners:
+      text_processing: 11
+      data_analysis: 15
+      file_operations: 10
+      math_calculations: 12
+      system_scripting: 20
+      functional_chains: 26
+      data: 1
+
+sprints:
+  # SPRINT 0: Foundation & Infrastructure (COMPLETED)
+  - id: sprint-0
+    name: "Foundation & Infrastructure"
+    goal: "Establish TDD infrastructure with 100% demo verification"
+    duration: 1_week
+    status: completed
+    completion_date: "2025-10-01"
+    tickets:
+      - id: REPL-001
+        title: "Create Ruchy native test infrastructure"
+        priority: critical
+        status: completed
+        requirements:
+          - "tests/ directory with test_*.ruchy files"
+          - "Ruchy native test command integration"
+          - "Test framework with assert functions"
+          - "Coverage reporting"
+        deliverable: "tests/test_framework.ruchy + test_basics.ruchy + test_functions.ruchy"
+        completed: true
+
+      - id: REPL-002
+        title: "Setup REPL and one-liner demo structure"
+        priority: critical
+        status: completed
+        requirements:
+          - "demos/repl/ directory with category subdirs"
+          - "demos/one-liners/ directory with category subdirs"
+          - "106 working demos created"
+        deliverable: "Complete demo directory structure"
+        completed: true
+
+      - id: REPL-003
+        title: "Create TDD verification framework"
+        priority: critical
+        status: completed
+        requirements:
+          - "scripts/tdd-verify.sh for quality gates"
+          - "Test all README examples"
+          - "Version compatibility checks"
+        deliverable: "scripts/tdd-verify.sh + tests/tdd/test_readme_examples.sh"
+        completed: true
+
+  # SPRINT 1: YAML Roadmap & Enhanced Testing (CURRENT)
+  - id: sprint-1
+    name: "YAML Roadmap & Enhanced Testing Infrastructure"
+    goal: "Implement ruchy-book style YAML roadmap with notebook validation"
+    duration: 3_days
+    status: in_progress
+    dependencies:
+      - sprint: 0
+        status: "completed"
+    tickets:
+      - id: REPL-101
+        title: "Create comprehensive YAML roadmap"
+        priority: critical
+        status: in_progress
+        requirements:
+          - "Follow ruchy-book roadmap.yaml pattern"
+          - "Define quality gates with measurable criteria"
+          - "Structure sprints with clear deliverables"
+          - "Add REPL and notebook validation commands"
+        tests:
+          - "YAML validates against schema"
+          - "All tickets have acceptance criteria"
+          - "Quality gates are measurable"
+        acceptance:
+          - "roadmap.yaml created and validated"
+          - "Quality gates defined"
+          - "Sprint structure clear"
+        deliverable: "roadmap.yaml"
+        estimated_time: "2 hours"
+
+      - id: REPL-102
+        title: "Create .paiml-display.yaml configuration"
+        priority: high
+        status: pending
+        requirements:
+          - "Display settings for demo metrics"
+          - "Export format configuration (JSON, HTML, Markdown)"
+          - "Performance settings"
+        tests:
+          - "Config loads correctly"
+          - "Display limits enforced"
+        acceptance:
+          - ".paiml-display.yaml created"
+          - "Settings validated"
+        deliverable: ".paiml-display.yaml"
+        estimated_time: "1 hour"
+
+      - id: REPL-103
+        title: "Implement notebook validation infrastructure"
+        priority: critical
+        status: pending
+        requirements:
+          - "Script to start/stop Ruchy notebook server"
+          - "Execute all demos as notebook cells"
+          - "Verify cell execution success"
+          - "Track per-demo notebook results"
+        tests:
+          - "test_notebook_server_starts"
+          - "test_repl_demo_as_notebook_cell"
+          - "test_oneliner_demo_as_notebook_cell"
+          - "test_notebook_results_json_generated"
+        acceptance:
+          - "make test-notebook executes correctly"
+          - "All demos tested in notebook"
+          - "100% notebook cell execution success"
+        deliverable: "scripts/test-notebook.sh + notebook-results.json"
+        estimated_time: "4 hours"
+
+      - id: REPL-104
+        title: "Create REPL replay validation"
+        priority: high
+        status: pending
+        requirements:
+          - "Convert REPL demos to .replay format"
+          - "Use ruchy repl --record for session capture"
+          - "Validate replay files execute correctly"
+          - "Integration with CI/CD"
+        tests:
+          - "test_repl_to_replay_conversion"
+          - "test_replay_execution"
+          - "test_replay_results_match_expected"
+        acceptance:
+          - "All REPL demos have .replay files"
+          - "make test-replay passes"
+          - "CI runs replay validation"
+        deliverable: "scripts/test-replay.sh + demos/repl/**/*.replay"
+        estimated_time: "3 hours"
+
+      - id: REPL-105
+        title: "Update INTEGRATION.md as single source of truth"
+        priority: critical
+        status: pending
+        requirements:
+          - "Auto-update from test-results.json"
+          - "Time-stamped test results"
+          - "Version-stamped reports (Ruchy 3.82.0)"
+          - "REPL and notebook test results"
+        tests:
+          - "make update-integration updates INTEGRATION.md"
+          - "Timestamps are current"
+          - "Statistics match test results"
+        acceptance:
+          - "INTEGRATION.md auto-updates on test run"
+          - "All test results documented"
+          - "Single source of truth established"
+        deliverable: "Updated INTEGRATION.md + scripts/update-integration.sh"
+        estimated_time: "2 hours"
+
+      - id: REPL-106
+        title: "Enhance Makefile with new targets"
+        priority: high
+        status: pending
+        requirements:
+          - "Add test-notebook target"
+          - "Add test-replay target"
+          - "Add update-integration target"
+          - "Add dogfood-quick and dogfood-full targets"
+        tests:
+          - "All new targets execute correctly"
+          - "Help text updated"
+        acceptance:
+          - "Makefile enhanced with new targets"
+          - "Documentation updated"
+        deliverable: "Updated Makefile"
+        estimated_time: "1 hour"
+
+  # SPRINT 2: Data Science Demo Expansion
+  - id: sprint-2
+    name: "Data Science Demo Expansion"
+    goal: "Add 10+ data science demos with statistical analysis"
+    duration: 1_week
+    status: pending
+    dependencies:
+      - sprint: 1
+        status: "completed"
+    tickets:
+      - id: REPL-201
+        title: "Add statistical analysis demos"
+        priority: high
+        status: pending
+        requirements:
+          - "Mean, median, mode calculations"
+          - "Standard deviation and variance"
+          - "Correlation analysis"
+          - "Linear regression basics"
+        tests:
+          - "test_statistical_functions"
+          - "test_correlation_accuracy"
+          - "test_regression_predictions"
+        acceptance:
+          - "10+ statistical demos created"
+          - "All tests pass"
+          - "Notebook verified"
+        deliverable: "demos/repl/08-data-science/statistics/*.ruchy"
+        estimated_time: "8 hours"
+
+      - id: REPL-202
+        title: "Add data transformation demos"
+        priority: high
+        status: pending
+        requirements:
+          - "Filtering and mapping"
+          - "Grouping and aggregation"
+          - "Pivoting and unpivoting"
+          - "Data cleaning patterns"
+        tests:
+          - "test_data_transformations"
+          - "test_groupby_operations"
+          - "test_data_cleaning"
+        acceptance:
+          - "10+ transformation demos created"
+          - "All tests pass"
+          - "Notebook verified"
+        deliverable: "demos/repl/08-data-science/transformations/*.ruchy"
+        estimated_time: "8 hours"
+
+      - id: REPL-203
+        title: "Add visualization preparation demos"
+        priority: medium
+        status: pending
+        requirements:
+          - "Data aggregation for plotting"
+          - "Time series preparation"
+          - "Categorical data encoding"
+        tests:
+          - "test_visualization_data_prep"
+          - "test_time_series_aggregation"
+        acceptance:
+          - "5+ visualization prep demos created"
+          - "All tests pass"
+          - "Notebook verified"
+        deliverable: "demos/repl/08-data-science/visualization/*.ruchy"
+        estimated_time: "5 hours"
+
+  # SPRINT 3: Advanced REPL Patterns
+  - id: sprint-3
+    name: "Advanced REPL Patterns"
+    goal: "Add 20+ advanced REPL demos showcasing language features"
+    duration: 1_week
+    status: pending
+    dependencies:
+      - sprint: 2
+        status: "completed"
+    tickets:
+      - id: REPL-301
+        title: "Add pattern matching demos"
+        priority: high
+        status: pending
+        requirements:
+          - "Match expressions with guards"
+          - "Destructuring patterns"
+          - "Option and Result handling"
+        tests:
+          - "test_pattern_matching"
+          - "test_destructuring"
+          - "test_error_handling"
+        acceptance:
+          - "10+ pattern matching demos"
+          - "All tests pass"
+          - "Notebook verified"
+        deliverable: "demos/repl/07-advanced-patterns/*.ruchy"
+        estimated_time: "6 hours"
+
+      - id: REPL-302
+        title: "Add async programming demos"
+        priority: medium
+        status: pending
+        requirements:
+          - "Async functions basics"
+          - "Promise-like patterns"
+          - "Concurrent operations"
+        tests:
+          - "test_async_functions"
+          - "test_concurrent_execution"
+        acceptance:
+          - "5+ async demos created"
+          - "All tests pass"
+          - "Notebook verified"
+        deliverable: "demos/repl/09-async/*.ruchy"
+        estimated_time: "4 hours"
+
+      - id: REPL-303
+        title: "Add metaprogramming demos"
+        priority: low
+        status: pending
+        requirements:
+          - "Code generation patterns"
+          - "Macro-like constructs"
+          - "Runtime reflection"
+        tests:
+          - "test_code_generation"
+          - "test_runtime_reflection"
+        acceptance:
+          - "5+ metaprogramming demos"
+          - "All tests pass"
+          - "Notebook verified"
+        deliverable: "demos/repl/10-metaprogramming/*.ruchy"
+        estimated_time: "4 hours"
+
+  # SPRINT 4: One-Liner Expansion
+  - id: sprint-4
+    name: "One-Liner Expansion"
+    goal: "Add 50+ one-liner demos reaching 150+ total"
+    duration: 1_week
+    status: pending
+    dependencies:
+      - sprint: 3
+        status: "completed"
+    tickets:
+      - id: REPL-401
+        title: "Add advanced text processing one-liners"
+        priority: high
+        status: pending
+        requirements:
+          - "Regular expression patterns"
+          - "String manipulation chains"
+          - "Text parsing and extraction"
+        tests:
+          - "test_regex_oneliners"
+          - "test_text_manipulation"
+        acceptance:
+          - "20+ text processing one-liners"
+          - "All tests pass"
+          - "Shell scripts verified"
+        deliverable: "demos/one-liners/text-processing/*.sh"
+        estimated_time: "5 hours"
+
+      - id: REPL-402
+        title: "Add data pipeline one-liners"
+        priority: high
+        status: pending
+        requirements:
+          - "Filter-map-reduce chains"
+          - "Data aggregation pipelines"
+          - "Statistical calculations"
+        tests:
+          - "test_pipeline_oneliners"
+          - "test_data_aggregation"
+        acceptance:
+          - "20+ data pipeline one-liners"
+          - "All tests pass"
+          - "Shell scripts verified"
+        deliverable: "demos/one-liners/data-pipelines/*.sh"
+        estimated_time: "5 hours"
+
+      - id: REPL-403
+        title: "Add system automation one-liners"
+        priority: medium
+        status: pending
+        requirements:
+          - "File system operations"
+          - "Process management patterns"
+          - "Environment variable handling"
+        tests:
+          - "test_system_oneliners"
+          - "test_file_operations"
+        acceptance:
+          - "10+ system automation one-liners"
+          - "All tests pass"
+          - "Shell scripts verified"
+        deliverable: "demos/one-liners/system-automation/*.sh"
+        estimated_time: "3 hours"
+
+  # SPRINT 5: Interactive Book Integration
+  - id: sprint-5
+    name: "Interactive Book Integration"
+    goal: "Integrate demos with mdBook for interactive documentation"
+    duration: 1_week
+    status: pending
+    dependencies:
+      - sprint: 4
+        status: "completed"
+    tickets:
+      - id: REPL-501
+        title: "Create mdBook structure with demo integration"
+        priority: critical
+        status: pending
+        requirements:
+          - "book/src/ directory with chapters"
+          - "Embed demos in book chapters"
+          - "Copy-paste code blocks"
+          - "Expected output documentation"
+        tests:
+          - "test_book_builds"
+          - "test_code_blocks_valid"
+        acceptance:
+          - "mdBook builds successfully"
+          - "All demos embedded in chapters"
+          - "Code blocks are testable"
+        deliverable: "book/src/ directory + book.toml"
+        estimated_time: "8 hours"
+
+      - id: REPL-502
+        title: "Add interactive code blocks"
+        priority: high
+        status: pending
+        requirements:
+          - "JavaScript integration for code execution"
+          - "Copy-to-clipboard functionality"
+          - "Syntax highlighting"
+        tests:
+          - "test_interactive_blocks"
+          - "test_clipboard_copy"
+        acceptance:
+          - "Code blocks are interactive"
+          - "Copy-paste works"
+          - "Syntax highlighting correct"
+        deliverable: "book/theme/ directory with custom JS"
+        estimated_time: "6 hours"
+
+      - id: REPL-503
+        title: "Deploy book to GitHub Pages"
+        priority: high
+        status: pending
+        requirements:
+          - ".github/workflows/book-deploy.yml"
+          - "Automated deployment on push"
+          - "Book accessible at paiml.github.io/ruchy-repl-demos"
+        tests:
+          - "test_workflow_syntax"
+          - "test_book_deployment"
+        acceptance:
+          - "CI/CD deploys book"
+          - "Book is publicly accessible"
+        deliverable: ".github/workflows/book-deploy.yml"
+        estimated_time: "2 hours"
+
+  # SPRINT 6: Quality Excellence & Dogfooding
+  - id: sprint-6
+    name: "Quality Excellence & Dogfooding"
+    goal: "Achieve A+ PMAT score and 15-tool dogfooding"
+    duration: 1_week
+    status: pending
+    dependencies:
+      - sprint: 5
+        status: "completed"
+    tickets:
+      - id: REPL-601
+        title: "Implement 15-tool dogfooding suite"
+        priority: critical
+        status: pending
+        requirements:
+          - "Run all 15 Ruchy tools on demos"
+          - "Document tool results"
+          - "Fix issues found by tools"
+        tests:
+          - "test_dogfood_check"
+          - "test_dogfood_lint"
+          - "test_dogfood_score"
+          - "test_dogfood_provability"
+        acceptance:
+          - "All 15 tools run successfully"
+          - "Results documented"
+          - "Issues resolved"
+        deliverable: "scripts/dogfood-all-tools.sh + reports/dogfooding/"
+        estimated_time: "10 hours"
+
+      - id: REPL-602
+        title: "Achieve A+ PMAT score"
+        priority: high
+        status: pending
+        requirements:
+          - "Fix all PMAT violations"
+          - "Improve TDG score to A+"
+          - "Zero SATD comments"
+          - "Perfect comment syntax"
+        tests:
+          - "test_pmat_score"
+          - "test_satd_zero"
+          - "test_comment_syntax"
+        acceptance:
+          - "PMAT score ≥ A+ (90+/100)"
+          - "Zero violations"
+        deliverable: "Updated codebase with A+ score"
+        estimated_time: "8 hours"
+
+      - id: REPL-603
+        title: "Add mutation testing for test suite"
+        priority: medium
+        status: pending
+        requirements:
+          - "cargo-mutants integration"
+          - "Mutation test all test files"
+          - "Achieve 80%+ mutation coverage"
+        tests:
+          - "test_mutation_coverage"
+        acceptance:
+          - "Mutation coverage ≥ 80%"
+          - "Mutation testing in CI"
+        deliverable: "mutants.toml + mutation-reports/"
+        estimated_time: "6 hours"
+
+quality_gates:
+  mandatory:
+    - gate: "demo_execution"
+      command: "make test"
+      threshold: 1.00
+      description: "100% of demos must work"
+      blocking: true
+
+    - gate: "repl_verification"
+      command: "make test-repl-integration"
+      threshold: 1.00
+      description: "All REPL demos must execute"
+      blocking: true
+
+    - gate: "notebook_verification"
+      command: "make test-notebook"
+      threshold: 1.00
+      description: "All demos must work in notebook"
+      blocking: true
+
+    - gate: "comment_syntax"
+      command: "make validate-comments"
+      threshold: 1.00
+      description: "All comments must use // syntax"
+      blocking: true
+
+    - gate: "satd_detection"
+      command: "make analyze-satd-zero"
+      threshold: 0
+      description: "No technical debt comments allowed"
+      blocking: true
+
+    - gate: "quality_gates"
+      command: "make quality-gates"
+      threshold: 1.00
+      description: "Toyota Way quality gates must pass"
+      blocking: true
+
+  advisory:
+    - gate: "pmat_score"
+      description: "PMAT TDG score"
+      target: 90
+      current: 87.6
+
+    - gate: "dogfood_coverage"
+      description: "% of demos tested with all 15 Ruchy tools"
+      target: 1.00
+      current: 0.80
+
+metrics:
+  current_status:
+    total_demos: 106
+    repl_demos: 11
+    oneliner_demos: 95
+    success_rate: 1.00
+    tdd_coverage: 1.00
+    pmat_score: 87.6
+    ruchy_version: "3.82.0"
+    last_updated: "2025-10-01"
+
+  targets:
+    sprint_1: 106  # Maintain 100% success
+    sprint_2: 126  # Add 20 data science demos
+    sprint_3: 146  # Add 20 advanced REPL demos
+    sprint_4: 196  # Add 50 one-liners
+    sprint_5: 196  # Same count, add book
+    sprint_6: 196  # Same count, improve quality
+    final: 200+    # 200+ total demos with A+ quality
+
+  quality_targets:
+    success_rate: 1.00  # 100% demos working
+    tdd_coverage: 1.00  # 100% tests before demos
+    pmat_score: 90+     # A+ grade
+    dogfood_coverage: 1.00  # All tools tested
+    notebook_coverage: 1.00  # All demos in notebook
+
+version_management:
+  ruchy_compiler:
+    tracking: "latest_version"
+    current: "3.82.0"
+    update_frequency: "weekly"
+    compatibility: "always_latest"
+
+  qualification_protocol:
+    - step: "detect_new_version"
+      command: "ruchy --version"
+
+    - step: "test_all_demos"
+      command: "make test"
+
+    - step: "test_notebook"
+      command: "make test-notebook"
+
+    - step: "update_integration_md"
+      command: "make update-integration"
+
+    - step: "commit_results"
+      command: "git add INTEGRATION.md && git commit -m 'feat: Qualify Ruchy vX.Y.Z'"
+
+    - step: "push_to_github"
+      command: "git push origin main"
+      mandatory: true
+
+execution_protocol:
+  demo_workflow:
+    - step: "write_failing_test"
+      description: "Write Ruchy test that expects demo behavior"
+      deliverable: "tests/test_*.ruchy with failing assertions"
+
+    - step: "create_demo"
+      description: "Create minimal demo that passes test"
+      deliverable: "demos/**/*.ruchy or demos/**/*.sh"
+
+    - step: "verify_repl"
+      description: "Test demo in Ruchy REPL"
+      deliverable: "Manual REPL verification"
+
+    - step: "verify_notebook"
+      description: "Test demo in Ruchy notebook"
+      deliverable: "Notebook cell execution success"
+
+    - step: "document_demo"
+      description: "Add demo to README or book"
+      deliverable: "Documentation with expected output"
+
+    - step: "run_quality_gates"
+      description: "Execute make quality-gates"
+      deliverable: "Quality gate pass confirmation"
+
+    - step: "atomic_commit"
+      description: "Single commit per demo with tests"
+      deliverable: "Git log shows TDD workflow"
+
+    - step: "push_to_github"
+      description: "Push after each demo completion"
+      deliverable: "Changes visible on GitHub"
+      mandatory: true
+
+documentation_standards:
+  format:
+    - "INTEGRATION.md is single source of truth"
+    - "Test results auto-generated from test-results.json"
+    - "README shows current statistics"
+    - "Book chapters embed working demos"
+
+  content:
+    - "Every demo has expected output documented"
+    - "Every demo has passing test in test suite"
+    - "Copy-paste examples work immediately"
+    - "Version compatibility clearly stated"
+
+  quality:
+    - "No vaporware demos"
+    - "No TODO/FIXME/HACK comments"
+    - "100% demo success rate"
+    - "All comments use // syntax"
+
+automation:
+  ci_cd:
+    - "GitHub Actions on every push"
+    - "Run make test"
+    - "Run make test-notebook"
+    - "Run make quality-gates"
+    - "Update INTEGRATION.md"
+    - "Deploy book to GitHub Pages"
+
+  pre_commit_hooks:
+    - "Run make quality-gate-strict"
+    - "Validate comment syntax"
+    - "Check for SATD comments"
+    - "Run tests on modified files"
+
+  scheduled_tasks:
+    - task: "weekly_ruchy_upgrade"
+      schedule: "Monday 9am"
+      command: "Check for new Ruchy version and qualify"
+
+    - task: "daily_notebook_test"
+      schedule: "Daily 6am"
+      command: "make test-notebook"
+
+deliverables:
+  sprint_1:
+    - "roadmap.yaml (this file)"
+    - ".paiml-display.yaml configuration"
+    - "scripts/test-notebook.sh"
+    - "scripts/test-replay.sh"
+    - "scripts/update-integration.sh"
+    - "Updated INTEGRATION.md"
+    - "Enhanced Makefile"
+
+  sprint_2:
+    - "20+ data science demos"
+    - "Statistical analysis test suite"
+    - "Data transformation examples"
+    - "Notebook-verified examples"
+
+  sprint_3:
+    - "20+ advanced REPL demos"
+    - "Pattern matching examples"
+    - "Async programming demos"
+    - "Metaprogramming examples"
+
+  sprint_4:
+    - "50+ new one-liners"
+    - "Advanced text processing"
+    - "Data pipeline examples"
+    - "System automation scripts"
+
+  sprint_5:
+    - "Interactive mdBook"
+    - "Copy-paste code blocks"
+    - "GitHub Pages deployment"
+    - "Book accessible online"
+
+  sprint_6:
+    - "A+ PMAT score achieved"
+    - "15-tool dogfooding complete"
+    - "Mutation testing integrated"
+    - "Quality excellence demonstrated"
+
+risks:
+  - risk: "Ruchy breaking changes"
+    mitigation: "Weekly version qualification + comprehensive test suite"
+    probability: "medium"
+    impact: "high"
+
+  - risk: "REPL or notebook API changes"
+    mitigation: "Abstract notebook interface + integration tests"
+    probability: "low"
+    impact: "high"
+
+  - risk: "Demo complexity creep"
+    mitigation: "Enforce demo size limits + focus on clarity"
+    probability: "medium"
+    impact: "medium"
+
+notes: |
+  This is a Test-Driven Demo Development (TDDD) project where every demo
+  is tested BEFORE being documented. Demos are verified in three ways:
+  1. Ruchy native test suite (tests/test_*.ruchy)
+  2. Interactive REPL execution (manual verification)
+  3. Notebook cell execution (automated verification)
+
+  The project serves as both:
+  1. Learning resource with 150+ copy-paste examples
+  2. Quality showcase demonstrating Ruchy's capabilities
+  3. Testing ground for REPL and notebook features
+
+  Quality is built-in, not bolted-on. Zero tolerance for broken demos.
+
+  Based on patterns from:
+  - ruchy-book: YAML roadmap, 15-tool dogfooding, notebook testing
+  - rosetta-ruchy: 98.4% success rate, quality gates, TDD methodology
+  - ruchy-cli-tools-book: Extreme TDD, Toyota Way principles

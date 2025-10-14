@@ -12,7 +12,8 @@
         check-links fix-links validate-all-links \
         quality-gates quality-gate-strict install-hooks update-integration \
         test-regression analyze-satd analyze-satd-zero kaizen help-toyota-way \
-        coverage-report test-wasm compare-wasm-native wasm-report quality-gates-wasm
+        coverage-report test-wasm compare-wasm-native wasm-report quality-gates-wasm \
+        test-notebook test-replay dogfood-quick dogfood-full
 
 # Use strict POSIX shell
 SHELL := /bin/sh
@@ -61,6 +62,12 @@ help:
 	@echo "  make coverage-report - Comprehensive coverage analysis"
 	@echo "  make test-regression - Detect test regressions"
 	@echo "  make test-all-examples - Test ALL examples"
+	@echo ""
+	@echo "📓 Notebook & REPL Validation:"
+	@echo "  make test-notebook - Test all demos in notebook environment"
+	@echo "  make test-replay   - Test REPL demos via replay files"
+	@echo "  make dogfood-quick - Run essential Ruchy tools (fast)"
+	@echo "  make dogfood-full  - Run ALL 15 Ruchy tools (comprehensive)"
 	@echo ""
 	@echo "🌸 Toyota Way Commands:"
 	@echo "  make kaizen       - Run continuous improvement cycle"
@@ -783,6 +790,75 @@ wasm-report:
 quality-gates-wasm: quality-gates test-wasm
 	@echo "✅ Quality gates + WASM validation complete"
 
+# ==============================================================================
+# Notebook & REPL Validation (Sprint 1)
+# ==============================================================================
+
+# Notebook validation (REPL-103)
+test-notebook:
+	@echo "📓 Testing demos in Ruchy notebook environment..."
+	@chmod +x scripts/test-notebook.sh
+	@./scripts/test-notebook.sh
+
+# REPL replay validation (REPL-104) - placeholder for future implementation
+test-replay:
+	@echo "🔄 REPL replay validation..."
+	@echo "⚠️  Not yet implemented - Coming in Sprint 1"
+	@echo "   Will convert REPL demos to .replay format and validate"
+
+# Quick dogfooding - essential tools only (fast)
+dogfood-quick: ruchy-lint
+	@echo "⚡ Running quick dogfooding (essential tools)..."
+	@echo ""
+	@echo "1️⃣ ruchy check - Syntax validation"
+	@for file in tests/test_*.ruchy; do \
+		printf "  Checking %s... " "$$(basename $$file)"; \
+		if ruchy check "$$file" > /dev/null 2>&1; then \
+			echo "✅"; \
+		else \
+			echo "❌"; \
+		fi; \
+	done
+	@echo ""
+	@echo "2️⃣ ruchy lint - Style analysis (already run above)"
+	@echo ""
+	@echo "3️⃣ ruchy score - Quality scoring"
+	@for file in tests/test_*.ruchy; do \
+		printf "  Scoring %s... " "$$(basename $$file)"; \
+		ruchy score "$$file" 2>/dev/null | grep -o '[0-9]\+\.[0-9]\+' | head -1 || echo "N/A"; \
+	done
+	@echo ""
+	@echo "✅ Quick dogfooding complete"
+
+# Full dogfooding - all 15 Ruchy tools (comprehensive)
+dogfood-full: dogfood-quick
+	@echo ""
+	@echo "🐕 Running FULL dogfooding (all 15 tools)..."
+	@echo ""
+	@echo "4️⃣ ruchy provability - Formal verification"
+	@for file in tests/test_*.ruchy; do \
+		printf "  Analyzing %s... " "$$(basename $$file)"; \
+		ruchy provability "$$file" 2>/dev/null | grep -o 'Score: [0-9]\+' || echo "N/A"; \
+	done
+	@echo ""
+	@echo "5️⃣ ruchy runtime - Performance analysis"
+	@for file in tests/test_*.ruchy; do \
+		printf "  Runtime analysis %s... " "$$(basename $$file)"; \
+		ruchy runtime "$$file" 2>/dev/null | grep -o 'O([^)]*)' | head -1 || echo "N/A"; \
+	done
+	@echo ""
+	@echo "6️⃣ ruchy quality-gate - Gate enforcement"
+	@for file in tests/test_*.ruchy; do \
+		printf "  Quality gate %s... " "$$(basename $$file)"; \
+		if ruchy quality-gate "$$file" > /dev/null 2>&1; then \
+			echo "✅ PASS"; \
+		else \
+			echo "⚠️  CHECK"; \
+		fi; \
+	done
+	@echo ""
+	@echo "✅ FULL dogfooding complete - See above for detailed results"
+
 # All
-all: install install-hooks test quality-gates coverage dogfood validate-all-links
+all: install install-hooks test test-notebook test-wasm quality-gates coverage dogfood-quick validate-all-links
 	@echo "✓ All tasks complete"

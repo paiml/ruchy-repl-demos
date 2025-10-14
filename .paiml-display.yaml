@@ -1,0 +1,212 @@
+# PMAT Display Configuration for Ruchy REPL Demos
+# Following patterns from ruchy-book and rosetta-ruchy
+
+project:
+  name: "Ruchy REPL & One-Liner Demos"
+  description: "100% working REPL and one-liner demonstrations with notebook validation"
+  version: "1.0.0"
+  ruchy_version: "3.82.0"
+
+display:
+  # Dashboard settings
+  title: "Ruchy REPL Demos Quality Dashboard"
+  subtitle: "Test-Driven Demo Development with 100% Success Rate"
+
+  # Metrics to display
+  primary_metrics:
+    - name: "Total Demos"
+      value: 106
+      target: 200
+      unit: "demos"
+
+    - name: "Success Rate"
+      value: 100.0
+      target: 100.0
+      unit: "%"
+      critical: true
+
+    - name: "TDD Coverage"
+      value: 100.0
+      target: 100.0
+      unit: "%"
+      critical: true
+
+    - name: "PMAT Score"
+      value: 87.6
+      target: 90.0
+      unit: "points"
+      scale: 100
+
+  # Category breakdown
+  categories:
+    repl:
+      name: "REPL Demos"
+      total: 11
+      passing: 11
+      categories:
+        - name: "basics"
+          count: 1
+        - name: "functions"
+          count: 1
+        - name: "data-structures"
+          count: 1
+        - name: "algorithms"
+          count: 1
+        - name: "functional"
+          count: 1
+        - name: "data-science"
+          count: 4
+        - name: "advanced"
+          count: 2
+
+    oneliners:
+      name: "One-Liner Demos"
+      total: 95
+      passing: 95
+      categories:
+        - name: "text-processing"
+          count: 11
+        - name: "data-analysis"
+          count: 15
+        - name: "file-operations"
+          count: 10
+        - name: "math-calculations"
+          count: 12
+        - name: "system-scripting"
+          count: 20
+        - name: "functional-chains"
+          count: 26
+        - name: "data"
+          count: 1
+
+export:
+  # Export formats
+  formats:
+    - json
+    - html
+    - markdown
+
+  # Output paths
+  paths:
+    json: "reports/dashboard.json"
+    html: "reports/dashboard.html"
+    markdown: "reports/DASHBOARD.md"
+
+  # Template settings
+  templates:
+    html: "templates/dashboard.html.j2"
+    markdown: "templates/dashboard.md.j2"
+
+performance:
+  # Performance settings
+  cache:
+    enabled: true
+    ttl: 3600  # 1 hour
+
+  # Refresh intervals
+  refresh:
+    metrics: 300  # 5 minutes
+    dashboard: 600  # 10 minutes
+
+alerts:
+  # Alert thresholds
+  success_rate:
+    critical: 95.0
+    warning: 98.0
+
+  pmat_score:
+    critical: 80.0
+    warning: 85.0
+
+  demo_count:
+    minimum: 100
+    target: 200
+
+validation:
+  # Validation rules
+  required_metrics:
+    - total_demos
+    - success_rate
+    - tdd_coverage
+    - pmat_score
+
+  quality_gates:
+    - name: "demo_execution"
+      threshold: 1.00
+      blocking: true
+
+    - name: "notebook_verification"
+      threshold: 1.00
+      blocking: true
+
+    - name: "satd_detection"
+      threshold: 0
+      blocking: true
+
+    - name: "comment_syntax"
+      threshold: 1.00
+      blocking: true
+
+reports:
+  # Report generation settings
+  integration:
+    file: "INTEGRATION.md"
+    auto_update: true
+
+  notebook_results:
+    file: "notebook-results.json"
+    auto_generate: true
+
+  test_results:
+    file: "test-results.json"
+    auto_generate: true
+
+  coverage:
+    file: "coverage.json"
+    auto_generate: true
+
+visualization:
+  # Chart settings
+  charts:
+    - type: "bar"
+      title: "Demos by Category"
+      data: "categories"
+
+    - type: "pie"
+      title: "REPL vs One-Liners"
+      data: "demo_types"
+
+    - type: "line"
+      title: "Success Rate Trend"
+      data: "historical_success_rate"
+
+    - type: "gauge"
+      title: "PMAT Score"
+      data: "pmat_score"
+      min: 0
+      max: 100
+      target: 90
+
+metadata:
+  # Project metadata
+  author: "Noah Gift"
+  repository: "https://github.com/paiml/ruchy-repl-demos"
+  documentation: "https://paiml.github.io/ruchy-repl-demos"
+
+  # Related projects
+  related:
+    - name: "ruchy-book"
+      url: "https://github.com/paiml/ruchy-book"
+
+    - name: "rosetta-ruchy"
+      url: "https://github.com/paiml/rosetta-ruchy"
+
+    - name: "ruchy-cli-tools-book"
+      url: "https://github.com/paiml/ruchy-cli-tools-book"
+
+  # Quality philosophy
+  philosophy:
+    - "Test-Driven Demo Development (TDDD)"
+    - "Toyota Way - Zero Defects"
+    - "100% Working Examples"
+    - "Notebook-First Validation"
