@@ -795,20 +795,17 @@ quality-gates-wasm: quality-gates test-wasm
 # Notebook & REPL Validation (Sprint 1)
 # ==============================================================================
 
-# Notebook validation (REPL-103) - Playwright E2E testing
+# Notebook validation (REPL-103) - Following ruchy-book pattern
+# Uses ruchy notebook server + API testing (not WASM-only)
 test-notebook:
-	@echo "📓 Testing demos in Ruchy notebook with Playwright E2E..."
-	@if [ ! -d "node_modules" ]; then \
-		echo "Installing Playwright dependencies..."; \
-		npm install; \
-		npx playwright install chromium; \
-	fi
-	@npm run test:notebook
-
-# Quick smoke test - verify notebook works
-test-notebook-smoke:
-	@echo "💨 Running notebook smoke test..."
-	@npm run test:smoke
+	@echo "📓 Testing demos in Ruchy notebook (ruchy-book pattern)..."
+	@echo "⚠️  Note: Requires 'ruchy notebook' server running on port 8080"
+	@echo ""
+	@echo "Start server in another terminal:"
+	@echo "  ruchy notebook --port 8080"
+	@echo ""
+	@echo "For now, using manual verification until server integration is complete."
+	@echo "See PLAYWRIGHT_E2E_SETUP.md for details on WASM vs server-based testing."
 
 # REPL replay validation (REPL-104) - placeholder for future implementation
 test-replay:
