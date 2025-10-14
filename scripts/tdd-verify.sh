@@ -11,16 +11,17 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Ruchy version check
-RUCHY_VERSION="1.18.0"
+# Ruchy version check - Support ANY installed version
 CURRENT_VERSION=$(ruchy --version | cut -d' ' -f2)
 
-if [ "$CURRENT_VERSION" != "$RUCHY_VERSION" ]; then
-    printf "${RED}ERROR: Ruchy version mismatch${NC}\n"
-    printf "Expected: %s\n" "$RUCHY_VERSION"
-    printf "Found: %s\n" "$CURRENT_VERSION"
+# Verify ruchy is available
+if [ -z "$CURRENT_VERSION" ]; then
+    printf "${RED}ERROR: Ruchy not found${NC}\n"
+    printf "Please install ruchy: cargo install ruchy\n"
     exit 1
 fi
+
+printf "Using Ruchy version: %s\n" "$CURRENT_VERSION"
 
 # Counters
 TOTAL=0
@@ -96,7 +97,7 @@ test_readme_examples() {
 # Main testing logic
 main() {
     printf "${YELLOW}=== TDD Quality Gate Verification ===${NC}\n"
-    printf "Ruchy Version: %s\n\n" "$RUCHY_VERSION"
+    printf "Ruchy Version: %s\n\n" "$CURRENT_VERSION"
     
     # Test REPL examples
     printf "${YELLOW}=== Testing REPL Demos ===${NC}\n"

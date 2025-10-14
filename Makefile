@@ -664,17 +664,8 @@ install-hooks:
 	@./scripts/install-hooks.sh
 
 # Update INTEGRATION.md with latest test results
-update-integration: test-all-examples
-	@echo "📝 Updating INTEGRATION.md..."
-	@RUCHY_VERSION=$$(ruchy --version 2>/dev/null | cut -d' ' -f2 || echo "unknown"); \
-	TIMESTAMP=$$(date "+%B %d, %Y"); \
-	DEMO_COUNT=$$(find demos -name '*.repl' -o -name '*.sh' | wc -l); \
-	echo "Current Status:" > /tmp/integration_update.txt; \
-	echo "  Ruchy Version: $$RUCHY_VERSION" >> /tmp/integration_update.txt; \
-	echo "  Demo Count: $$DEMO_COUNT" >> /tmp/integration_update.txt; \
-	echo "  Last Updated: $$TIMESTAMP" >> /tmp/integration_update.txt; \
-	cat /tmp/integration_update.txt
-	@echo "✅ Integration status updated"
+update-integration:
+	@./scripts/update-integration.sh
 
 # Detect test regressions
 test-regression:
