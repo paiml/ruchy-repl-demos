@@ -1,0 +1,106 @@
+// Data Transformation Demo 8: Missing Data Handling
+// Concepts: Null handling, imputation, deletion, forward fill
+// Use cases: Data completeness, cleaning incomplete records
+
+println("=== Missing Data Handling ===\n");
+
+println("1. Detecting Missing Data:");
+let measurements = [25.0, 26.0, null, 25.8, null, 26.2];
+let mut missing_count = 0;
+let mut valid_count = 0;
+
+for m in measurements {
+    if m == null { missing_count = missing_count + 1; }
+    else { valid_count = valid_count + 1; }
+}
+
+println(f"Total: {measurements.len()}");
+println(f"Valid: {valid_count}");
+println(f"Missing: {missing_count}");
+let completeness = (valid_count * 100) / measurements.len();
+println(f"Completeness: {completeness}%");
+
+println("\n2. Deletion Strategy:");
+println("   Remove records with missing values");
+
+let data = [
+    {id: 1, value: 10},
+    {id: 2, value: null},
+    {id: 3, value: 30}
+];
+
+let mut complete = [];
+for record in data {
+    if record.value != null {
+        complete.push(record);
+    }
+}
+
+println(f"Original: {data.len()} records");
+println(f"After deletion: {complete.len()} records");
+
+println("\n3. Imputation with Mean:");
+let scores = [85, 90, null, 88, null, 92];
+let mut sum = 0;
+let mut count = 0;
+
+// Calculate mean of valid values
+for score in scores {
+    if score != null {
+        sum = sum + score;
+        count = count + 1;
+    }
+}
+let mean = sum / count;
+
+println(f"Scores: {scores:?}");
+println(f"Mean of valid scores: {mean}");
+
+// Fill nulls with mean
+let mut filled = [];
+for score in scores {
+    if score == null {
+        filled.push(mean);
+    } else {
+        filled.push(score);
+    }
+}
+println(f"After imputation: {filled:?}");
+
+println("\n4. Forward Fill:");
+println("   Carry last valid value forward");
+
+let timeseries = [100, 105, null, null, 110, null];
+let mut forward_filled = [];
+let mut last_valid = timeseries[0];
+
+for value in timeseries {
+    if value != null {
+        forward_filled.push(value);
+        last_valid = value;
+    } else {
+        forward_filled.push(last_valid);
+    }
+}
+
+println(f"Original: {timeseries:?}");
+println(f"Forward filled: {forward_filled:?}");
+
+println("\n5. Strategy Selection:");
+println("\n  DELETION:");
+println("    ✓ Small % missing");
+println("    ✓ Data is MCAR (Missing Completely At Random)");
+println("    ✗ Reduces sample size");
+
+println("\n  MEAN IMPUTATION:");
+println("    ✓ Quick and simple");
+println("    ✓ Preserves sample size");
+println("    ✗ Reduces variance");
+println("    ✗ May distort relationships");
+
+println("\n  FORWARD FILL:");
+println("    ✓ Good for time series");
+println("    ✓ Preserves trends");
+println("    ✗ Only for ordered data");
+
+println("\n✅ Missing Data Complete!");

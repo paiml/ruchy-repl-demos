@@ -1,0 +1,49 @@
+// Data Transformation Demo 5: Data Cleaning Patterns
+// Concepts: Cleaning, normalization, deduplication, trimming
+// Use cases: Data preparation, quality improvement, ETL
+
+println("=== Data Cleaning Patterns ===\n");
+
+println("1. Removing Duplicates:");
+let data_with_dupes = [1, 2, 3, 2, 4, 3, 5];
+println(f"With duplicates: {data_with_dupes:?}");
+let mut unique = [];
+for item in data_with_dupes {
+    let mut found = false;
+    for u in unique {
+        if u == item { found = true; }
+    }
+    if !found { unique.push(item); }
+}
+println(f"Unique values: {unique:?}");
+
+println("\n2. Trimming Whitespace:");
+let messy_names = ["  Alice  ", "Bob", "  Carol"];
+println(f"Messy: {messy_names:?}");
+let clean_names = messy_names.map(|n| n.trim());
+println(f"Clean: {clean_names:?}");
+
+println("\n3. Handling Invalid Values:");
+let measurements = [25.5, -999, 26.0, 25.8, -999];
+let valid = measurements.filter(|m| m > 0);
+println(f"Raw: {measurements:?}");
+println(f"Valid: {valid:?}");
+
+println("\n4. Type Conversion:");
+let string_numbers = ["10", "20", "30"];
+println(f"Strings: {string_numbers:?}");
+// In practice: Convert to integers
+println("Convert to numbers for analysis");
+
+println("\n5. Standardization:");
+let mixed_case = ["Alice", "bob", "CAROL"];
+let standardized = mixed_case.map(|n| n.to_lowercase());
+println(f"Mixed: {mixed_case:?}");
+println(f"Standardized: {standardized:?}");
+
+println("\n✅ Data Cleaning Complete!");
+println("\n📚 Common patterns:");
+println("  • Remove duplicates");
+println("  • Trim whitespace");
+println("  • Filter invalid values");
+println("  • Standardize formats");

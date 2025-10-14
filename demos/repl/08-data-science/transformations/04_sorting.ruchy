@@ -1,0 +1,34 @@
+// Data Transformation Demo 4: Sorting and Ordering
+// Concepts: Sorting, ordering, ranking, top-N queries
+// Use cases: Ranking, leaderboards, prioritization
+
+println("=== Sorting and Ordering Data ===\n");
+
+println("1. Basic Sorting:");
+let numbers = [64, 34, 25, 12, 22, 11, 90];
+println(f"Original: {numbers:?}");
+let sorted = numbers.sorted();
+println(f"Sorted: {sorted:?}");
+
+println("\n2. Descending Order:");
+let scores = [85, 92, 78, 95, 88];
+let desc = scores.sorted().reversed();
+println(f"Scores: {scores:?}");
+println(f"Highest to lowest: {desc:?}");
+
+println("\n3. Top N:");
+let top3 = desc[0..3];
+println(f"Top 3 scores: {top3:?}");
+
+println("\n4. Sorting Objects:");
+let students = [
+    {name: "Alice", score: 85},
+    {name: "Bob", score: 92},
+    {name: "Carol", score: 78}
+];
+println("\nStudents by score (manual sort):");
+for s in students {
+    println(f"  {s.name}: {s.score}");
+}
+
+println("\n✅ Sorting Complete!");

@@ -1,0 +1,124 @@
+// Data Transformation Demo 10: Pipeline Compositions
+// Concepts: Chaining, pipelines, composing transformations
+// Use cases: ETL, data processing workflows, functional composition
+
+println("=== Data Transformation Pipelines ===\n");
+
+println("1. Simple Pipeline:");
+println("   Raw Data → Filter → Map → Aggregate");
+
+let raw_data = [10, 15, 20, 25, 30, 35, 40];
+println(f"\nRaw: {raw_data:?}");
+
+// Step 1: Filter (values > 20)
+let filtered = raw_data.filter(|x| x > 20);
+println(f"After filter (>20): {filtered:?}");
+
+// Step 2: Map (apply discount)
+let discounted = filtered.map(|x| x * 0.9);
+println(f"After discount: {discounted:?}");
+
+// Step 3: Aggregate (sum)
+let mut total = 0;
+for value in discounted {
+    total = total + value;
+}
+println(f"Total: {total}");
+
+println("\n2. Data Cleaning Pipeline:");
+let messy_data = ["  10", "20 ", " 30", "invalid", "40"];
+println(f"\nMessy: {messy_data:?}");
+
+// Clean: Trim → Filter valid → Convert
+let cleaned = messy_data
+    .map(|s| s.trim())
+    .filter(|s| s.is_numeric());
+
+println(f"Cleaned: {cleaned:?}");
+
+println("\n3. ETL Pipeline:");
+println("   Extract → Transform → Load");
+
+// Extract: Raw sales data
+let sales = [
+    {product: "A", qty: 10, price: 50},
+    {product: "B", qty: 0, price: 30},
+    {product: "C", qty: 5, price: 80}
+];
+
+println("\n1. Extract:");
+println(f"  Loaded {sales.len()} records");
+
+// Transform: Filter + Calculate revenue
+println("\n2. Transform:");
+let transformed = sales
+    .filter(|s| s.qty > 0)
+    .map(|s| {
+        let revenue = s.qty * s.price;
+        {product: s.product, revenue: revenue}
+    });
+
+println(f"  Filtered to {transformed.len()} active products");
+
+// Load: Calculate totals
+println("\n3. Load:");
+let mut total_revenue = 0;
+for item in transformed {
+    println(f"  Product {item.product}: ${item.revenue}");
+    total_revenue = total_revenue + item.revenue;
+}
+println(f"  Total revenue: ${total_revenue}");
+
+println("\n4. Multi-stage Pipeline:");
+let customers = [
+    {name: "alice", orders: 5, spent: 500},
+    {name: "bob", orders: 1, spent: 50},
+    {name: "carol", orders: 10, spent: 1200}
+];
+
+println("\nPipeline: Normalize → Filter → Enrich");
+
+// Stage 1: Normalize names
+let normalized = customers.map(|c| {
+    {name: c.name.to_uppercase(), orders: c.orders, spent: c.spent}
+});
+
+// Stage 2: Filter high-value
+let high_value = normalized.filter(|c| c.spent > 100);
+
+// Stage 3: Enrich with segment
+let enriched = high_value.map(|c| {
+    let segment = if c.spent > 1000 { "Premium" } else { "Regular" };
+    {name: c.name, segment: segment, spent: c.spent}
+});
+
+println("\nFinal result:");
+for c in enriched {
+    println(f"  {c.name} ({c.segment}): ${c.spent}");
+}
+
+println("\n5. Pipeline Benefits:");
+println("\n  ✓ Modular: Each step isolated");
+println("  ✓ Testable: Test each stage");
+println("  ✓ Reusable: Compose building blocks");
+println("  ✓ Readable: Clear data flow");
+println("  ✓ Maintainable: Easy to modify");
+
+println("\n6. Best Practices:");
+println("\n  • Keep transformations pure");
+println("  • Handle errors at each stage");
+println("  • Log intermediate results");
+println("  • Make stages reusable");
+println("  • Document data contracts");
+
+println("\n✅ Pipelines Complete!");
+println("\n📚 Pipeline patterns:");
+println("  • Sequential: One step after another");
+println("  • Branching: Split into parallel paths");
+println("  • Merging: Combine multiple sources");
+println("  • ETL: Extract-Transform-Load");
+println("\n🎯 Real-world uses:");
+println("  ✓ Data processing workflows");
+println("  ✓ ETL jobs");
+println("  ✓ Feature engineering");
+println("  ✓ Data quality checks");

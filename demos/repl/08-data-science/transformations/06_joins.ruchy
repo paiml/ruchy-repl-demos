@@ -1,0 +1,64 @@
+// Data Transformation Demo 6: Joining Datasets
+// Concepts: Inner join, left join, merging, combining data
+// Use cases: Combining tables, enriching data, relational operations
+
+println("=== Joining Datasets ===\n");
+
+println("1. Inner Join - Matching Records:");
+let customers = [
+    {id: 1, name: "Alice"},
+    {id: 2, name: "Bob"},
+    {id: 3, name: "Carol"}
+];
+
+let orders = [
+    {customer_id: 1, amount: 100},
+    {customer_id: 2, amount: 150},
+    {customer_id: 1, amount: 200}
+];
+
+println("\nCustomers and their orders:");
+for order in orders {
+    for customer in customers {
+        if customer.id == order.customer_id {
+            println(f"  {customer.name} ordered ${order.amount}");
+        }
+    }
+}
+
+println("\n2. Enriching Data:");
+let products = [
+    {id: 101, name: "Laptop"},
+    {id: 102, name: "Mouse"}
+];
+
+let sales = [
+    {product_id: 101, qty: 5},
+    {product_id: 102, qty: 20}
+];
+
+println("\nSales with product names:");
+for sale in sales {
+    for product in products {
+        if product.id == sale.product_id {
+            println(f"  Sold {sale.qty} × {product.name}");
+        }
+    }
+}
+
+println("\n3. Lookup Pattern:");
+let employee_ids = [101, 102, 103];
+let employee_names = {101: "Alice", 102: "Bob", 103: "Carol"};
+
+println("\nEmployee directory:");
+for id in employee_ids {
+    if employee_names.has_key(id) {
+        println(f"  #{id}: {employee_names[id]}");
+    }
+}
+
+println("\n✅ Joins Complete!");
+println("\n📚 Join types:");
+println("  • Inner: Only matching records");
+println("  • Left: All from left + matches");
+println("  • Lookup: Key-based enrichment");

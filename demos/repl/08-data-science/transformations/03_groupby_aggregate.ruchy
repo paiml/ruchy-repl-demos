@@ -1,0 +1,117 @@
+// Data Transformation Demo 3: GroupBy and Aggregation
+// Concepts: Grouping, aggregation, summary statistics by group
+// Use cases: Category analysis, segmentation, group summaries
+
+println("=== GroupBy and Aggregation: Analyzing by Categories ===\n");
+
+// 1. Basic grouping concept
+println("1. GROUPBY Concept:");
+println("   Split data into groups → Apply function → Combine results");
+
+let sales = [
+    {region: "North", amount: 100},
+    {region: "South", amount: 150},
+    {region: "North", amount: 200},
+    {region: "South", amount: 120},
+    {region: "North", amount: 180}
+];
+
+println(f"\nSales data: {sales.len()} records");
+
+// Manual grouping
+let mut north_total = 0;
+let mut north_count = 0;
+let mut south_total = 0;
+let mut south_count = 0;
+
+for sale in sales {
+    if sale.region == "North" {
+        north_total = north_total + sale.amount;
+        north_count = north_count + 1;
+    } else {
+        south_total = south_total + sale.amount;
+        south_count = south_count + 1;
+    }
+}
+
+println(f"\nNorth: {north_count} sales, ${north_total} total, ${north_total/north_count} avg");
+println(f"South: {south_count} sales, ${south_total} total, ${south_total/south_count} avg");
+
+// 2. Multiple aggregations
+println("\n2. MULTIPLE Aggregations:");
+
+let products = [
+    {category: "Electronics", price: 1200, sold: 5},
+    {category: "Books", price: 25, sold: 50},
+    {category: "Electronics", price: 300, sold: 10},
+    {category: "Books", price: 15, sold: 75},
+    {category: "Electronics", price: 80, sold: 20}
+];
+
+let mut elec_revenue = 0;
+let mut elec_units = 0;
+let mut book_revenue = 0;
+let mut book_units = 0;
+
+for p in products {
+    let revenue = p.price * p.sold;
+    if p.category == "Electronics" {
+        elec_revenue = elec_revenue + revenue;
+        elec_units = elec_units + p.sold;
+    } else {
+        book_revenue = book_revenue + revenue;
+        book_units = book_units + p.sold;
+    }
+}
+
+println("\nBy Category:");
+println(f"Electronics: {elec_units} units, ${elec_revenue} revenue");
+println(f"Books: {book_units} units, ${book_revenue} revenue");
+
+// 3. Real-world: Customer segmentation
+println("\n3. Customer Segmentation:");
+
+let customers = [
+    {segment: "Premium", spend: 500, visits: 10},
+    {segment: "Regular", spend: 200, visits: 5},
+    {segment: "Premium", spend: 800, visits: 15},
+    {segment: "Regular", spend: 150, visits: 4},
+    {segment: "Premium", spend: 600, visits: 12}
+];
+
+let mut premium_spend = 0;
+let mut premium_visits = 0;
+let mut premium_count = 0;
+let mut regular_spend = 0;
+let mut regular_visits = 0;
+let mut regular_count = 0;
+
+for c in customers {
+    if c.segment == "Premium" {
+        premium_spend = premium_spend + c.spend;
+        premium_visits = premium_visits + c.visits;
+        premium_count = premium_count + 1;
+    } else {
+        regular_spend = regular_spend + c.spend;
+        regular_visits = regular_visits + c.visits;
+        regular_count = regular_count + 1;
+    }
+}
+
+println(f"\nPremium ({premium_count} customers):");
+println(f"  Avg spend: ${premium_spend / premium_count}");
+println(f"  Avg visits: {premium_visits / premium_count}");
+
+println(f"\nRegular ({regular_count} customers):");
+println(f"  Avg spend: ${regular_spend / regular_count}");
+println(f"  Avg visits: {regular_visits / regular_count}");
+
+println("\n✅ GroupBy Complete!");
+println("\n📚 Key Takeaways:");
+println("• GroupBy: Split-Apply-Combine pattern");
+println("• Enables category-wise analysis");
+println("• Multiple aggregations per group");
+println("\n🎯 Applications:");
+println("  ✓ Sales by region");
+println("  ✓ Customer segmentation");
+println("  ✓ Category performance");

@@ -1,0 +1,191 @@
+// Data Transformation Demo 1: Map and Filter - Core Transformations
+// Concepts: Mapping, filtering, chaining, predicate functions
+// Use cases: Data cleaning, feature extraction, subsetting data
+
+println("=== Map and Filter: Essential Data Transformations ===\n");
+
+// 1. Map - Transform each element
+println("1. MAP: Transform Each Element");
+println("   Purpose: Apply function to every element");
+
+let prices = [10, 20, 30, 40, 50];
+println(f"\nOriginal prices: {prices:?}");
+
+// Apply discount
+let discounted = prices.map(|p| p * 0.9);
+println(f"After 10% discount: {discounted:?}");
+
+// Convert to strings with currency
+let formatted = prices.map(|p| f"${p}");
+println(f"Formatted: {formatted:?}");
+
+// 2. Filter - Select elements matching condition
+println("\n2. FILTER: Select Matching Elements");
+println("   Purpose: Keep only elements that satisfy condition");
+
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+println(f"\nAll numbers: {numbers:?}");
+
+// Filter even numbers
+let evens = numbers.filter(|n| n % 2 == 0);
+println(f"Even numbers: {evens:?}");
+
+// Filter numbers > 5
+let large = numbers.filter(|n| n > 5);
+println(f"Numbers > 5: {large:?}");
+
+// 3. Chaining Map and Filter
+println("\n3. CHAINING: Map and Filter Together");
+
+let scores = [45, 67, 89, 72, 91, 55, 38, 82];
+println(f"\nTest scores: {scores:?}");
+
+// Filter passing scores (≥60), then apply bonus
+let passing_with_bonus = scores
+    .filter(|s| s >= 60)
+    .map(|s| s + 5);
+
+println(f"Passing scores with +5 bonus: {passing_with_bonus:?}");
+
+// 4. Real-world: Customer data
+println("\n4. Real-World: Customer Order Processing");
+
+let orders = [
+    {id: 101, amount: 45, status: "paid"},
+    {id: 102, amount: 120, status: "paid"},
+    {id: 103, amount: 30, status: "pending"},
+    {id: 104, amount: 200, status: "paid"},
+    {id: 105, amount: 15, status: "cancelled"}
+];
+
+println(f"\nTotal orders: {orders.len()}");
+
+// Filter paid orders
+let paid_orders = orders.filter(|o| o.status == "paid");
+println(f"Paid orders: {paid_orders.len()}");
+
+// Extract amounts from paid orders
+let paid_amounts = paid_orders.map(|o| o.amount);
+println(f"Paid amounts: {paid_amounts:?}");
+
+// Calculate total revenue
+let mut total_revenue = 0;
+for amount in paid_amounts {
+    total_revenue = total_revenue + amount;
+}
+println(f"Total revenue: ${total_revenue}");
+
+// 5. Filter with complex predicates
+println("\n5. COMPLEX PREDICATES:");
+
+let products = [
+    {name: "Laptop", price: 1200, stock: 5},
+    {name: "Mouse", price: 25, stock: 50},
+    {name: "Monitor", price: 300, stock: 0},
+    {name: "Keyboard", price: 75, stock: 20},
+    {name: "Webcam", price: 80, stock: 0}
+];
+
+println(f"\nTotal products: {products.len()}");
+
+// Available and affordable (price < 100)
+let affordable_available = products
+    .filter(|p| p.stock > 0 && p.price < 100);
+
+println(f"Affordable & available: {affordable_available.len()} products");
+for item in affordable_available {
+    println(f"  • {item.name}: ${item.price} ({item.stock} in stock)");
+}
+
+// Out of stock items
+let out_of_stock = products.filter(|p| p.stock == 0);
+println(f"\nOut of stock: {out_of_stock.len()} items");
+for item in out_of_stock {
+    println(f"  ⚠ {item.name} needs restock");
+}
+
+// 6. Map to create new fields
+println("\n6. MAP: Creating New Fields");
+
+let employees = [
+    {name: "Alice", hours: 40, rate: 25},
+    {name: "Bob", hours: 35, rate: 30},
+    {name: "Carol", hours: 45, rate: 28}
+];
+
+println("\nEmployee payroll:");
+let payroll = employees.map(|e| {
+    let salary = e.hours * e.rate;
+    {name: e.name, hours: e.hours, salary: salary}
+});
+
+for record in payroll {
+    println(f"  {record.name}: {record.hours}h × ${record.salary / record.hours}/h = ${record.salary}");
+}
+
+// 7. Filter-Map pattern
+println("\n7. FILTER-MAP Pattern:");
+
+let sales = [
+    {product: "A", units: 100, price: 10},
+    {product: "B", units: 0, price: 20},
+    {product: "C", units: 50, price: 15},
+    {product: "D", units: 0, price: 25},
+    {product: "E", units: 75, price: 12}
+];
+
+println("\nActive products (units > 0) with revenue:");
+let active_revenue = sales
+    .filter(|s| s.units > 0)
+    .map(|s| {
+        let revenue = s.units * s.price;
+        {product: s.product, revenue: revenue}
+    });
+
+for item in active_revenue {
+    println(f"  Product {item.product}: ${item.revenue} revenue");
+}
+
+// 8. Map for data normalization
+println("\n8. MAP: Data Normalization");
+
+let user_inputs = ["  Alice  ", "bob", "  CAROL", "dave  "];
+println(f"\nRaw inputs: {user_inputs:?}");
+
+// Normalize: trim and lowercase
+let normalized = user_inputs.map(|name| name.trim().to_lowercase());
+println(f"Normalized: {normalized:?}");
+
+// 9. Filter for data quality
+println("\n9. FILTER: Data Quality Checks");
+
+let measurements = [25.5, 26.0, 150.0, 25.8, 26.2, -5.0, 25.9];
+println(f"\nRaw measurements: {measurements:?}");
+
+// Filter valid range (20-30)
+let valid = measurements.filter(|m| m >= 20.0 && m <= 30.0);
+println(f"Valid measurements (20-30): {valid:?}");
+
+let invalid = measurements.filter(|m| m < 20.0 || m > 30.0);
+println(f"Invalid/outliers: {invalid:?}");
+println(f"Data quality: {valid.len()}/{measurements.len()} valid ({valid.len() * 100 / measurements.len()}%)");
+
+// 10. Performance considerations
+println("\n10. PERFORMANCE TIPS:");
+println("   • Map/Filter are lazy in many languages");
+println("   • Chain operations for readability");
+println("   • Filter before map to reduce work");
+println("   • Consider filter_map for combined ops");
+
+println("\n✅ Map and Filter Complete!");
+println("\n📚 Key Takeaways:");
+println("• Map: Transform every element");
+println("• Filter: Select elements by predicate");
+println("• Chain operations for complex transformations");
+println("• Filter before map for efficiency");
+println("• Essential for data cleaning and preparation");
+println("\n🎯 Applications:");
+println("  ✓ Data cleaning and validation");
+println("  ✓ Feature extraction");
+println("  ✓ Subsetting datasets");
+println("  ✓ Data normalization");

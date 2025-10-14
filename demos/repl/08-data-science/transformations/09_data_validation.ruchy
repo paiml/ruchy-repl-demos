@@ -1,0 +1,139 @@
+// Data Transformation Demo 9: Data Validation
+// Concepts: Validation rules, constraints, quality checks
+// Use cases: Data quality, input validation, schema enforcement
+
+println("=== Data Validation Patterns ===\n");
+
+println("1. Range Validation:");
+let ages = [25, 30, 150, -5, 42, 200];
+println(f"Ages: {ages:?}");
+
+let mut valid = [];
+let mut invalid = [];
+
+for age in ages {
+    if age >= 0 && age <= 120 {
+        valid.push(age);
+    } else {
+        invalid.push(age);
+    }
+}
+
+println(f"Valid (0-120): {valid:?}");
+println(f"Invalid: {invalid:?}");
+
+println("\n2. Format Validation:");
+let emails = [
+    "alice@example.com",
+    "bob@",
+    "carol@example.com",
+    "invalid.email"
+];
+
+println("\nEmail validation:");
+for email in emails {
+    let has_at = email.contains("@");
+    let has_dot = email.contains(".");
+    let is_valid = has_at && has_dot;
+
+    let status = if is_valid { "✓" } else { "✗" };
+    println(f"  {status} {email}");
+}
+
+println("\n3. Required Fields:");
+let records = [
+    {name: "Alice", age: 30, email: "alice@ex.com"},
+    {name: "Bob", age: null, email: "bob@ex.com"},
+    {name: null, age: 25, email: "carol@ex.com"}
+];
+
+println("\nRequired field check:");
+for i in 0..records.len() {
+    let r = records[i];
+    let has_name = r.name != null;
+    let has_age = r.age != null;
+    let has_email = r.email != null;
+
+    let complete = has_name && has_age && has_email;
+    let status = if complete { "✓ Complete" } else { "✗ Incomplete" };
+    println(f"  Record {i+1}: {status}");
+}
+
+println("\n4. Uniqueness Constraint:");
+let ids = [101, 102, 103, 102, 104];
+println(f"IDs: {ids:?}");
+
+let mut seen = [];
+let mut duplicates = [];
+
+for id in ids {
+    let mut is_duplicate = false;
+    for s in seen {
+        if s == id {
+            is_duplicate = true;
+        }
+    }
+
+    if is_duplicate {
+        duplicates.push(id);
+    } else {
+        seen.push(id);
+    }
+}
+
+if duplicates.len() > 0 {
+    println(f"⚠ Duplicate IDs found: {duplicates:?}");
+} else {
+    println("✓ All IDs unique");
+}
+
+println("\n5. Referential Integrity:");
+let orders = [
+    {id: 1, customer_id: 101},
+    {id: 2, customer_id: 102},
+    {id: 3, customer_id: 999}  // Invalid
+];
+
+let valid_customers = [101, 102, 103];
+
+println("\nChecking referential integrity:");
+for order in orders {
+    let mut customer_exists = false;
+    for cid in valid_customers {
+        if cid == order.customer_id {
+            customer_exists = true;
+        }
+    }
+
+    let status = if customer_exists { "✓" } else { "✗ Orphaned" };
+    println(f"  Order {order.id} (customer {order.customer_id}): {status}");
+}
+
+println("\n6. Data Quality Score:");
+let dataset = [
+    {complete: true, valid: true, unique: true},
+    {complete: true, valid: false, unique: true},
+    {complete: false, valid: true, unique: true}
+];
+
+let mut quality_score = 0;
+let total_checks = dataset.len() * 3;  // 3 checks per record
+let mut passed_checks = 0;
+
+for record in dataset {
+    if record.complete { passed_checks = passed_checks + 1; }
+    if record.valid { passed_checks = passed_checks + 1; }
+    if record.unique { passed_checks = passed_checks + 1; }
+}
+
+quality_score = (passed_checks * 100) / total_checks;
+println(f"\nData Quality Score: {quality_score}%");
+println(f"  {passed_checks}/{total_checks} checks passed");
+
+println("\n✅ Data Validation Complete!");
+println("\n📚 Validation types:");
+println("  • Range: Value within bounds");
+println("  • Format: Matches pattern");
+println("  • Required: No nulls");
+println("  • Unique: No duplicates");
+println("  • Referential: Foreign keys exist");

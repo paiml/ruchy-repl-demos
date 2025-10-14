@@ -1,0 +1,74 @@
+// Data Transformation Demo 7: Pivoting and Reshaping
+// Concepts: Pivot tables, reshaping, wide-to-long, long-to-wide
+// Use cases: Reporting, analysis views, data reorganization
+
+println("=== Pivoting and Reshaping Data ===\n");
+
+println("1. Pivot Concept:");
+println("   Transform: Rows → Columns");
+println("   Example: Monthly sales by product");
+
+let monthly_sales = [
+    {month: "Jan", product: "A", sales: 100},
+    {month: "Jan", product: "B", sales: 150},
+    {month: "Feb", product: "A", sales: 120},
+    {month: "Feb", product: "B", sales: 180}
+];
+
+println("\nLong format (row per observation):");
+for row in monthly_sales {
+    println(f"  {row.month} - Product {row.product}: ${row.sales}");
+}
+
+println("\nPivot to wide format:");
+println("         Product A  Product B");
+
+let mut jan_a = 0;
+let mut jan_b = 0;
+let mut feb_a = 0;
+let mut feb_b = 0;
+
+for row in monthly_sales {
+    if row.month == "Jan" && row.product == "A" { jan_a = row.sales; }
+    if row.month == "Jan" && row.product == "B" { jan_b = row.sales; }
+    if row.month == "Feb" && row.product == "A" { feb_a = row.sales; }
+    if row.month == "Feb" && row.product == "B" { feb_b = row.sales; }
+}
+
+println(f"Jan      ${jan_a}        ${jan_b}");
+println(f"Feb      ${feb_a}        ${feb_b}");
+
+println("\n2. Cross-Tabulation:");
+let survey = [
+    {age_group: "18-30", liked: true},
+    {age_group: "18-30", liked: false},
+    {age_group: "31-50", liked: true},
+    {age_group: "31-50", liked: true},
+    {age_group: "18-30", liked: true}
+];
+
+let mut young_yes = 0;
+let mut young_no = 0;
+let mut mid_yes = 0;
+let mut mid_no = 0;
+
+for response in survey {
+    if response.age_group == "18-30" {
+        if response.liked { young_yes = young_yes + 1; }
+        else { young_no = young_no + 1; }
+    } else {
+        if response.liked { mid_yes = mid_yes + 1; }
+        else { mid_no = mid_no + 1; }
+    }
+}
+
+println("\nCross-tab: Age × Preference");
+println("           Yes  No");
+println(f"18-30      {young_yes}    {young_no}");
+println(f"31-50      {mid_yes}    {mid_no}");
+
+println("\n✅ Pivot and Reshape Complete!");
+println("\n📚 Reshaping operations:");
+println("  • Long → Wide: Pivot");
+println("  • Wide → Long: Unpivot/Melt");
+println("  • Cross-tabs: 2D frequency tables");
