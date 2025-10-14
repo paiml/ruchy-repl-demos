@@ -796,16 +796,28 @@ quality-gates-wasm: quality-gates test-wasm
 # ==============================================================================
 
 # Notebook validation (REPL-103) - Following ruchy-book pattern
-# Uses ruchy notebook server + API testing (not WASM-only)
+# Uses ruchy notebook server + Deno script → /api/execute
 test-notebook:
 	@echo "📓 Testing demos in Ruchy notebook (ruchy-book pattern)..."
-	@echo "⚠️  Note: Requires 'ruchy notebook' server running on port 8080"
-	@echo ""
-	@echo "Start server in another terminal:"
-	@echo "  ruchy notebook --port 8080"
-	@echo ""
-	@echo "For now, using manual verification until server integration is complete."
-	@echo "See PLAYWRIGHT_E2E_SETUP.md for details on WASM vs server-based testing."
+	@if ! command -v deno >/dev/null 2>&1; then \
+		echo "❌ Deno not found. Install with:"; \
+		echo "  curl -fsSL https://deno.land/install.sh | sh"; \
+		exit 1; \
+	fi
+	@echo "🚀 Starting notebook server..."
+	@ruchy notebook --port 8080 > /dev/null 2>&1 & echo $$! > .notebook.pid
+	@sleep 3
+	@echo "🧪 Running tests via Deno script..."
+	@./scripts/test-notebook.ts || (kill $$(cat .notebook.pid) 2>/dev/null; rm -f .notebook.pid; exit 1)
+	@echo "🛑 Stopping notebook server..."
+	@kill $$(cat .notebook.pid) 2>/dev/null || true
+	@rm -f .notebook.pid
+	@echo "✅ Notebook validation complete"
+
+# Test notebook with external server (don't start/stop)
+test-notebook-external:
+	@echo "📓 Testing with external notebook server..."
+	@./scripts/test-notebook.ts
 
 # REPL replay validation (REPL-104) - placeholder for future implementation
 test-replay:

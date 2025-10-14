@@ -10,7 +10,8 @@ import { test, expect } from '@playwright/test';
 test.describe('Notebook Smoke Test - Reality Check', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to ACTUAL notebook URL
-    await page.goto('http://localhost:8080');
+    // Ruchy notebook serves the UI at /notebook.html
+    await page.goto('http://localhost:8080/notebook.html');
 
     // Wait for notebook to load
     await page.waitForSelector('#notebook-cells', { timeout: 10000 });

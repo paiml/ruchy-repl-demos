@@ -31,6 +31,8 @@ package-lock.json
 
 # Test artifacts
 notebook-results.json
+notebook-test-results.json
+.notebook.pid
 *.tmp
 *.log
 *.out
