@@ -27,13 +27,34 @@
 
 ## Development Workflow
 
+### Feature Verification Protocol (MANDATORY)
+**NO VAPORWARE: Only create demos for verified, working language features**
+
+Before creating ANY demo:
+1. **VERIFY**: Check ../ruchy or ../ruchy-book for actual feature support
+2. **TEST**: Run simple example in REPL to confirm it works
+3. **DOCUMENT**: Note which Ruchy version supports the feature
+
+**Never create demos for:**
+- Features that "might" exist
+- Theoretical language capabilities
+- Syntax you assume works
+- Advanced features without verification
+
+**Always verify:**
+- Check existing working demos for patterns
+- Test syntax in actual Ruchy REPL
+- Consult ../ruchy repository for language spec
+- Review ../ruchy-book for documented features
+
 ### Demo Creation Process
-1. **DESIGN**: Define learning objective
-2. **TEST FIRST**: Write test before demo
-3. **IMPLEMENT**: Create minimal working example
-4. **VERIFY**: Run all quality checks
-5. **DOCUMENT**: Explain what it demonstrates
-6. **INTEGRATE**: Add to test suite
+1. **VERIFY FEATURE**: Confirm feature exists in Ruchy (see above)
+2. **DESIGN**: Define learning objective
+3. **TEST FIRST**: Write test before demo
+4. **IMPLEMENT**: Create minimal working example
+5. **VERIFY EXECUTION**: Run in actual REPL
+6. **DOCUMENT**: Explain what it demonstrates
+7. **INTEGRATE**: Add to test suite
 
 ### Comment Syntax Rules (MANDATORY)
 **P0 REQUIREMENT: All comments must use syntactically correct Ruchy syntax**
