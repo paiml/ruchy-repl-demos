@@ -1,0 +1,34 @@
+// Basic Demo: Mutable Variables
+// Verified features: mut keyword, reassignment
+
+println("=== Mutable Variables ===\n");
+
+println("1. MUTABLE Variables:");
+let mut counter = 0;
+println(f"Initial: {counter}");
+counter = counter + 1;
+println(f"After increment: {counter}");
+counter = counter + 10;
+println(f"After adding 10: {counter}");
+
+println("\n2. Accumulation:");
+let mut total = 0;
+total = total + 5;
+total = total + 10;
+total = total + 15;
+println(f"Total: {total}");
+
+println("\n3. Updating Values:");
+let mut name = "Alice";
+println(f"Name: {name}");
+name = "Bob";
+println(f"Updated name: {name}");
+
+println("\n4. Loop Counter:");
+let mut i = 1;
+while i <= 5 {
+    println(f"Iteration: {i}");
+    i = i + 1;
+}
+
+println("\n✅ Mutable Variables Complete!");

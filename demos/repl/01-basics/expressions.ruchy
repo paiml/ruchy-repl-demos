@@ -1,0 +1,32 @@
+// Basic Demo: Expressions
+// Verified features: expression evaluation, precedence
+
+println("=== Expressions ===\n");
+
+println("1. ARITHMETIC Expressions:");
+let result1 = 2 + 3 * 4;
+println(f"2 + 3 * 4 = {result1} (multiplication first)");
+
+let result2 = (2 + 3) * 4;
+println(f"(2 + 3) * 4 = {result2} (parentheses first)");
+
+println("\n2. BOOLEAN Expressions:");
+let age = 25;
+let has_id = true;
+let can_enter = age >= 21 && has_id;
+println(f"Age {age}, Has ID: {has_id}");
+println(f"Can enter: {can_enter}");
+
+println("\n3. COMPARISON Chains:");
+let score = 85;
+let is_passing = score >= 60 && score < 100;
+println(f"Score {score} is passing: {is_passing}");
+
+println("\n4. Expression in IF:");
+let x = 10;
+let y = 20;
+if x * 2 == y {
+    println("x * 2 equals y");
+}
+
+println("\n✅ Expressions Complete!");

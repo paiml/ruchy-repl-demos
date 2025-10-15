@@ -1,0 +1,28 @@
+// Basic Demo: String Operations
+// Verified features: string concatenation, interpolation, length
+
+println("=== String Operations ===\n");
+
+println("1. STRING Concatenation:");
+let first = "Hello";
+let second = "World";
+let combined = first + " " + second;
+println(f"'{first}' + ' ' + '{second}' = '{combined}'");
+
+println("\n2. STRING Interpolation:");
+let name = "Bob";
+let age = 30;
+let message = f"{name} is {age} years old";
+println(message);
+
+println("\n3. STRING Length:");
+let text = "Ruchy";
+println(f"Text: '{text}'");
+println(f"Length: {text.len()} characters");
+
+println("\n4. MULTI-LINE Strings:");
+let poem = "Roses are red
+Violets are blue";
+println(poem);
+
+println("\n✅ String Operations Complete!");

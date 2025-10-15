@@ -1,0 +1,43 @@
+// Basic Demo: Control Flow
+// Verified features: if/else, comparison operators
+
+println("=== Control Flow ===\n");
+
+println("1. IF Statement:");
+let age = 20;
+if age >= 18 {
+    println(f"Age {age}: Adult");
+}
+
+println("\n2. IF-ELSE:");
+let score = 75;
+if score >= 70 {
+    println(f"Score {score}: Pass");
+} else {
+    println(f"Score {score}: Fail");
+}
+
+println("\n3. IF-ELSE IF:");
+let grade = 85;
+if grade >= 90 {
+    println("Grade A");
+} else if grade >= 80 {
+    println("Grade B");
+} else if grade >= 70 {
+    println("Grade C");
+} else {
+    println("Grade F");
+}
+
+println("\n4. NESTED IF:");
+let x = 15;
+let y = 10;
+if x > y {
+    if x > 20 {
+        println("x is large");
+    } else {
+        println("x is medium");
+    }
+}
+
+println("\n✅ Control Flow Complete!");

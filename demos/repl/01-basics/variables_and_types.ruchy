@@ -1,0 +1,41 @@
+// Basic Demo: Variables and Types
+// Verified features: let bindings, integers, floats, strings, booleans
+
+println("=== Variables and Types ===\n");
+
+// Integer variables
+println("1. INTEGER Variables:");
+let age = 25;
+let year = 2024;
+println(f"Age: {age}");
+println(f"Year: {year}");
+
+// Float variables
+println("\n2. FLOAT Variables:");
+let price = 19.99;
+let temperature = 72.5;
+println(f"Price: ${price}");
+println(f"Temperature: {temperature}°F");
+
+// String variables
+println("\n3. STRING Variables:");
+let name = "Alice";
+let message = "Hello, World!";
+println(f"Name: {name}");
+println(f"Message: {message}");
+
+// Boolean variables
+println("\n4. BOOLEAN Variables:");
+let is_active = true;
+let is_complete = false;
+println(f"Active: {is_active}");
+println(f"Complete: {is_complete}");
+
+// Multiple assignments
+println("\n5. MULTIPLE Variables:");
+let x = 10;
+let y = 20;
+let z = 30;
+println(f"x={x}, y={y}, z={z}");
+
+println("\n✅ Variables and Types Complete!");

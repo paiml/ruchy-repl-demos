@@ -1,0 +1,34 @@
+// Basic Demo: Loops
+// Verified features: for loops, while loops, ranges
+
+println("=== Loops ===\n");
+
+println("1. FOR Loop with Range:");
+for i in 0..5 {
+    println(f"Count: {i}");
+}
+
+println("\n2. FOR Loop with Array:");
+let fruits = ["apple", "banana", "cherry"];
+for fruit in fruits {
+    println(f"Fruit: {fruit}");
+}
+
+println("\n3. WHILE Loop:");
+let mut count = 0;
+while count < 3 {
+    println(f"Count: {count}");
+    count = count + 1;
+}
+
+println("\n4. Loop with BREAK:");
+let mut i = 0;
+while true {
+    println(f"i = {i}");
+    i = i + 1;
+    if i >= 3 {
+        break;
+    }
+}
+
+println("\n✅ Loops Complete!");

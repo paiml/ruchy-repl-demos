@@ -1,0 +1,22 @@
+// Basic Demo: Arrays
+// Verified features: array creation, indexing, length
+
+println("=== Arrays ===\n");
+
+println("1. Array Creation:");
+let numbers = [1, 2, 3, 4, 5];
+println(f"Numbers: {numbers}");
+
+println("\n2. Array Indexing:");
+println(f"First: {numbers[0]}");
+println(f"Third: {numbers[2]}");
+println(f"Last: {numbers[4]}");
+
+println("\n3. Array Length:");
+println(f"Length: {numbers.len()}");
+
+println("\n4. Mixed Arrays:");
+let mixed = [10, 20, 30];
+println(f"Mixed: {mixed}");
+
+println("\n✅ Arrays Complete!");

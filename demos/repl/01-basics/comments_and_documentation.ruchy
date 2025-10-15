@@ -1,0 +1,43 @@
+// Basic Demo: Comments and Documentation
+// Verified features: single-line comments, documentation style
+
+println("=== Comments and Documentation ===\n");
+
+// This is a single-line comment
+println("1. SINGLE-LINE Comments:");
+let x = 10;  // Comment after code
+println(f"x = {x}");
+
+// Multiple single-line comments
+// can be used together
+// to create multi-line documentation
+println("\n2. MULTIPLE Comment Lines:");
+let name = "Alice";
+println(f"Name: {name}");
+
+println("\n3. DOCUMENTATION Style:");
+// Function: Calculates area of rectangle
+// Parameters: width, height
+// Returns: area
+fn calculate_area(width, height) {
+    width * height
+}
+
+let area = calculate_area(5, 10);
+println(f"Area: {area}");
+
+println("\n4. Code Organization:");
+// === Setup ===
+let value1 = 100;
+
+// === Processing ===
+let value2 = value1 * 2;
+
+// === Output ===
+println(f"Result: {value2}");
+
+println("\n✅ Comments Complete!");
+println("\nBest practices:");
+println("• Use // for all Ruchy comments");
+println("• Explain WHY, not WHAT");
+println("• Keep comments up to date");

@@ -1,0 +1,30 @@
+// Basic Demo: Operators
+// Verified features: arithmetic, comparison, logical operators
+
+println("=== Operators ===\n");
+
+println("1. ARITHMETIC Operators:");
+let a = 10;
+let b = 3;
+println(f"{a} + {b} = {a + b}");
+println(f"{a} - {b} = {a - b}");
+println(f"{a} * {b} = {a * b}");
+println(f"{a} / {b} = {a / b}");
+println(f"{a} % {b} = {a % b}");
+
+println("\n2. COMPARISON Operators:");
+println(f"{a} == {b}: {a == b}");
+println(f"{a} != {b}: {a != b}");
+println(f"{a} > {b}: {a > b}");
+println(f"{a} < {b}: {a < b}");
+println(f"{a} >= {b}: {a >= b}");
+println(f"{a} <= {b}: {a <= b}");
+
+println("\n3. LOGICAL Operators:");
+let x = true;
+let y = false;
+println(f"{x} && {y}: {x && y}");
+println(f"{x} || {y}: {x || y}");
+println(f"!{x}: {!x}");
+
+println("\n✅ Operators Complete!");

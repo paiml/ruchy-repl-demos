@@ -1,0 +1,29 @@
+// Basic Demo: Records (Objects)
+// Verified features: record creation, field access
+
+println("=== Records (Objects) ===\n");
+
+println("1. Record Creation:");
+let person = {name: "Alice", age: 30};
+println(f"Person: {person}");
+
+println("\n2. Field Access:");
+println(f"Name: {person.name}");
+println(f"Age: {person.age}");
+
+println("\n3. Nested Records:");
+let user = {
+    profile: {name: "Bob", email: "bob@example.com"},
+    active: true
+};
+println(f"User name: {user.profile.name}");
+println(f"Email: {user.profile.email}");
+println(f"Active: {user.active}");
+
+println("\n4. Multiple Records:");
+let car = {brand: "Toyota", year: 2024};
+let house = {address: "123 Main St", rooms: 3};
+println(f"Car: {car.brand} ({car.year})");
+println(f"House: {house.rooms} rooms at {house.address}");
+
+println("\n✅ Records Complete!");
