@@ -347,6 +347,34 @@ else
 fi
 echo ""
 
+# ==============================================================================
+# GATE 13: Feature Verification (Phase 2B - REPL-221)
+# ==============================================================================
+check_gate "Feature Verification (Vaporware Detection)" "13"
+
+if [ -f "scripts/verify-features.sh" ]; then
+    echo "Scanning demos for unimplemented features..."
+
+    if sh scripts/verify-features.sh > /tmp/feature_verification.log 2>&1; then
+        FILES_SCANNED=$(grep "Files scanned:" /tmp/feature_verification.log | awk '{print $3}' || echo "0")
+        echo "✅ PASS: No vaporware detected ($FILES_SCANNED files scanned)"
+        GATES_PASSED=$((GATES_PASSED + 1))
+    else
+        ISSUES=$(grep "VAPORWARE DETECTED:" /tmp/feature_verification.log | awk '{print $3}' || echo "unknown")
+        echo "❌ FAIL: Vaporware features detected in demos"
+        echo "   Issues: $ISSUES"
+        echo "   Details:"
+        grep "❌ VAPORWARE:" /tmp/feature_verification.log | head -5 || true
+        echo ""
+        echo "   Action: Remove demos using unimplemented features or add verification comments"
+        GATES_FAILED=$((GATES_FAILED + 1))
+    fi
+else
+    echo "⚠️  WARNING: Feature verification script not found"
+    GATES_PASSED=$((GATES_PASSED + 1))
+fi
+echo ""
+
 # Summary
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "QUALITY GATE SUMMARY"

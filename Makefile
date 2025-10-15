@@ -36,6 +36,7 @@ help:
 	@echo "  make test-demos-verbose - Test with full output (debugging)"
 	@echo "  make test-notebook - Test demos in Ruchy notebook"
 	@echo "  make test-repl-contract - Test REPL interactive UX (10 contracts)"
+	@echo "  make verify-features - Detect vaporware (unimplemented features)"
 	@echo "  make test-repl    - Test all REPL demos"
 	@echo "  make test-oneliner - Test all one-liner demos"
 	@echo "  make test-repl-basics - Test basic REPL demos"
@@ -839,6 +840,12 @@ test-repl-contract:
 	@echo "🔌 Testing REPL contract (interactive UX)..."
 	@chmod +x scripts/test-repl-contract.sh
 	@./scripts/test-repl-contract.sh
+
+# Feature Verification (Phase 2B - REPL-221) - vaporware detection
+verify-features:
+	@echo "🔍 Verifying features (vaporware detection)..."
+	@chmod +x scripts/verify-features.sh
+	@./scripts/verify-features.sh
 
 # REPL replay validation (REPL-104) - placeholder for future implementation
 test-replay:
