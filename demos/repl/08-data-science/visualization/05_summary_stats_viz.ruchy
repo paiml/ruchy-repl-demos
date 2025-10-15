@@ -1,0 +1,170 @@
+// Visualization Prep Demo 5: Summary Statistics for Visualization
+// Concepts: Box plots, quartiles, outliers, distribution summaries
+// Use cases: Box plots, violin plots, statistical overlays
+
+println("=== Summary Statistics for Visualization ===\n");
+
+// 1. Box Plot Five Number Summary
+println("1. BOX PLOT: Five Number Summary");
+
+let dataset = [12, 15, 18, 20, 22, 25, 28, 30, 35, 40, 45];
+println(f"\nDataset: {dataset:?}");
+
+let min_val = dataset[0];
+let max_val = dataset[dataset.len() - 1];
+let median = dataset[dataset.len() / 2];
+let q1 = dataset[dataset.len() / 4];
+let q3 = dataset[(3 * dataset.len()) / 4];
+
+println("\n📦 Box plot summary:");
+println(f"  Min:    {min_val}  |");
+println(f"  Q1:     {q1}  ├──┐");
+println(f"  Median: {median}  │  │  (box)");
+println(f"  Q3:     {q3}  └──┤");
+println(f"  Max:    {max_val}  |");
+
+let iqr = q3 - q1;
+println(f"\n  IQR (Q3-Q1): {iqr}");
+println(f"  Range: {max_val - min_val}");
+
+// 2. Outlier Detection for Plots
+println("\n2. OUTLIER DETECTION: For box plots");
+
+let data_with_outliers = [10, 12, 15, 18, 20, 22, 25, 100];
+println(f"\nData: {data_with_outliers:?}");
+
+let q1_data = 12;
+let q3_data = 25;
+let iqr_data = q3_data - q1_data;
+
+// Outlier fences: Q1 - 1.5*IQR, Q3 + 1.5*IQR
+let lower_fence = q1_data - (1.5 * iqr_data);
+let upper_fence = q3_data + (1.5 * iqr_data);
+
+println(f"\nQ1: {q1_data}, Q3: {q3_data}, IQR: {iqr_data}");
+println(f"Lower fence: {lower_fence}");
+println(f"Upper fence: {upper_fence}");
+
+println("\n🔍 Outlier check:");
+for value in data_with_outliers {
+    if value < lower_fence || value > upper_fence {
+        println(f"  {value} → OUTLIER ⚠");
+    } else {
+        println(f"  {value} → Normal ✓");
+    }
+}
+
+// 3. Error Bars - Mean ± StdDev
+println("\n3. ERROR BARS: Mean ± Standard Deviation");
+
+let measurements = [25, 26, 24, 27, 25, 26, 28];
+let mut sum = 0;
+for m in measurements { sum = sum + m; }
+let mean = sum / measurements.len();
+
+// Calculate std dev
+let mut sum_sq_diff = 0;
+for m in measurements {
+    let diff = m - mean;
+    sum_sq_diff = sum_sq_diff + (diff * diff);
+}
+let variance = sum_sq_diff / measurements.len();
+let std_dev = 2;  // Approximate sqrt
+
+println(f"\nMeasurements: {measurements:?}");
+println(f"Mean: {mean}");
+println(f"Std dev: ±{std_dev}");
+
+println("\n📊 Error bar representation:");
+println(f"  Upper: {mean + std_dev}  ─┐");
+println(f"  Mean:  {mean}  ──●── (point)");
+println(f"  Lower: {mean - std_dev}  ─┘");
+
+// 4. Confidence Intervals
+println("\n4. CONFIDENCE INTERVALS:");
+
+let sample_means = [98, 102, 100, 99, 101];
+let mut mean_sum = 0;
+for m in sample_means { mean_sum = mean_sum + m; }
+let overall_mean = mean_sum / sample_means.len();
+
+// Approximate 95% CI: mean ± 2*SE
+let std_error = 2;  // Simplified
+let ci_lower = overall_mean - (2 * std_error);
+let ci_upper = overall_mean + (2 * std_error);
+
+println(f"\nSample means: {sample_means:?}");
+println(f"Overall mean: {overall_mean}");
+println(f"\n95% Confidence Interval:");
+println(f"  [{ci_lower}, {ci_upper}]");
+println("\n✓ Interpretation: 95% confident true mean is in this range");
+
+// 5. Distribution Shape Metrics
+println("\n5. DISTRIBUTION SHAPE:");
+
+let symmetric = [10, 15, 20, 25, 30, 35, 40];
+let skewed = [10, 15, 20, 25, 30, 50, 100];
+
+println("\nSymmetric distribution:");
+println(f"  Data: {symmetric:?}");
+println("  Shape: Bell-shaped, mean ≈ median");
+
+println("\nSkewed distribution:");
+println(f"  Data: {skewed:?}");
+println("  Shape: Right-skewed, mean > median");
+println("  ✓ Visualization: Use median for center");
+
+// 6. Comparative Statistics (Multiple groups)
+println("\n6. MULTIPLE GROUPS: Side-by-side comparison");
+
+let group_a = [20, 22, 25, 23, 24];
+let group_b = [30, 32, 35, 33, 34];
+
+let mut sum_a = 0;
+let mut sum_b = 0;
+for val in group_a { sum_a = sum_a + val; }
+for val in group_b { sum_b = sum_b + val; }
+
+let mean_a = sum_a / group_a.len();
+let mean_b = sum_b / group_b.len();
+
+println("\n📊 Group comparison:");
+println(f"  Group A: Mean = {mean_a}");
+println(f"  Group B: Mean = {mean_b}");
+println(f"  Difference: {mean_b - mean_a}");
+
+println("\n  Visualization: Side-by-side box plots");
+println("  Group A    Group B");
+println("    ├─●─┤      ├─●─┤");
+println(f"    {mean_a}        {mean_b}");
+
+// 7. Percentile Overlays
+println("\n7. PERCENTILE OVERLAYS:");
+
+let response_times = [50, 55, 60, 65, 70, 75, 80, 90, 100, 120];
+println(f"\nResponse times: {response_times:?} ms");
+
+let p50 = response_times[response_times.len() / 2];
+let p95 = response_times[(95 * response_times.len()) / 100];
+let p99 = response_times[(99 * response_times.len()) / 100];
+
+println("\n⚡ Performance markers:");
+println(f"  P50 (median): {p50} ms  ──●── (typical)");
+println(f"  P95:          {p95} ms  ─────●─ (95%)");
+println(f"  P99:          {p99} ms  ──────● (99%)");
+
+println("\n✓ Add to charts: SLA thresholds, performance targets");
+
+println("\n✅ Summary Statistics for Viz Complete!");
+println("\n📚 Statistical visualizations:");
+println("  • Box plots: 5-number summary");
+println("  • Error bars: Mean ± SD or SE");
+println("  • Confidence intervals: Uncertainty");
+println("  • Outlier markers: Points beyond fences");
+println("  • Percentile lines: P50, P95, P99");
+println("\n🎯 Best practices:");
+println("  ✓ Always show center AND spread");
+println("  ✓ Mark outliers explicitly");
+println("  ✓ Add reference lines (mean, median)");
+println("  ✓ Include sample size (n=X)");
+println("  ✓ Show confidence, not just point estimates");

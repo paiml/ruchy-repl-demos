@@ -1,0 +1,131 @@
+// Visualization Prep Demo 2: Time Series Preparation
+// Concepts: Resampling, rolling averages, trend analysis
+// Use cases: Financial charts, metrics dashboards, forecasting
+
+println("=== Time Series Preparation for Visualization ===\n");
+
+// 1. Daily to Weekly Aggregation
+println("1. RESAMPLING: Daily → Weekly");
+
+let daily_data = [
+    {day: 1, value: 100}, {day: 2, value: 105}, {day: 3, value: 110},
+    {day: 4, value: 108}, {day: 5, value: 112}, {day: 6, value: 115},
+    {day: 7, value: 120}, {day: 8, value: 118}, {day: 9, value: 122},
+    {day: 10, value: 125}, {day: 11, value: 130}, {day: 12, value: 128},
+    {day: 13, value: 135}, {day: 14, value: 140}
+];
+
+println(f"\n📅 Daily data: {daily_data.len()} points");
+
+// Aggregate to weekly (7-day periods)
+let week1_sum = daily_data[0].value + daily_data[1].value + daily_data[2].value +
+                daily_data[3].value + daily_data[4].value + daily_data[5].value + daily_data[6].value;
+let week1_avg = week1_sum / 7;
+
+let week2_sum = daily_data[7].value + daily_data[8].value + daily_data[9].value +
+                daily_data[10].value + daily_data[11].value + daily_data[12].value + daily_data[13].value;
+let week2_avg = week2_sum / 7;
+
+println("\n📊 Weekly averages:");
+println(f"  Week 1: {week1_avg}");
+println(f"  Week 2: {week2_avg}");
+println(f"  Growth: +{week2_avg - week1_avg} ({((week2_avg - week1_avg) * 100) / week1_avg}%)");
+
+// 2. Moving Average (Smoothing)
+println("\n2. MOVING AVERAGE: 3-day window");
+
+let prices = [100, 105, 103, 108, 110, 107, 112, 115];
+println(f"\nOriginal prices: {prices:?}");
+
+let mut moving_avg = [];
+for i in 0..(prices.len() - 2) {
+    let avg = (prices[i] + prices[i+1] + prices[i+2]) / 3;
+    moving_avg.push(avg);
+}
+
+println(f"3-day MA: {moving_avg:?}");
+println("\n✓ Smoothed: Reduces noise, shows trend");
+
+// 3. Growth Rate Calculation
+println("\n3. GROWTH RATE: Period-over-period");
+
+let monthly_revenue = [1000, 1100, 1150, 1300, 1400];
+println(f"\nMonthly revenue: {monthly_revenue:?}");
+
+println("\n📈 Month-over-month growth:");
+for i in 1..monthly_revenue.len() {
+    let prev = monthly_revenue[i-1];
+    let curr = monthly_revenue[i];
+    let growth = curr - prev;
+    let growth_pct = (growth * 100) / prev;
+    println(f"  Month {i} → {i+1}: +${growth} ({growth_pct}%)");
+}
+
+// 4. Cumulative Sum
+println("\n4. CUMULATIVE SUM: Running total");
+
+let daily_signups = [10, 15, 12, 18, 20, 14, 16];
+println(f"\nDaily signups: {daily_signups:?}");
+
+let mut cumulative = [];
+let mut total = 0;
+for signup in daily_signups {
+    total = total + signup;
+    cumulative.push(total);
+}
+
+println(f"Cumulative: {cumulative:?}");
+println(f"Total signups: {total}");
+
+// 5. Downsampling for Performance
+println("\n5. DOWNSAMPLING: Every Nth point");
+
+let high_freq_data = [10, 12, 11, 13, 15, 14, 16, 18, 17, 19, 21, 20, 22, 24, 23, 25];
+println(f"\nHigh frequency: {high_freq_data.len()} points");
+
+// Take every 4th point
+let mut downsampled = [];
+let mut i = 0;
+while i < high_freq_data.len() {
+    downsampled.push(high_freq_data[i]);
+    i = i + 4;
+}
+
+println(f"Downsampled (every 4th): {downsampled:?}");
+println("✓ Reduced: Better chart performance");
+
+// 6. Trend Detection
+println("\n6. TREND DETECTION:");
+
+let stock_prices = [100, 102, 105, 103, 108, 110, 109, 112, 115];
+println(f"\nStock prices: {stock_prices:?}");
+
+let start_price = stock_prices[0];
+let end_price = stock_prices[stock_prices.len() - 1];
+let total_change = end_price - start_price;
+let pct_change = (total_change * 100) / start_price;
+
+println(f"\nStart: ${start_price}");
+println(f"End: ${end_price}");
+println(f"Change: +${total_change} (+{pct_change}%)");
+
+if pct_change > 10 {
+    println("📈 Strong uptrend");
+} else if pct_change > 0 {
+    println("📊 Slight uptrend");
+} else {
+    println("📉 Downtrend");
+}
+
+println("\n✅ Time Series Prep Complete!");
+println("\n📚 Techniques:");
+println("  • Resampling: Change frequency");
+println("  • Moving average: Smooth noise");
+println("  • Growth rate: Period changes");
+println("  • Cumulative: Running totals");
+println("  • Downsampling: Reduce points");
+println("\n🎯 Visualization benefits:");
+println("  ✓ Cleaner charts");
+println("  ✓ Highlight trends");
+println("  ✓ Better performance");
+println("  ✓ Easier interpretation");

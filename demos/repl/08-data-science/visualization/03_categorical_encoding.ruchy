@@ -1,0 +1,179 @@
+// Visualization Prep Demo 3: Categorical Data Encoding
+// Concepts: Label encoding, one-hot encoding, ordinal encoding
+// Use cases: ML prep, chart colors, categorical plotting
+
+println("=== Categorical Data Encoding for Visualization ===\n");
+
+// 1. Label Encoding - String to Number
+println("1. LABEL ENCODING: Categories → Numbers");
+
+let sizes = ["Small", "Medium", "Large", "Small", "Large", "Medium"];
+println(f"\nOriginal: {sizes:?}");
+
+// Create encoding map
+let size_map = {"Small": 0, "Medium": 1, "Large": 2};
+
+let mut encoded = [];
+for size in sizes {
+    encoded.push(size_map[size]);
+}
+
+println(f"Encoded: {encoded:?}");
+println("\nMapping: Small=0, Medium=1, Large=2");
+println("✓ Useful for: Ordinal categories, color mapping");
+
+// 2. Ordinal Encoding - Ranked categories
+println("\n2. ORDINAL ENCODING: Preserving Order");
+
+let ratings = ["Poor", "Good", "Excellent", "Poor", "Good"];
+println(f"\nRatings: {ratings:?}");
+
+let rating_map = {"Poor": 1, "Good": 2, "Excellent": 3};
+let mut rating_values = [];
+
+for rating in ratings {
+    rating_values.push(rating_map[rating]);
+}
+
+println(f"Encoded: {rating_values:?}");
+println("\n1=Poor < 2=Good < 3=Excellent");
+println("✓ Maintains: Natural ordering");
+
+// 3. Color Mapping for Categories
+println("\n3. COLOR MAPPING: Categories → Colors");
+
+let categories = ["A", "B", "C", "A", "B"];
+println(f"\nCategories: {categories:?}");
+
+let color_map = {"A": "red", "B": "blue", "C": "green"};
+
+println("\n🎨 Color assignments:");
+for cat in categories {
+    let color = color_map[cat];
+    println(f"  Category {cat} → {color}");
+}
+
+println("\n✓ Use for: Scatter plots, bar charts");
+
+// 4. Binning Continuous → Categorical
+println("\n4. BINNING: Continuous → Categorical");
+
+let ages = [22, 35, 45, 28, 52, 38, 61, 29];
+println(f"\nAges: {ages:?}");
+
+let mut age_groups = [];
+for age in ages {
+    if age < 30 {
+        age_groups.push("Young");
+    } else if age < 50 {
+        age_groups.push("Middle");
+    } else {
+        age_groups.push("Senior");
+    }
+}
+
+println(f"Age groups: {age_groups:?}");
+println("\nBins: Young(<30), Middle(30-49), Senior(50+)");
+println("✓ Simplifies: Continuous data for categorical plots");
+
+// 5. Frequency Encoding
+println("\n5. FREQUENCY ENCODING: Based on occurrence");
+
+let products = ["A", "B", "A", "C", "A", "B"];
+println(f"\nProducts: {products:?}");
+
+// Count frequencies
+let mut freq_a = 0;
+let mut freq_b = 0;
+let mut freq_c = 0;
+
+for p in products {
+    if p == "A" { freq_a = freq_a + 1; }
+    else if p == "B" { freq_b = freq_b + 1; }
+    else if p == "C" { freq_c = freq_c + 1; }
+}
+
+let freq_map = {"A": freq_a, "B": freq_b, "C": freq_c};
+
+println("\n📊 Frequencies:");
+println(f"  A: {freq_a} times");
+println(f"  B: {freq_b} times");
+println(f"  C: {freq_c} times");
+
+let mut freq_encoded = [];
+for p in products {
+    freq_encoded.push(freq_map[p]);
+}
+
+println(f"\nFrequency encoded: {freq_encoded:?}");
+println("✓ Captures: Importance by frequency");
+
+// 6. Target Encoding (for visualization grouping)
+println("\n6. TARGET ENCODING: Category → Mean target");
+
+let sales_data = [
+    {region: "North", sales: 100},
+    {region: "South", sales: 150},
+    {region: "North", sales: 120},
+    {region: "South", sales: 140},
+    {region: "North", sales: 110}
+];
+
+// Calculate mean sales by region
+let mut north_sum = 0;
+let mut north_count = 0;
+let mut south_sum = 0;
+let mut south_count = 0;
+
+for sale in sales_data {
+    if sale.region == "North" {
+        north_sum = north_sum + sale.sales;
+        north_count = north_count + 1;
+    } else {
+        south_sum = south_sum + sale.sales;
+        south_count = south_count + 1;
+    }
+}
+
+let north_avg = north_sum / north_count;
+let south_avg = south_sum / south_count;
+
+println("\n📈 Regional averages:");
+println(f"  North: ${north_avg}");
+println(f"  South: ${south_avg}");
+
+println("\nTarget encoded values:");
+let target_map = {"North": north_avg, "South": south_avg};
+for sale in sales_data {
+    println(f"  {sale.region} → {target_map[sale.region]}");
+}
+
+// 7. Sorting for Better Visualization
+println("\n7. CATEGORY SORTING: Order by value");
+
+let category_sales = [
+    {name: "B", revenue: 150},
+    {name: "A", revenue: 200},
+    {name: "C", revenue: 80}
+];
+
+println("\nOriginal order:");
+for item in category_sales {
+    println(f"  {item.name}: ${item.revenue}");
+}
+
+println("\n✓ Better: Sort by revenue for clearer chart");
+println("Visualization tip: Descending order highlights top performers");
+
+println("\n✅ Categorical Encoding Complete!");
+println("\n📚 Encoding methods:");
+println("  • Label: String → Number");
+println("  • Ordinal: Preserves order");
+println("  • Color mapping: Visual distinction");
+println("  • Binning: Continuous → Categories");
+println("  • Frequency: Encode by occurrence");
+println("\n🎯 Visualization uses:");
+println("  ✓ Color assignment");
+println("  ✓ Axis ordering");
+println("  ✓ Size mapping");
+println("  ✓ Grouping logic");
