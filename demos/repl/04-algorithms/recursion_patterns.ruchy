@@ -1,0 +1,91 @@
+// Algorithms: Recursion Patterns
+// Verified features: recursive functions, base cases, accumulation
+
+println("=== Recursion Patterns ===\n");
+
+println("1. Factorial:");
+fn factorial(n) {
+    if n <= 1 {
+        1
+    } else {
+        n * factorial(n - 1)
+    }
+}
+
+println(f"5! = {factorial(5)}");
+println(f"7! = {factorial(7)}");
+println(f"10! = {factorial(10)}");
+
+println("\n2. Fibonacci:");
+fn fibonacci(n) {
+    if n <= 1 {
+        n
+    } else {
+        fibonacci(n - 1) + fibonacci(n - 2)
+    }
+}
+
+println("Fibonacci sequence:");
+println(f"  fib(0) = {fibonacci(0)}");
+println(f"  fib(1) = {fibonacci(1)}");
+println(f"  fib(5) = {fibonacci(5)}");
+println(f"  fib(10) = {fibonacci(10)}");
+
+println("\n3. Sum of Array:");
+fn sum_recursive(arr, index) {
+    if index >= arr.len() {
+        0
+    } else {
+        arr[index] + sum_recursive(arr, index + 1)
+    }
+}
+
+let numbers = [1, 2, 3, 4, 5];
+println(f"Array: {numbers:?}");
+println(f"Sum: {sum_recursive(numbers, 0)}");
+
+println("\n4. Power Function:");
+fn power(base, exp) {
+    if exp == 0 {
+        1
+    } else {
+        base * power(base, exp - 1)
+    }
+}
+
+println(f"2^5 = {power(2, 5)}");
+println(f"3^4 = {power(3, 4)}");
+println(f"5^3 = {power(5, 3)}");
+
+println("\n5. Countdown:");
+fn countdown(n) {
+    if n <= 0 {
+        println("  Blastoff!");
+    } else {
+        println(f"  {n}...");
+        countdown(n - 1);
+    }
+}
+
+println("Countdown from 5:");
+countdown(5);
+
+println("\n6. Greatest Common Divisor (GCD):");
+fn gcd(a, b) {
+    if b == 0 {
+        a
+    } else {
+        gcd(b, a % b)
+    }
+}
+
+println(f"gcd(48, 18) = {gcd(48, 18)}");
+println(f"gcd(100, 35) = {gcd(100, 35)}");
+
+println("\n7. Recursion Tips:");
+println("  • Always have a base case");
+println("  • Make progress toward base case");
+println("  • Each call should simplify the problem");
+println("  • Be mindful of stack depth");
+
+println("\n✅ Recursion Patterns Complete!");

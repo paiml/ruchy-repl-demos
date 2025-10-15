@@ -1,0 +1,158 @@
+// Algorithms: Mathematical Algorithms
+// Verified features: math operations, loops, recursion
+
+println("=== Mathematical Algorithms ===\n");
+
+println("1. Prime Number Check:");
+fn is_prime(n) {
+    if n <= 1 {
+        return false;
+    }
+    if n == 2 {
+        return true;
+    }
+    let mut i = 2;
+    while i * i <= n {
+        if n % i == 0 {
+            return false;
+        }
+        i = i + 1;
+    }
+    true
+}
+
+println("Prime checks:");
+println(f"  is_prime(2) = {is_prime(2)}");
+println(f"  is_prime(7) = {is_prime(7)}");
+println(f"  is_prime(10) = {is_prime(10)}");
+println(f"  is_prime(17) = {is_prime(17)}");
+
+println("\n2. Greatest Common Divisor:");
+fn gcd(a, b) {
+    if b == 0 {
+        a
+    } else {
+        gcd(b, a % b)
+    }
+}
+
+println(f"gcd(48, 18) = {gcd(48, 18)}");
+println(f"gcd(100, 35) = {gcd(100, 35)}");
+println(f"gcd(54, 24) = {gcd(54, 24)}");
+
+println("\n3. Least Common Multiple:");
+fn lcm(a, b) {
+    (a * b) / gcd(a, b)
+}
+
+println(f"lcm(12, 18) = {lcm(12, 18)}");
+println(f"lcm(15, 25) = {lcm(15, 25)}");
+
+println("\n4. Factorial:");
+fn factorial(n) {
+    if n <= 1 {
+        1
+    } else {
+        n * factorial(n - 1)
+    }
+}
+
+println("Factorials:");
+println(f"  5! = {factorial(5)}");
+println(f"  7! = {factorial(7)}");
+println(f"  10! = {factorial(10)}");
+
+println("\n5. Power Function:");
+fn power(base, exp) {
+    if exp == 0 {
+        1
+    } else if exp == 1 {
+        base
+    } else {
+        base * power(base, exp - 1)
+    }
+}
+
+println("Powers:");
+println(f"  2^8 = {power(2, 8)}");
+println(f"  3^5 = {power(3, 5)}");
+println(f"  5^3 = {power(5, 3)}");
+
+println("\n6. Sum of Range:");
+fn sum_range(start, end) {
+    if start > end {
+        0
+    } else {
+        let mut sum = 0;
+        let mut i = start;
+        while i <= end {
+            sum = sum + i;
+            i = i + 1;
+        }
+        sum
+    }
+}
+
+println(f"sum(1 to 10) = {sum_range(1, 10)}");
+println(f"sum(1 to 100) = {sum_range(1, 100)}");
+
+println("\n7. Fibonacci Numbers:");
+fn fibonacci(n) {
+    if n <= 1 {
+        n
+    } else {
+        fibonacci(n - 1) + fibonacci(n - 2)
+    }
+}
+
+println("Fibonacci sequence:");
+let mut i = 0;
+while i <= 10 {
+    println(f"  fib({i}) = {fibonacci(i)}");
+    i = i + 1;
+}
+
+println("\n8. Perfect Square Check:");
+fn is_perfect_square(n) {
+    let mut i = 1;
+    while i * i <= n {
+        if i * i == n {
+            return true;
+        }
+        i = i + 1;
+    }
+    false
+}
+
+println("Perfect square checks:");
+println(f"  16: {is_perfect_square(16)}");
+println(f"  25: {is_perfect_square(25)}");
+println(f"  30: {is_perfect_square(30)}");
+println(f"  64: {is_perfect_square(64)}");
+
+println("\n9. Digit Sum:");
+fn sum_digits(n) {
+    let mut sum = 0;
+    let mut num = n;
+    while num > 0 {
+        sum = sum + (num % 10);
+        num = num / 10;
+    }
+    sum
+}
+
+println("Sum of digits:");
+println(f"  123 -> {sum_digits(123)}");
+println(f"  456 -> {sum_digits(456)}");
+println(f"  9876 -> {sum_digits(9876)}");
+
+println("\n10. Absolute Value:");
+fn abs(n) {
+    if n < 0 { -n } else { n }
+}
+
+println(f"abs(-5) = {abs(-5)}");
+println(f"abs(5) = {abs(5)}");
+println(f"abs(-42) = {abs(-42)}");
+
+println("\n✅ Mathematical Algorithms Complete!");

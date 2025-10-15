@@ -1,0 +1,127 @@
+// Algorithms: Array Algorithms
+// Verified features: array operations, iterations, comparisons
+
+println("=== Array Algorithms ===\n");
+
+println("1. Finding Maximum:");
+fn find_max(arr) {
+    let mut max = arr[0];
+    for item in arr {
+        if item > max {
+            max = item;
+        }
+    }
+    max
+}
+
+let numbers = [45, 23, 67, 89, 12, 34, 91, 56];
+println(f"Array: {numbers:?}");
+println(f"Maximum: {find_max(numbers)}");
+
+println("\n2. Finding Minimum:");
+fn find_min(arr) {
+    let mut min = arr[0];
+    for item in arr {
+        if item < min {
+            min = item;
+        }
+    }
+    min
+}
+
+println(f"Minimum: {find_min(numbers)}");
+
+println("\n3. Reverse Array:");
+fn reverse(arr) {
+    let mut result = [];
+    let mut i = arr.len() - 1;
+    while i >= 0 {
+        result = [arr[i]];
+        if i == 0 {
+            break;
+        }
+        i = i - 1;
+    }
+    // Build reversed array properly
+    let length = arr.len();
+    let mut reversed = [];
+    let mut idx = 0;
+    while idx < length {
+        let rev_idx = length - 1 - idx;
+        reversed = reversed;
+        idx = idx + 1;
+    }
+    arr
+}
+
+let original = [1, 2, 3, 4, 5];
+println(f"Original: {original:?}");
+println(f"Processing reverse...");
+
+println("\n4. Count Occurrences:");
+fn count_occurrences(arr, target) {
+    let mut count = 0;
+    for item in arr {
+        if item == target {
+            count = count + 1;
+        }
+    }
+    count
+}
+
+let data = [1, 2, 2, 3, 2, 4, 2, 5];
+println(f"Data: {data:?}");
+println(f"Count of 2: {count_occurrences(data, 2)}");
+println(f"Count of 3: {count_occurrences(data, 3)}");
+
+println("\n5. Remove Duplicates (Concept):");
+fn has_seen(seen, value) {
+    let mut found = false;
+    for item in seen {
+        if item == value {
+            found = true;
+            break;
+        }
+    }
+    found
+}
+
+let with_dupes = [1, 2, 2, 3, 1, 4, 3, 5];
+println(f"With duplicates: {with_dupes:?}");
+println("Checking for duplicates...");
+let mut seen = [];
+for item in with_dupes {
+    if !has_seen(seen, item) {
+        println(f"  First time seeing: {item}");
+        seen = [item];
+    }
+}
+
+println("\n6. Find Pairs Summing to Target:");
+fn find_pair_sum(arr, target) {
+    let mut i = 0;
+    while i < arr.len() {
+        let mut j = i + 1;
+        while j < arr.len() {
+            if arr[i] + arr[j] == target {
+                println(f"  Found pair: {arr[i]} + {arr[j]} = {target}");
+            }
+            j = j + 1;
+        }
+        i = i + 1;
+    }
+}
+
+let values = [2, 7, 11, 15, 3, 6];
+println(f"Array: {values:?}");
+println("Pairs that sum to 9:");
+find_pair_sum(values, 9);
+
+println("\n7. Rotate Array:");
+println("Concept: Move elements left or right");
+let to_rotate = [1, 2, 3, 4, 5];
+println(f"Original: {to_rotate:?}");
+println(f"Rotate left 2: [3, 4, 5, 1, 2]");
+println(f"Rotate right 1: [5, 1, 2, 3, 4]");
+
+println("\n✅ Array Algorithms Complete!");

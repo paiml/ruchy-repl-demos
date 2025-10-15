@@ -1,0 +1,87 @@
+// Algorithms: Binary Search
+// Verified features: recursion, array indexing, comparisons
+
+println("=== Binary Search ===\n");
+
+println("1. Linear Search (Baseline):");
+fn linear_search(arr, target) {
+    let mut index = 0;
+    let mut found = false;
+    for item in arr {
+        if item == target {
+            found = true;
+            break;
+        }
+        index = index + 1;
+    }
+    if found { index } else { -1 }
+}
+
+let numbers = [2, 5, 8, 12, 16, 23, 38, 45, 56, 67, 78];
+println(f"Array: {numbers:?}");
+println(f"Search for 23: index {linear_search(numbers, 23)}");
+println(f"Search for 99: index {linear_search(numbers, 99)}");
+
+println("\n2. Binary Search (Iterative):");
+fn binary_search(arr, target) {
+    let mut low = 0;
+    let mut high = arr.len() - 1;
+
+    while low <= high {
+        let mid = (low + high) / 2;
+        let mid_val = arr[mid];
+
+        if mid_val == target {
+            return mid;
+        }
+        if mid_val < target {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    -1
+}
+
+let sorted = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+println(f"Sorted array: {sorted:?}");
+println(f"Binary search for 50: index {binary_search(sorted, 50)}");
+println(f"Binary search for 90: index {binary_search(sorted, 90)}");
+println(f"Binary search for 35: index {binary_search(sorted, 35)}");
+
+println("\n3. Finding Boundaries:");
+fn find_first_occurrence(arr, target) {
+    let mut result = -1;
+    let mut low = 0;
+    let mut high = arr.len() - 1;
+
+    while low <= high {
+        let mid = (low + high) / 2;
+        if arr[mid] == target {
+            result = mid;
+            high = mid - 1;
+        } else if arr[mid] < target {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    result
+}
+
+let duplicates = [1, 2, 2, 2, 3, 4, 5, 5, 5, 6];
+println(f"Array with duplicates: {duplicates:?}");
+println(f"First occurrence of 2: index {find_first_occurrence(duplicates, 2)}");
+println(f"First occurrence of 5: index {find_first_occurrence(duplicates, 5)}");
+
+println("\n4. Complexity Analysis:");
+println("Linear Search: O(n) - checks every element");
+println("Binary Search: O(log n) - halves search space");
+let size = 1000;
+let linear_ops = size;
+let binary_ops = 10;
+println(f"For {size} elements:");
+println(f"  Linear: ~{linear_ops} operations");
+println(f"  Binary: ~{binary_ops} operations");
+
+println("\n✅ Binary Search Complete!");
