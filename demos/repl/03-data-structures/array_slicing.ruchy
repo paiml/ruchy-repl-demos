@@ -1,0 +1,30 @@
+// Data Structures: Array Slicing and Manipulation
+// Verified features: array methods, indexing, transformations
+
+println("=== Array Slicing and Manipulation ===\n");
+
+println("1. Array Creation:");
+let numbers = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+println(f"Original: {numbers:?}");
+println(f"Length: {numbers.len()}");
+
+println("\n2. Accessing Elements:");
+println(f"First: {numbers[0]}");
+println(f"Third: {numbers[2]}");
+println(f"Last: {numbers[numbers.len() - 1]}");
+
+println("\n3. Array Methods:");
+let sum = numbers.sum();
+println(f"Sum: {sum}");
+
+let doubled = numbers.map(|x| x * 2);
+println(f"Doubled: {doubled:?}");
+
+let large = numbers.filter(|x| x > 50);
+println(f"Greater than 50: {large:?}");
+
+println("\n4. Building New Arrays:");
+let first_five = [numbers[0], numbers[1], numbers[2], numbers[3], numbers[4]];
+println(f"First five: {first_five:?}");
+
+println("\n✅ Array Slicing Complete!");

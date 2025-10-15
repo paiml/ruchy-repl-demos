@@ -1,0 +1,40 @@
+// Functional Programming: Filter Operations
+// Verified features: .filter() method, predicates, selection
+
+println("=== Filter Operations ===\n");
+
+println("1. Basic Filtering:");
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+println(f"All numbers: {numbers:?}");
+
+let evens = numbers.filter(|x| x % 2 == 0);
+println(f"Even numbers: {evens:?}");
+
+let odds = numbers.filter(|x| x % 2 == 1);
+println(f"Odd numbers: {odds:?}");
+
+println("\n2. Threshold Filtering:");
+let scores = [45, 67, 89, 72, 91, 55, 38, 82];
+println(f"All scores: {scores:?}");
+
+let passing = scores.filter(|s| s >= 60);
+println(f"Passing (≥60): {passing:?}");
+
+let excellent = scores.filter(|s| s >= 90);
+println(f"Excellent (≥90): {excellent:?}");
+
+println("\n3. Range Filtering:");
+let temps = [15, 22, 28, 35, 42, 18, 25];
+println(f"Temperatures: {temps:?}");
+
+let comfortable = temps.filter(|t| t >= 20 && t <= 30);
+println(f"Comfortable (20-30): {comfortable:?}");
+
+println("\n4. Combined Filters:");
+let values = [5, 12, 18, 23, 7, 31, 14];
+let filtered = values
+    .filter(|x| x > 10)
+    .filter(|x| x < 25);
+println(f"Between 10 and 25: {filtered:?}");
+
+println("\n✅ Filter Operations Complete!");

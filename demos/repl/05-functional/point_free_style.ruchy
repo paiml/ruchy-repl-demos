@@ -1,0 +1,70 @@
+// Functional Programming: Point-Free Style Concepts
+// Verified features: passing functions directly, avoiding intermediate variables
+
+println("=== Point-Free Style Concepts ===\n");
+
+println("1. Function References:");
+fn double(x) {
+    x * 2
+}
+fn square(x) {
+    x * x
+}
+
+let numbers = [1, 2, 3, 4, 5];
+println(f"Numbers: {numbers:?}");
+
+let doubled = numbers.map(double);
+println(f"Doubled: {doubled:?}");
+
+let squared = numbers.map(square);
+println(f"Squared: {squared:?}");
+
+println("\n2. Direct Closure Passing:");
+let data = [10, 15, 20, 25, 30];
+let result = data.map(|x| x / 5);
+println(f"Divided by 5: {result:?}");
+
+println("\n3. Composing Operations:");
+fn increment(x) {
+    x + 1
+}
+fn triple(x) {
+    x * 3
+}
+
+let values = [1, 2, 3];
+let transformed = values
+    .map(increment)
+    .map(triple);
+println(f"Increment then triple: {transformed:?}");
+
+println("\n4. Predicate Functions:");
+fn is_positive(x) {
+    x > 0
+}
+fn is_even(x) {
+    x % 2 == 0
+}
+
+let mixed = [-2, -1, 0, 1, 2, 3, 4];
+let positives = mixed.filter(is_positive);
+let evens = mixed.filter(is_even);
+println(f"Positives: {positives:?}");
+println(f"Evens: {evens:?}");
+
+println("\n5. Chaining with Named Functions:");
+fn is_large(x) {
+    x > 50
+}
+fn add_bonus(x) {
+    x + 10
+}
+
+let scores = [45, 67, 82, 55, 91];
+let adjusted = scores
+    .filter(is_large)
+    .map(add_bonus);
+println(f"Large scores with bonus: {adjusted:?}");
+
+println("\n✅ Point-Free Style Complete!");

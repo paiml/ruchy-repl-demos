@@ -1,0 +1,52 @@
+// Functional Programming: Function Chaining
+// Verified features: method chaining, pipeline patterns
+
+println("=== Function Chaining ===\n");
+
+println("1. Map Chain:");
+let numbers = [1, 2, 3, 4, 5];
+println(f"Start: {numbers:?}");
+
+let result = numbers
+    .map(|x| x + 1)
+    .map(|x| x * 2);
+println(f"After +1, ×2: {result:?}");
+
+println("\n2. Filter Chain:");
+let all_nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+println(f"All: {all_nums:?}");
+
+let filtered = all_nums
+    .filter(|x| x > 3)
+    .filter(|x| x < 8);
+println(f"Between 3 and 8: {filtered:?}");
+
+println("\n3. Map-Filter Chain:");
+let data = [1, 2, 3, 4, 5];
+println(f"Data: {data:?}");
+
+let processed = data
+    .map(|x| x * 2)
+    .filter(|x| x > 5);
+println(f"Double, then >5: {processed:?}");
+
+println("\n4. Filter-Map Chain:");
+let values = [10, 15, 20, 25, 30];
+println(f"Values: {values:?}");
+
+let transformed = values
+    .filter(|x| x > 15)
+    .map(|x| x / 5);
+println(f"Filter >15, then ÷5: {transformed:?}");
+
+println("\n5. Complex Chain:");
+let scores = [45, 67, 89, 72, 55, 91];
+println(f"Scores: {scores:?}");
+
+let adjusted = scores
+    .filter(|s| s >= 60)
+    .map(|s| s + 5)
+    .map(|s| if s > 100 { 100 } else { s });
+println(f"Passing + 5 bonus (capped 100): {adjusted:?}");
+
+println("\n✅ Function Chaining Complete!");

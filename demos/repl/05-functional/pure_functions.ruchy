@@ -1,0 +1,61 @@
+// Functional Programming: Pure Functions
+// Verified features: deterministic functions, no side effects
+
+println("=== Pure Functions ===\n");
+
+println("1. Pure Mathematical Functions:");
+fn add(a, b) {
+    a + b
+}
+fn multiply(a, b) {
+    a * b
+}
+println(f"add(3, 5) = {add(3, 5)}");
+println(f"multiply(4, 7) = {multiply(4, 7)}");
+
+println("\n2. Pure String Functions:");
+fn greet(name) {
+    f"Hello, {name}!"
+}
+fn shout(text) {
+    text.to_uppercase()
+}
+println(greet("Alice"));
+println(shout("hello"));
+
+println("\n3. Pure Array Functions:");
+fn double_all(arr) {
+    arr.map(|x| x * 2)
+}
+fn sum_array(arr) {
+    let mut total = 0;
+    for n in arr {
+        total = total + n;
+    }
+    total
+}
+let numbers = [1, 2, 3];
+println(f"double_all([1,2,3]) = {double_all(numbers):?}");
+println(f"sum_array([1,2,3]) = {sum_array(numbers)}");
+
+println("\n4. Pure Computation:");
+fn calculate_discount(price, percent) {
+    price * (100 - percent) / 100
+}
+fn calculate_tax(price, rate) {
+    price * (100 + rate) / 100
+}
+let price = 100;
+let discounted = calculate_discount(price, 20);
+let with_tax = calculate_tax(discounted, 8);
+println(f"$100 - 20% discount = ${discounted}");
+println(f"${discounted} + 8% tax = ${with_tax}");
+
+println("\n5. Pure Transformation:");
+fn normalize(value, min, max) {
+    (value - min) / (max - min)
+}
+println(f"normalize(5, 0, 10) = {normalize(5, 0, 10)}");
+println(f"normalize(75, 0, 100) = {normalize(75, 0, 100)}");
+
+println("\n✅ Pure Functions Complete!");

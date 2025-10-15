@@ -1,0 +1,64 @@
+// Functional Programming: Reduce Patterns
+// Verified features: aggregation with loops, accumulation patterns
+
+println("=== Reduce Patterns ===\n");
+
+println("1. Sum with Loop:");
+let numbers = [1, 2, 3, 4, 5];
+println(f"Numbers: {numbers:?}");
+
+let mut sum = 0;
+for n in numbers {
+    sum = sum + n;
+}
+println(f"Sum: {sum}");
+
+println("\n2. Product:");
+let values = [2, 3, 4];
+println(f"Values: {values:?}");
+
+let mut product = 1;
+for v in values {
+    product = product * v;
+}
+println(f"Product: {product}");
+
+println("\n3. Maximum:");
+let temps = [72, 68, 75, 71, 79, 73];
+println(f"Temperatures: {temps:?}");
+
+let mut max = temps[0];
+for t in temps {
+    if t > max {
+        max = t;
+    }
+}
+println(f"Maximum: {max}");
+
+println("\n4. Count Matching:");
+let scores = [45, 67, 89, 72, 91, 55];
+println(f"Scores: {scores:?}");
+
+let mut passing_count = 0;
+for s in scores {
+    if s >= 60 {
+        passing_count = passing_count + 1;
+    }
+}
+println(f"Passing scores: {passing_count}");
+
+println("\n5. String Concatenation:");
+let words = ["Hello", "Functional", "World"];
+println(f"Words: {words:?}");
+
+let mut sentence = "";
+for word in words {
+    if sentence == "" {
+        sentence = word;
+    } else {
+        sentence = f"{sentence} {word}";
+    }
+}
+println(f"Sentence: {sentence}");
+
+println("\n✅ Reduce Patterns Complete!");

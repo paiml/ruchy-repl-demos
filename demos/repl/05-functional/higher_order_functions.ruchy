@@ -1,0 +1,59 @@
+// Functional Programming: Higher-Order Functions
+// Verified features: functions as parameters, closures
+
+println("=== Higher-Order Functions ===\n");
+
+println("1. Function Taking Function:");
+fn apply_twice(f, x) {
+    f(f(x))
+}
+
+let add_one = |n| n + 1;
+let result = apply_twice(add_one, 5);
+println(f"apply_twice(+1, 5) = {result}");
+
+let double = |n| n * 2;
+let doubled_twice = apply_twice(double, 3);
+println(f"apply_twice(×2, 3) = {doubled_twice}");
+
+println("\n2. Function Returning Function:");
+fn make_adder(n) {
+    |x| x + n
+}
+
+let add_five = make_adder(5);
+println(f"add_five(10) = {add_five(10)}");
+
+let add_ten = make_adder(10);
+println(f"add_ten(10) = {add_ten(10)}");
+
+println("\n3. Array Methods as HOF:");
+let numbers = [1, 2, 3, 4, 5];
+println(f"Numbers: {numbers:?}");
+
+let squared = numbers.map(|x| x * x);
+println(f"Squared: {squared:?}");
+
+let evens = numbers.filter(|x| x % 2 == 0);
+println(f"Evens: {evens:?}");
+
+println("\n4. Custom HOF:");
+fn transform_all(arr, f) {
+    arr.map(f)
+}
+
+let data = [10, 20, 30];
+let doubled = transform_all(data, |x| x * 2);
+println(f"transform_all([10,20,30], ×2) = {doubled:?}");
+
+println("\n5. Composition:");
+fn compose(f, g) {
+    |x| f(g(x))
+}
+
+let add_two = |x| x + 2;
+let times_three = |x| x * 3;
+let combined = compose(times_three, add_two);
+println(f"(×3) ∘ (+2) applied to 5 = {combined(5)}");
+
+println("\n✅ Higher-Order Functions Complete!");

@@ -1,0 +1,64 @@
+// Functional Programming: Function Composition
+// Verified features: combining functions, building complex operations
+
+println("=== Function Composition ===\n");
+
+println("1. Manual Composition:");
+let add_one = |x| x + 1;
+let double = |x| x * 2;
+
+let value = 5;
+let step1 = add_one(value);
+let step2 = double(step1);
+println(f"add_one(5) then double: {step2}");
+
+println("\n2. Nested Composition:");
+let square = |x| x * x;
+let increment = |x| x + 1;
+
+let result = square(increment(3));
+println(f"square(increment(3)) = {result}");
+
+println("\n3. Composing with Helper:");
+fn compose(f, g) {
+    |x| f(g(x))
+}
+
+let add_two = |x| x + 2;
+let times_three = |x| x * 3;
+let combined = compose(times_three, add_two);
+println(f"(×3) after (+2) on 5: {combined(5)}");
+
+println("\n4. Multiple Compositions:");
+let add_ten = |x| x + 10;
+let divide_by_two = |x| x / 2;
+let subtract_five = |x| x - 5;
+
+let input = 20;
+let result = subtract_five(divide_by_two(add_ten(input)));
+println(f"((20 + 10) / 2) - 5 = {result}");
+
+println("\n5. Practical Composition:");
+fn celsius_to_fahrenheit(c) {
+    (c * 9 / 5) + 32
+}
+fn round_temp(t) {
+    t
+}
+
+let temp_c = 25;
+let temp_f = celsius_to_fahrenheit(temp_c);
+println(f"{temp_c}°C = {temp_f}°F");
+
+println("\n6. String Composition:");
+let add_greeting = |name| f"Hello, {name}";
+let add_punctuation = |msg| f"{msg}!";
+let make_upper = |text| text.to_uppercase();
+
+let name = "Alice";
+let step1 = add_greeting(name);
+let step2 = add_punctuation(step1);
+let final = make_upper(step2);
+println(f"Composed result: {final}");
+
+println("\n✅ Function Composition Complete!");

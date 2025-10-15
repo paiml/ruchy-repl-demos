@@ -1,0 +1,36 @@
+// Data Structures: Nested Arrays
+// Verified features: multi-dimensional arrays, nested access
+
+println("=== Nested Arrays ===\n");
+
+println("1. 2D Arrays (Matrix):");
+let matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+println(f"Matrix: {matrix:?}");
+println(f"First row: {matrix[0]:?}");
+println(f"Element at [1][2]: {matrix[1][2]}");
+
+println("\n2. Jagged Arrays:");
+let jagged = [
+    [1],
+    [2, 3],
+    [4, 5, 6]
+];
+println(f"Jagged: {jagged:?}");
+println(f"Row 0 length: {jagged[0].len()}");
+println(f"Row 2 length: {jagged[2].len()}");
+
+println("\n3. Array of Records:");
+let students = [
+    {name: "Alice", grades: [95, 87, 92]},
+    {name: "Bob", grades: [88, 91, 85]},
+    {name: "Carol", grades: [92, 94, 89]}
+];
+println(f"Student 1: {students[0].name}");
+println(f"Alice's grades: {students[0].grades:?}");
+println(f"Bob's first grade: {students[1].grades[0]}");
+
+println("\n✅ Nested Arrays Complete!");

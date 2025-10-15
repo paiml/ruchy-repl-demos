@@ -1,0 +1,92 @@
+// Data Structures: Practical Applications
+// Verified features: real-world data modeling patterns
+
+println("=== Practical Data Structures ===\n");
+
+println("1. User Profile:");
+let profile = {
+    id: 1001,
+    username: "coder_42",
+    display_name: "Alice Coder",
+    email: "alice@dev.com",
+    joined: "2024-01-15",
+    verified: true,
+    posts: 127,
+    followers: 542,
+    following: 89
+};
+
+println(f"Profile: @{profile.username}");
+println(f"Name: {profile.display_name}");
+println(f"Member since: {profile.joined}");
+println(f"Activity: {profile.posts} posts, {profile.followers} followers");
+
+println("\n2. Shopping Cart:");
+let cart = {
+    customer_id: 7890,
+    items: [
+        {name: "Book", price: 29.99, qty: 2},
+        {name: "Pen", price: 4.99, qty: 5},
+        {name: "Notebook", price: 12.99, qty: 3}
+    ],
+    coupon: "SAVE10",
+    discount_percent: 10
+};
+
+println("Shopping Cart:");
+let mut subtotal = 0;
+for item in cart.items {
+    let line_total = item.price * item.qty;
+    subtotal = subtotal + line_total;
+    println(f"  {item.name}: {item.qty} × ${item.price} = ${line_total}");
+}
+
+let discount = subtotal * cart.discount_percent / 100;
+let total = subtotal - discount;
+println(f"\nSubtotal: ${subtotal}");
+println(f"Discount ({cart.discount_percent}%): -${discount}");
+println(f"Total: ${total}");
+
+println("\n3. Analytics Dashboard:");
+let stats = {
+    period: "March 2024",
+    metrics: {
+        page_views: 15420,
+        unique_visitors: 3241,
+        bounce_rate: 42,
+        avg_session: 245
+    },
+    top_pages: [
+        {url: "/home", views: 5234},
+        {url: "/products", views: 3891},
+        {url: "/about", views: 2103}
+    ]
+};
+
+println(f"Analytics for {stats.period}:");
+println(f"  Page Views: {stats.metrics.page_views}");
+println(f"  Unique Visitors: {stats.metrics.unique_visitors}");
+println(f"  Bounce Rate: {stats.metrics.bounce_rate}%");
+println(f"  Avg Session: {stats.metrics.avg_session}s");
+println("\nTop Pages:");
+for page in stats.top_pages {
+    println(f"  {page.url}: {page.views} views");
+}
+
+println("\n4. Event Schedule:");
+let schedule = [
+    {time: "09:00", event: "Team Standup", duration: 15},
+    {time: "10:00", event: "Code Review", duration: 60},
+    {time: "14:00", event: "Client Meeting", duration: 45},
+    {time: "16:00", event: "Sprint Planning", duration: 90}
+];
+
+println("Today's Schedule:");
+let mut total_minutes = 0;
+for item in schedule {
+    total_minutes = total_minutes + item.duration;
+    println(f"  {item.time} - {item.event} ({item.duration} min)");
+}
+println(f"\nTotal meeting time: {total_minutes} minutes ({total_minutes / 60}h {total_minutes % 60}m)");
+
+println("\n✅ Practical Data Structures Complete!");

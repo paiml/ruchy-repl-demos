@@ -1,0 +1,55 @@
+// Functional Programming: Advanced Closures
+// Verified features: closure capture, factory functions
+
+println("=== Advanced Closures ===\n");
+
+println("1. Capturing Variables:");
+let multiplier = 10;
+let scale = |x| x * multiplier;
+println(f"scale(5) with multiplier={multiplier}: {scale(5)}");
+
+let offset = 100;
+let shift = |x| x + offset;
+println(f"shift(25) with offset={offset}: {shift(25)}");
+
+println("\n2. Closure Factories:");
+fn make_multiplier(factor) {
+    |x| x * factor
+}
+
+let times_two = make_multiplier(2);
+let times_five = make_multiplier(5);
+println(f"times_two(7) = {times_two(7)}");
+println(f"times_five(7) = {times_five(7)}");
+
+println("\n3. Closure with Multiple Captures:");
+fn make_range_checker(min, max) {
+    |value| value >= min && value <= max
+}
+
+let is_valid_age = make_range_checker(18, 65);
+println(f"is_valid_age(25) = {is_valid_age(25)}");
+println(f"is_valid_age(70) = {is_valid_age(70)}");
+
+println("\n4. Closure Composition:");
+let add_ten = |x| x + 10;
+let double = |x| x * 2;
+
+let value = 5;
+let result = double(add_ten(value));
+println(f"double(add_ten(5)) = {result}");
+
+println("\n5. Closures in Arrays:");
+let operations = [
+    |x| x + 1,
+    |x| x * 2,
+    |x| x * x
+];
+
+let input = 5;
+println(f"Input: {input}");
+println(f"  +1: {operations[0](input)}");
+println(f"  ×2: {operations[1](input)}");
+println(f"  ²: {operations[2](input)}");
+
+println("\n✅ Advanced Closures Complete!");

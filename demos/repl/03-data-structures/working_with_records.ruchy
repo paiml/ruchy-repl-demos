@@ -1,0 +1,69 @@
+// Data Structures: Working with Records
+// Verified features: record literals, field access, practical patterns
+
+println("=== Working with Records ===\n");
+
+println("1. Creating Records:");
+let user = {
+    username: "alice123",
+    email: "alice@example.com",
+    active: true,
+    login_count: 42
+};
+println(f"User: {user.username}");
+println(f"Email: {user.email}");
+println(f"Active: {user.active}");
+
+println("\n2. Record with Calculations:");
+let rectangle = {
+    width: 10,
+    height: 5
+};
+let area = rectangle.width * rectangle.height;
+let perimeter = 2 * (rectangle.width + rectangle.height);
+println(f"Rectangle: {rectangle.width}x{rectangle.height}");
+println(f"Area: {area}");
+println(f"Perimeter: {perimeter}");
+
+println("\n3. Multi-Level Records:");
+let order = {
+    id: 12345,
+    customer: {
+        name: "Bob Smith",
+        email: "bob@example.com"
+    },
+    items: [
+        {product: "Widget", quantity: 2, price: 9.99},
+        {product: "Gadget", quantity: 1, price: 19.99}
+    ],
+    status: "processing"
+};
+
+println(f"Order #{order.id}");
+println(f"Customer: {order.customer.name}");
+println(f"Items: {order.items.len()}");
+println(f"Status: {order.status}");
+
+// Calculate total
+let mut total = 0;
+for item in order.items {
+    let item_total = item.quantity * item.price;
+    total = total + item_total;
+    println(f"  {item.product}: {item.quantity} × ${item.price} = ${item_total}");
+}
+println(f"Total: ${total}");
+
+println("\n4. Array of Records:");
+let inventory = [
+    {sku: "A101", name: "Widget", price: 9.99, stock: 100},
+    {sku: "B202", name: "Gadget", price: 19.99, stock: 50},
+    {sku: "C303", name: "Doohickey", price: 14.99, stock: 75}
+];
+
+println("\nInventory Report:");
+for item in inventory {
+    let value = item.price * item.stock;
+    println(f"  {item.sku}: {item.name} (Stock: {item.stock}, Value: ${value})");
+}
+
+println("\n✅ Working with Records Complete!");

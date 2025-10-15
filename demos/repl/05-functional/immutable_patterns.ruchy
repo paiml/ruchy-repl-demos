@@ -1,0 +1,59 @@
+// Functional Programming: Immutable Patterns
+// Verified features: creating new values, avoiding mutation
+
+println("=== Immutable Patterns ===\n");
+
+println("1. Transforming Arrays:");
+let original = [1, 2, 3, 4, 5];
+println(f"Original: {original:?}");
+
+let doubled = original.map(|x| x * 2);
+println(f"Doubled: {doubled:?}");
+println(f"Original unchanged: {original:?}");
+
+println("\n2. Filtering Creates New Array:");
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+println(f"Numbers: {numbers:?}");
+
+let evens = numbers.filter(|x| x % 2 == 0);
+println(f"Evens: {evens:?}");
+println(f"Original unchanged: {numbers:?}");
+
+println("\n3. Building New Records:");
+let person = {name: "Alice", age: 30};
+println(f"Original: {person.name}, age {person.age}");
+
+let updated = {name: person.name, age: person.age + 1};
+println(f"Updated: {updated.name}, age {updated.age}");
+
+println("\n4. Combining Arrays:");
+let arr1 = [1, 2, 3];
+let arr2 = [4, 5, 6];
+println(f"Array 1: {arr1:?}");
+println(f"Array 2: {arr2:?}");
+
+let combined = arr1.map(|x| x);
+println(f"Copy of arr1: {combined:?}");
+
+println("\n5. Transforming Records:");
+let products = [
+    {name: "Widget", price: 10},
+    {name: "Gadget", price: 20},
+    {name: "Doohickey", price: 15}
+];
+
+let with_tax = products.map(|p| {
+    let new_price = p.price * 1.08;
+    {name: p.name, price: new_price}
+});
+
+println("Original prices:");
+for p in products {
+    println(f"  {p.name}: ${p.price}");
+}
+println("\nWith tax:");
+for p in with_tax {
+    println(f"  {p.name}: ${p.price}");
+}
+
+println("\n✅ Immutable Patterns Complete!");

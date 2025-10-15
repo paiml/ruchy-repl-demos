@@ -1,0 +1,55 @@
+// Data Structures: Record Patterns
+// Verified features: record literals, field access, nested records
+
+println("=== Record Patterns ===\n");
+
+println("1. Simple Records:");
+let point = {x: 10, y: 20};
+println(f"Point: ({point.x}, {point.y})");
+
+let color = {r: 255, g: 100, b: 50};
+println(f"RGB: ({color.r}, {color.g}, {color.b})");
+
+println("\n2. Records with Mixed Types:");
+let product = {
+    name: "Laptop",
+    price: 1299.99,
+    in_stock: true,
+    quantity: 15
+};
+println(f"Product: {product.name}");
+println(f"Price: ${product.price}");
+println(f"Available: {product.in_stock}");
+println(f"Quantity: {product.quantity}");
+
+println("\n3. Nested Records:");
+let employee = {
+    name: "Alice Johnson",
+    age: 28,
+    address: {
+        street: "123 Main St",
+        city: "Seattle",
+        zip: "98101"
+    },
+    department: {
+        name: "Engineering",
+        floor: 5
+    }
+};
+println(f"Name: {employee.name}");
+println(f"City: {employee.address.city}");
+println(f"Department: {employee.department.name}, Floor {employee.department.floor}");
+
+println("\n4. Record with Arrays:");
+let course = {
+    title: "Ruchy Programming",
+    instructor: "Dr. Smith",
+    students: ["Alice", "Bob", "Carol", "Dave"],
+    scores: [95, 88, 92, 87]
+};
+println(f"Course: {course.title}");
+println(f"Instructor: {course.instructor}");
+println(f"Students: {course.students.len()} enrolled");
+println(f"Average score: {course.scores.sum() / course.scores.len()}");
+
+println("\n✅ Record Patterns Complete!");

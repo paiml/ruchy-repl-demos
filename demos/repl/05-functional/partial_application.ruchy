@@ -1,0 +1,67 @@
+// Functional Programming: Partial Application Concepts
+// Verified features: creating specialized functions from general ones
+
+println("=== Partial Application Concepts ===\n");
+
+println("1. Creating Specialized Functions:");
+fn make_adder(n) {
+    |x| x + n
+}
+
+let add_five = make_adder(5);
+let add_ten = make_adder(10);
+
+println(f"add_five(7) = {add_five(7)}");
+println(f"add_ten(7) = {add_ten(7)}");
+
+println("\n2. Multiplier Factory:");
+fn make_multiplier(factor) {
+    |x| x * factor
+}
+
+let double = make_multiplier(2);
+let triple = make_multiplier(3);
+let times_ten = make_multiplier(10);
+
+println(f"double(5) = {double(5)}");
+println(f"triple(5) = {triple(5)}");
+println(f"times_ten(5) = {times_ten(5)}");
+
+println("\n3. Range Checker:");
+fn make_range_checker(min, max) {
+    |value| value >= min && value <= max
+}
+
+let is_adult = make_range_checker(18, 120);
+let is_teen = make_range_checker(13, 19);
+
+println(f"is_adult(25) = {is_adult(25)}");
+println(f"is_teen(15) = {is_teen(15)}");
+
+println("\n4. Discount Calculator:");
+fn make_discount(percent) {
+    |price| price * (100 - percent) / 100
+}
+
+let apply_10_percent = make_discount(10);
+let apply_25_percent = make_discount(25);
+
+println(f"10% off $100 = ${apply_10_percent(100)}");
+println(f"25% off $100 = ${apply_25_percent(100)}");
+
+println("\n5. Threshold Filter:");
+fn make_threshold_filter(limit) {
+    |x| x > limit
+}
+
+let above_50 = make_threshold_filter(50);
+let above_75 = make_threshold_filter(75);
+
+let scores = [45, 67, 82, 55, 91];
+let high_scores = scores.filter(above_50);
+let excellent = scores.filter(above_75);
+
+println(f"Above 50: {high_scores:?}");
+println(f"Above 75: {excellent:?}");
+
+println("\n✅ Partial Application Complete!");

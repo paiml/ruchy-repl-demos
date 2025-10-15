@@ -1,0 +1,64 @@
+// Functional Programming: Functional Pipelines
+// Verified features: chaining operations, data flow
+
+println("=== Functional Pipelines ===\n");
+
+println("1. Simple Pipeline:");
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+println(f"Input: {numbers:?}");
+
+let result = numbers
+    .filter(|x| x % 2 == 0)
+    .map(|x| x * x);
+println(f"Even numbers squared: {result:?}");
+
+println("\n2. Multi-Stage Pipeline:");
+let data = [10, 15, 20, 25, 30, 35, 40];
+println(f"Data: {data:?}");
+
+let processed = data
+    .filter(|x| x > 15)
+    .map(|x| x / 5)
+    .filter(|x| x < 8);
+println(f"Filter >15, ÷5, <8: {processed:?}");
+
+println("\n3. Data Transformation Pipeline:");
+let scores = [45, 67, 89, 72, 91, 55, 38, 82];
+println(f"Raw scores: {scores:?}");
+
+let final_scores = scores
+    .filter(|s| s >= 60)
+    .map(|s| s + 5)
+    .map(|s| if s > 100 { 100 } else { s });
+println(f"Passing + bonus (capped): {final_scores:?}");
+
+println("\n4. Record Pipeline:");
+let products = [
+    {name: "Laptop", price: 1200, stock: 5},
+    {name: "Mouse", price: 25, stock: 50},
+    {name: "Monitor", price: 300, stock: 0},
+    {name: "Keyboard", price: 75, stock: 20}
+];
+
+let affordable_available = products
+    .filter(|p| p.stock > 0)
+    .filter(|p| p.price < 100);
+
+println(f"Affordable & available: {affordable_available.len()} items");
+for item in affordable_available {
+    println(f"  {item.name}: ${item.price}");
+}
+
+println("\n5. Aggregation Pipeline:");
+let sales = [100, 150, 120, 180, 90, 200, 110];
+println(f"Sales: {sales:?}");
+
+let strong_sales = sales.filter(|s| s >= 100);
+println(f"Strong sales (≥100): {strong_sales:?}");
+
+let total = strong_sales.sum();
+let count = strong_sales.len();
+let average = total / count;
+println(f"Average of strong sales: ${average}");
+
+println("\n✅ Functional Pipelines Complete!");

@@ -1,0 +1,55 @@
+// Data Structures: Transforming Structures
+// Verified features: map, filter, building new structures
+
+println("=== Transforming Structures ===\n");
+
+println("1. Array to Array:");
+let prices = [10, 20, 30, 40, 50];
+println(f"Prices: {prices:?}");
+
+let with_tax = prices.map(|p| p * 1.08);
+println(f"With 8% tax: {with_tax:?}");
+
+println("\n2. Filtering Records:");
+let products = [
+    {name: "Laptop", price: 1200, stock: 5},
+    {name: "Mouse", price: 25, stock: 50},
+    {name: "Monitor", price: 300, stock: 0},
+    {name: "Keyboard", price: 75, stock: 20}
+];
+
+let in_stock = products.filter(|p| p.stock > 0);
+println(f"In stock: {in_stock.len()} items");
+
+let affordable = products.filter(|p| p.price < 100);
+println(f"Under $100: {affordable.len()} items");
+
+println("\n3. Extracting Fields:");
+let people = [
+    {name: "Alice", age: 30, city: "NYC"},
+    {name: "Bob", age: 25, city: "LA"},
+    {name: "Carol", age: 35, city: "SF"}
+];
+
+let names = people.map(|p| p.name);
+println(f"Names: {names:?}");
+
+let ages = people.map(|p| p.age);
+println(f"Ages: {ages:?}");
+
+println("\n4. Creating New Records:");
+let employees = [
+    {name: "Alice", hours: 40, rate: 25},
+    {name: "Bob", hours: 35, rate: 30}
+];
+
+let payroll = employees.map(|e| {
+    let salary = e.hours * e.rate;
+    {name: e.name, salary: salary}
+});
+
+for record in payroll {
+    println(f"  {record.name}: ${record.salary}");
+}
+
+println("\n✅ Transforming Structures Complete!");

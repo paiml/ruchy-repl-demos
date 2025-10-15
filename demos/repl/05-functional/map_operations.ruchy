@@ -1,0 +1,36 @@
+// Functional Programming: Map Operations
+// Verified features: .map() method, closures, transformations
+
+println("=== Map Operations ===\n");
+
+println("1. Basic Mapping:");
+let numbers = [1, 2, 3, 4, 5];
+println(f"Original: {numbers:?}");
+
+let doubled = numbers.map(|x| x * 2);
+println(f"Doubled: {doubled:?}");
+
+let squared = numbers.map(|x| x * x);
+println(f"Squared: {squared:?}");
+
+println("\n2. String Transformations:");
+let names = ["alice", "bob", "carol"];
+println(f"Names: {names:?}");
+
+let upper = names.map(|s| s.to_uppercase());
+println(f"Uppercase: {upper:?}");
+
+println("\n3. Complex Transformations:");
+let prices = [10, 20, 30];
+let with_tax = prices.map(|p| p * 1.08);
+println(f"Prices: {prices:?}");
+println(f"With tax: {with_tax:?}");
+
+println("\n4. Chaining Maps:");
+let data = [1, 2, 3];
+let result = data
+    .map(|x| x + 1)
+    .map(|x| x * 2);
+println(f"Add 1, then double: {result:?}");
+
+println("\n✅ Map Operations Complete!");

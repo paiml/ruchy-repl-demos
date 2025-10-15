@@ -1,0 +1,43 @@
+// Data Structures: Collection Operations
+// Verified features: array methods, transformations, aggregations
+
+println("=== Collection Operations ===\n");
+
+println("1. Mapping:");
+let numbers = [1, 2, 3, 4, 5];
+println(f"Original: {numbers:?}");
+
+let squared = numbers.map(|x| x * x);
+println(f"Squared: {squared:?}");
+
+let plus_ten = numbers.map(|x| x + 10);
+println(f"Plus 10: {plus_ten:?}");
+
+println("\n2. Filtering:");
+let all_nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+println(f"All: {all_nums:?}");
+
+let evens = all_nums.filter(|x| x % 2 == 0);
+println(f"Evens: {evens:?}");
+
+let odds = all_nums.filter(|x| x % 2 == 1);
+println(f"Odds: {odds:?}");
+
+let large = all_nums.filter(|x| x > 5);
+println(f"Greater than 5: {large:?}");
+
+println("\n3. Combining Operations:");
+let data = [1, 2, 3, 4, 5];
+let result = data
+    .map(|x| x * 2)
+    .filter(|x| x > 5);
+println(f"Double then filter >5: {result:?}");
+
+println("\n4. Aggregations:");
+let values = [10, 20, 30, 40, 50];
+println(f"Values: {values:?}");
+println(f"Sum: {values.sum()}");
+println(f"Count: {values.len()}");
+println(f"Average: {values.sum() / values.len()}");
+
+println("\n✅ Collection Operations Complete!");
