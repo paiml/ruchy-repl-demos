@@ -1,0 +1,44 @@
+// Functions Demo: Function Helper Patterns
+// Verified features: utility functions, helper patterns
+
+println("=== Function Helper Patterns ===\n");
+
+println("1. Math Helpers:");
+fn min(a, b) {
+    if a < b { a } else { b }
+}
+fn max(a, b) {
+    if a > b { a } else { b }
+}
+println(f"min(5, 10) = {min(5, 10)}");
+println(f"max(5, 10) = {max(5, 10)}");
+
+println("\n2. Range Checker:");
+fn in_range(value, low, high) {
+    value >= low && value <= high
+}
+println(f"in_range(5, 1, 10) = {in_range(5, 1, 10)}");
+println(f"in_range(15, 1, 10) = {in_range(15, 1, 10)}");
+
+println("\n3. List Helpers:");
+fn first(arr) {
+    arr[0]
+}
+fn last(arr) {
+    arr[arr.len() - 1]
+}
+let numbers = [10, 20, 30, 40];
+println(f"first: {first(numbers)}");
+println(f"last: {last(numbers)}");
+
+println("\n4. Validation:");
+fn is_positive(n) {
+    n > 0
+}
+fn is_even(n) {
+    n % 2 == 0
+}
+println(f"is_positive(5) = {is_positive(5)}");
+println(f"is_even(6) = {is_even(6)}");
+
+println("\n✅ Helper Functions Complete!");

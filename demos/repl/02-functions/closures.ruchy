@@ -1,0 +1,28 @@
+// Functions Demo: Closures
+// Verified features: closure syntax |x| expr
+
+println("=== Closures ===\n");
+
+println("1. Basic Closure:");
+let double = |x| x * 2;
+println(f"double(5) = {double(5)}");
+
+println("\n2. Multiple Parameters:");
+let add = |a, b| a + b;
+let multiply = |x, y| x * y;
+println(f"add(3, 7) = {add(3, 7)}");
+println(f"multiply(4, 5) = {multiply(4, 5)}");
+
+println("\n3. Closure with Variables:");
+let factor = 10;
+let scale = |x| x * factor;
+println(f"scale(5) = {scale(5)}");
+
+println("\n4. Array Operations:");
+let numbers = [1, 2, 3, 4, 5];
+let doubled = numbers.map(|x| x * 2);
+let evens = numbers.filter(|x| x % 2 == 0);
+println(f"Doubled: {doubled}");
+println(f"Evens: {evens}");
+
+println("\n✅ Closures Complete!");

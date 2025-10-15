@@ -1,0 +1,10 @@
+// Data Structures: Array Operations
+println("=== Array Operations ===\n");
+let arr = [1, 2, 3, 4, 5];
+println(f"Array: {arr}");
+println(f"Length: {arr.len()}");
+println(f"First: {arr[0]}");
+println(f"Last: {arr[arr.len()-1]}");
+let doubled = arr.map(|x| x * 2);
+println(f"Doubled: {doubled}");
+println("\n✅ Complete!");

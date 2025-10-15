@@ -1,0 +1,37 @@
+// Functions Demo: Higher-Order Functions
+// Verified features: functions as parameters, returning functions
+
+println("=== Higher-Order Functions ===\n");
+
+println("1. Function as Parameter:");
+fn apply_twice(f, x) {
+    f(f(x))
+}
+let increment = |n| n + 1;
+println(f"apply_twice(increment, 5) = {apply_twice(increment, 5)}");
+
+println("\n2. Map (HOF):");
+fn my_map(arr, f) {
+    arr.map(f)
+}
+let nums = [1, 2, 3, 4];
+let squared = my_map(nums, |x| x * x);
+println(f"Squared: {squared}");
+
+println("\n3. Filter (HOF):");
+fn my_filter(arr, pred) {
+    arr.filter(pred)
+}
+let numbers = [1, 2, 3, 4, 5, 6];
+let evens = my_filter(numbers, |x| x % 2 == 0);
+println(f"Evens: {evens}");
+
+println("\n4. Compose Operations:");
+fn process(data, f1, f2) {
+    let step1 = data.map(f1);
+    step1.filter(f2)
+}
+let result = process([1,2,3,4], |x| x * 2, |x| x > 4);
+println(f"Result: {result}");
+
+println("\n✅ Higher-Order Functions Complete!");

@@ -1,0 +1,44 @@
+// Functions Demo: Return Values
+// Verified features: explicit and implicit returns
+
+println("=== Function Return Values ===\n");
+
+println("1. Implicit Return (last expression):");
+fn add(a, b) {
+    a + b
+}
+println(f"add(3, 5) = {add(3, 5)}");
+
+println("\n2. Early Return:");
+fn check_positive(n) {
+    if n <= 0 {
+        return false;
+    }
+    true
+}
+println(f"check_positive(5) = {check_positive(5)}");
+println(f"check_positive(-3) = {check_positive(-3)}");
+
+println("\n3. Multiple Return Points:");
+fn classify_number(n) {
+    if n < 0 {
+        return "negative";
+    }
+    if n == 0 {
+        return "zero";
+    }
+    "positive"
+}
+println(f"classify_number(-5) = {classify_number(-5)}");
+println(f"classify_number(0) = {classify_number(0)}");
+println(f"classify_number(7) = {classify_number(7)}");
+
+println("\n4. Computed Result:");
+fn calculate(x, y) {
+    let sum = x + y;
+    let product = x * y;
+    sum + product
+}
+println(f"calculate(3, 4) = {calculate(3, 4)}");
+
+println("\n✅ Function Returns Complete!");

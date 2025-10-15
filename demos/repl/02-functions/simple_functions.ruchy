@@ -1,0 +1,40 @@
+// Functions Demo: Simple Functions
+// Verified features: fn keyword, parameters, return values
+
+println("=== Simple Functions ===\n");
+
+println("1. Basic Function:");
+fn greet() {
+    println("Hello, World!");
+}
+greet();
+
+println("\n2. Function with Parameters:");
+fn greet_name(name) {
+    println(f"Hello, {name}!");
+}
+greet_name("Alice");
+greet_name("Bob");
+
+println("\n3. Function with Return:");
+fn add(a, b) {
+    a + b
+}
+let result = add(5, 3);
+println(f"5 + 3 = {result}");
+
+println("\n4. Multiple Parameters:");
+fn multiply(x, y, z) {
+    x * y * z
+}
+let product = multiply(2, 3, 4);
+println(f"2 × 3 × 4 = {product}");
+
+println("\n5. Using Return Value:");
+fn square(n) {
+    n * n
+}
+let num = 7;
+println(f"{num}² = {square(num)}");
+
+println("\n✅ Simple Functions Complete!");

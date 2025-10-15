@@ -1,0 +1,33 @@
+// Functions Demo: Function Composition
+// Verified features: chaining function calls
+
+println("=== Function Composition ===\n");
+
+println("1. Manual Composition:");
+fn add_one(x) { x + 1 }
+fn double(x) { x * 2 }
+let result = double(add_one(5));
+println(f"double(add_one(5)) = {result}");
+
+println("\n2. Multiple Steps:");
+fn square(n) { n * n }
+fn increment(n) { n + 1 }
+let value = 3;
+let step1 = square(value);
+let step2 = increment(step1);
+println(f"increment(square(3)) = {step2}");
+
+println("\n3. Pipeline:");
+fn negate(x) { -x }
+fn abs(x) { if x < 0 { -x } else { x } }
+let num = -5;
+println(f"abs(negate({num})) = {abs(negate(num))}");
+
+println("\n4. Transform Chain:");
+let data = [1, 2, 3];
+let transformed = data
+    .map(|x| x * 2)
+    .map(|x| x + 1);
+println(f"Result: {transformed}");
+
+println("\n✅ Composition Complete!");

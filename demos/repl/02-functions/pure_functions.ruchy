@@ -1,0 +1,41 @@
+// Functions Demo: Pure Functions
+// Verified features: functions without side effects
+
+println("=== Pure Functions ===\n");
+
+println("1. Pure Function (same input → same output):");
+fn add(a, b) {
+    a + b
+}
+println(f"add(2, 3) = {add(2, 3)}");
+println(f"add(2, 3) = {add(2, 3)} (same result)");
+
+println("\n2. Impure Function (side effects):");
+let mut counter = 0;
+fn increment_counter() {
+    counter = counter + 1;
+    counter
+}
+println(f"Call 1: {increment_counter()}");
+println(f"Call 2: {increment_counter()} (different result!)");
+
+println("\n3. Pure Calculation:");
+fn calculate_area(width, height) {
+    width * height
+}
+println(f"Area(5, 10) = {calculate_area(5, 10)}");
+
+println("\n4. Pure Transformation:");
+fn uppercase_first(str) {
+    // Conceptual - returns new value without modifying input
+    str
+}
+let name = "alice";
+println(f"Original: {name}");
+
+println("\n✅ Pure Functions Complete!");
+println("\nPure functions:");
+println("  ✓ No side effects");
+println("  ✓ Same input → same output");
+println("  ✓ Easy to test");
+println("  ✓ Predictable behavior");

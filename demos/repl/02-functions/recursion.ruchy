@@ -1,0 +1,49 @@
+// Functions Demo: Recursion
+// Verified features: recursive function calls
+
+println("=== Recursion ===\n");
+
+println("1. Factorial:");
+fn factorial(n) {
+    if n <= 1 {
+        1
+    } else {
+        n * factorial(n - 1)
+    }
+}
+println(f"5! = {factorial(5)}");
+println(f"7! = {factorial(7)}");
+
+println("\n2. Fibonacci:");
+fn fibonacci(n) {
+    if n <= 1 {
+        n
+    } else {
+        fibonacci(n - 1) + fibonacci(n - 2)
+    }
+}
+println(f"fib(6) = {fibonacci(6)}");
+println(f"fib(8) = {fibonacci(8)}");
+
+println("\n3. Countdown:");
+fn countdown(n) {
+    if n > 0 {
+        println(f"  {n}...");
+        countdown(n - 1);
+    } else {
+        println("  Blast off!");
+    }
+}
+countdown(5);
+
+println("\n4. Sum of Range:");
+fn sum_range(n) {
+    if n <= 0 {
+        0
+    } else {
+        n + sum_range(n - 1)
+    }
+}
+println(f"\nSum 1..10 = {sum_range(10)}");
+
+println("\n✅ Recursion Complete!");

@@ -1,0 +1,37 @@
+// Functions Demo: Nested Functions
+// Verified features: defining functions inside functions
+
+println("=== Nested Functions ===\n");
+
+println("1. Helper Function:");
+fn calculate_total(items) {
+    fn sum_prices(arr) {
+        let mut total = 0;
+        for item in arr {
+            total = total + item;
+        }
+        total
+    }
+    sum_prices(items)
+}
+let prices = [10, 20, 30];
+println(f"Total: ${calculate_total(prices)}");
+
+println("\n2. Closure in Function:");
+fn make_multiplier(factor) {
+    let multiply = |x| x * factor;
+    multiply
+}
+let times_five = make_multiplier(5);
+println(f"times_five(3) = {times_five(3)}");
+
+println("\n3. Local Scope:");
+fn outer() {
+    fn inner() {
+        "From inner"
+    }
+    inner()
+}
+println(outer());
+
+println("\n✅ Nested Functions Complete!");
