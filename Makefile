@@ -32,6 +32,9 @@ help:
 	@echo "  make clean        - Clean generated files"
 	@echo ""
 	@echo "🧪 Test Commands:"
+	@echo "  make test-demos   - Test ALL demos for execution (200 demos)"
+	@echo "  make test-demos-verbose - Test with full output (debugging)"
+	@echo "  make test-notebook - Test demos in Ruchy notebook"
 	@echo "  make test-repl    - Test all REPL demos"
 	@echo "  make test-oneliner - Test all one-liner demos"
 	@echo "  make test-repl-basics - Test basic REPL demos"
@@ -781,6 +784,22 @@ wasm-report:
 
 quality-gates-wasm: quality-gates test-wasm
 	@echo "✅ Quality gates + WASM validation complete"
+
+# ==============================================================================
+# Demo Execution Tests (Phase 1A - REPL-210)
+# ==============================================================================
+
+# Test all demos for successful execution (200 demos)
+test-demos:
+	@echo "🧪 Testing all demos for execution..."
+	@chmod +x scripts/test-demos.sh
+	@./scripts/test-demos.sh
+
+# Test all demos with verbose output (debugging)
+test-demos-verbose:
+	@echo "🧪 Testing all demos (VERBOSE mode)..."
+	@chmod +x scripts/test-demos-verbose.sh
+	@./scripts/test-demos-verbose.sh
 
 # ==============================================================================
 # Notebook & REPL Validation (Sprint 1)
