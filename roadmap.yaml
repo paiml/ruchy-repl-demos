@@ -248,14 +248,163 @@ sprints:
         deliverable: "Updated Makefile"
         estimated_time: "1 hour"
 
-  # SPRINT 2: Data Science Demo Expansion
+  # SPRINT 2: Testing Infrastructure Implementation (NEW - CRITICAL)
   - id: sprint-2
+    name: "Testing Infrastructure Implementation"
+    goal: "Implement complete testing pyramid with automated quality gates"
+    duration: 2_days
+    status: pending
+    priority: critical
+    dependencies:
+      - sprint: 1
+        status: "completed"
+    reference: "docs/specifications/repl-book-testing-improvement-spec.md"
+    tracking: "TESTING_ROADMAP.md"
+    tickets:
+      - id: REPL-210
+        title: "[Phase 1A] Implement demo execution test framework"
+        priority: critical
+        status: pending
+        requirements:
+          - "Create scripts/test-demos.sh (POSIX sh)"
+          - "Test all 200 demos (85 REPL + 115 one-liners)"
+          - "Exit code validation (0 = success)"
+          - "Stderr validation (empty on success)"
+        tests:
+          - "test_execution_framework_exists"
+          - "test_all_repl_demos_execute"
+          - "test_all_oneliners_execute"
+          - "test_execution_time_under_5min"
+        acceptance:
+          - "200/200 demos have execution tests"
+          - "100% success rate"
+          - "Test execution time < 5 minutes"
+          - "Make targets: test-demos, test-demos-verbose"
+        deliverable: "scripts/test-demos.sh + test-demos-verbose.sh"
+        estimated_time: "4 hours"
+        phase: "1A"
+
+      - id: REPL-211
+        title: "[Phase 1B] Execute notebook validation infrastructure"
+        priority: critical
+        status: pending
+        requirements:
+          - "Configure scripts/test-notebook.ts"
+          - "Run notebook tests on 85 REPL demos"
+          - "Input/output pair verification"
+          - "Multi-line handling validation"
+        tests:
+          - "test_notebook_validation_runs"
+          - "test_io_pairs_validated"
+          - "test_multiline_handling"
+        acceptance:
+          - "85/85 REPL demos pass notebook validation"
+          - "100% notebook test coverage"
+          - "Test results documented"
+        deliverable: "Configured test-notebook.ts + execution results"
+        estimated_time: "2 hours"
+        phase: "1B"
+
+      - id: REPL-212
+        title: "[Phase 1C] Implement CI pipeline automation"
+        priority: critical
+        status: pending
+        requirements:
+          - "Create .github/workflows/quality-gates.yml"
+          - "Install Ruchy in CI environment"
+          - "Auto-update INTEGRATION.md on success"
+          - "Auto-create issues on failure (Andon cord)"
+        tests:
+          - "test_ci_workflow_syntax"
+          - "test_quality_gates_run"
+          - "test_andon_cord_creates_issues"
+          - "test_integration_auto_updates"
+        acceptance:
+          - "All quality gates run on every push"
+          - "Failures block PR merge"
+          - "Issues created automatically"
+          - "INTEGRATION.md stays current"
+        deliverable: ".github/workflows/quality-gates.yml"
+        estimated_time: "3 hours"
+        phase: "1C"
+
+      - id: REPL-213
+        title: "[Phase 2A] Implement REPL contract tests"
+        priority: high
+        status: pending
+        requirements:
+          - "Install expect or rexpect"
+          - "Create 10 REPL contract test scenarios"
+          - "Script interactive REPL sessions"
+          - "Validate prompts, input, output, errors"
+        tests:
+          - "test_repl_prompt_appearance"
+          - "test_repl_arithmetic"
+          - "test_repl_variable_definition"
+          - "test_repl_function_definition"
+          - "test_repl_error_handling"
+          - "test_repl_multiline_input"
+          - "test_repl_exit_command"
+          - "test_repl_ctrl_c_handling"
+        acceptance:
+          - "10/10 REPL contract scenarios passing"
+          - "Interactive UX validated"
+          - "Documentation with examples"
+        deliverable: "tests/repl-contract/*.sh (10 test scripts)"
+        estimated_time: "5 hours"
+        phase: "2A"
+
+      - id: REPL-214
+        title: "[Phase 2B] Implement feature verification CI"
+        priority: high
+        status: pending
+        requirements:
+          - "Create scripts/verify-features.sh"
+          - "Detect suspicious vaporware keywords"
+          - "Require verification comments"
+          - "Integrate with CI pipeline"
+        tests:
+          - "test_vaporware_detection"
+          - "test_verification_comment_required"
+          - "test_ci_blocks_unverified"
+        acceptance:
+          - "Vaporware keywords detected"
+          - "All demos require verification comments"
+          - "CI fails on unverified features"
+        deliverable: "scripts/verify-features.sh"
+        estimated_time: "2 hours"
+        phase: "2B"
+
+      - id: REPL-215
+        title: "[Phase 3] Documentation and validation"
+        priority: medium
+        status: pending
+        requirements:
+          - "Update README.md with testing info"
+          - "Document testing pyramid"
+          - "Create testing guide with examples"
+          - "Full integration test"
+        tests:
+          - "test_documentation_complete"
+          - "test_all_tests_pass_locally"
+          - "test_ci_pipeline_works"
+        acceptance:
+          - "Documentation updated"
+          - "All tests pass locally"
+          - "CI works end-to-end"
+          - "INTEGRATION.md reflects reality"
+        deliverable: "Updated docs + integration verification"
+        estimated_time: "4 hours"
+        phase: "3"
+
+  # SPRINT 3: Data Science Demo Expansion
+  - id: sprint-3
     name: "Data Science Demo Expansion"
     goal: "Add 10+ data science demos with statistical analysis"
     duration: 1_week
     status: pending
     dependencies:
-      - sprint: 1
+      - sprint: 2
         status: "completed"
     tickets:
       - id: REPL-201
