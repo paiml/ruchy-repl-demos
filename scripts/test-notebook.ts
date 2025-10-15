@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run --allow-net --allow-read --allow-run
+#!/usr/bin/env -S deno run --allow-net --allow-read --allow-run --allow-write
 
 /**
  * Test Ruchy REPL Demos in Notebook
@@ -10,7 +10,7 @@
  */
 
 const NOTEBOOK_URL = "http://localhost:8080/api/execute";
-const NOTEBOOK_HEALTH = "http://localhost:8080";
+const NOTEBOOK_HEALTH = "http://localhost:8080/api/health";
 const NOTEBOOK_TIMEOUT = 10000; // 10 seconds
 
 interface NotebookResponse {
@@ -36,7 +36,12 @@ async function checkNotebookServer(): Promise<boolean> {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
 
-    const response = await fetch(NOTEBOOK_HEALTH, {
+    // Try a simple execution to check if server is running
+    // (ruchy notebook doesn't have /api/health endpoint)
+    const response = await fetch(NOTEBOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ source: "1 + 1" }),
       signal: controller.signal,
     });
 
@@ -81,27 +86,28 @@ async function executeInNotebook(code: string): Promise<NotebookResponse> {
 }
 
 /**
- * Find all REPL demo files
+ * Find all REPL demo files recursively
  */
 async function findDemoFiles(): Promise<string[]> {
   const demos: string[] = [];
-  const demoDir = "demos/repl";
 
-  try {
-    for await (const dirEntry of Deno.readDir(demoDir)) {
-      if (dirEntry.isDirectory) {
-        const categoryPath = `${demoDir}/${dirEntry.name}`;
-        for await (const file of Deno.readDir(categoryPath)) {
-          if (file.isFile && file.name.endsWith(".ruchy")) {
-            demos.push(`${categoryPath}/${file.name}`);
-          }
+  async function walkDirectory(dir: string) {
+    try {
+      for await (const dirEntry of Deno.readDir(dir)) {
+        const path = `${dir}/${dirEntry.name}`;
+        if (dirEntry.isDirectory) {
+          // Recursively walk subdirectories
+          await walkDirectory(path);
+        } else if (dirEntry.isFile && dirEntry.name.endsWith(".ruchy")) {
+          demos.push(path);
         }
       }
+    } catch (error) {
+      console.error(`Error reading directory ${dir}: ${error}`);
     }
-  } catch (error) {
-    console.error(`Error reading demo directory: ${error}`);
   }
 
+  await walkDirectory("demos/repl");
   return demos.sort();
 }
 

@@ -816,7 +816,7 @@ test-notebook:
 	fi
 	@echo "🚀 Starting notebook server..."
 	@ruchy notebook --port 8080 > /dev/null 2>&1 & echo $$! > .notebook.pid
-	@sleep 3
+	@sleep 5
 	@echo "🧪 Running tests via Deno script..."
 	@./scripts/test-notebook.ts || (kill $$(cat .notebook.pid) 2>/dev/null; rm -f .notebook.pid; exit 1)
 	@echo "🛑 Stopping notebook server..."
