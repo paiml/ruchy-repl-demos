@@ -441,7 +441,7 @@ ruchy-lint:
 
 shellcheck:
 	@echo "Running ShellCheck on all shell scripts..."
-	@find . -name "*.sh" -type f | while read -r script; do \
+	@find . -name "*.sh" -type f -not -path "*/node_modules/*" | while read -r script; do \
 		printf "  Checking %s..." "$$script"; \
 		if shellcheck -s sh -e SC2039,SC3043 "$$script" >/dev/null 2>&1; then \
 			printf " ✓\n"; \

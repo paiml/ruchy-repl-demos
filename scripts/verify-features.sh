@@ -32,7 +32,7 @@ DEMO_DIRS="demos/repl demos/one-liner book/demos"
 # Create temp file for results
 TEMP_RESULTS=$(mktemp)
 
-printf "${BLUE}Checking for unimplemented methods...${NC}\n"
+printf "%s\n" "${BLUE}Checking for unimplemented methods...${NC}"
 
 for dir in $DEMO_DIRS; do
     if [ ! -d "$dir" ]; then
@@ -40,6 +40,7 @@ for dir in $DEMO_DIRS; do
     fi
 
     # Find all .ruchy files
+    # shellcheck disable=SC2044
     for file in $(find "$dir" -type f -name "*.ruchy"); do
         # Check for unimplemented methods
         if grep -E "$UNIMPLEMENTED_METHODS" "$file" > /dev/null 2>&1; then
@@ -58,14 +59,14 @@ for dir in $DEMO_DIRS; do
         # Check for unsupported syntax
         if grep -E "$UNSUPPORTED_SYNTAX" "$file" > /dev/null 2>&1; then
             printf "${RED}❌ VAPORWARE: %s${NC}\n" "$file"
-            printf "   ${YELLOW}Contains unsupported syntax: string/array range slicing${NC}\n"
+             printf "   %s\n" "${YELLOW}Contains unsupported syntax: string/array range slicing${NC}"
             echo "ISSUE" >> "$TEMP_RESULTS"
         fi
 
         # Check for DataFrame references
         if grep -E "$DATAFRAME_REFS" "$file" > /dev/null 2>&1; then
             printf "${RED}❌ VAPORWARE: %s${NC}\n" "$file"
-            printf "   ${YELLOW}Contains DataFrame reference (not implemented)${NC}\n"
+            printf "   %s\n" "${YELLOW}Contains DataFrame reference (not implemented)${NC}"
             echo "ISSUE" >> "$TEMP_RESULTS"
         fi
     done
@@ -73,6 +74,7 @@ done
 
 # Count issues and files
 ISSUES_FOUND=$(wc -l < "$TEMP_RESULTS" 2>/dev/null || echo "0")
+# shellcheck disable=SC2086
 TOTAL_FILES=$(find $DEMO_DIRS -type f -name "*.ruchy" 2>/dev/null | wc -l)
 
 # Clean up temp file

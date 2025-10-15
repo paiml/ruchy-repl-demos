@@ -68,7 +68,7 @@ for test_script in "$TEST_DIR"/*.sh; do
             echo "${RED}❌ FAIL${NC}"
             FAILED=$((FAILED + 1))
             echo "${YELLOW}Error output:${NC}"
-            cat /tmp/repl-contract-test.log | head -10
+            head -10 /tmp/repl-contract-test.log
         fi
         echo ""
     fi

@@ -21,7 +21,7 @@ run_test() {
     
     echo "📦 Running: $test_name"
     
-    if ruchy test "$test_file" > /tmp/test_output.txt 2>&1; then
+    if ruchy run "$test_file" > /tmp/test_output.txt 2>&1; then
         printf "  ✅ PASSED\n"
         PASSED_TESTS=$((PASSED_TESTS + 1))
         

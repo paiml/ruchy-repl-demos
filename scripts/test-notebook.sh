@@ -18,7 +18,6 @@ NOTEBOOK_PID=""
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Cleanup function
@@ -43,11 +42,13 @@ start_notebook_server() {
 
     # Wait for server to be ready
     echo "⏳ Waiting for server to be ready..."
-    for i in 1 2 3 4 5 6 7 8 9 10; do
+    attempt=0
+    while [ "$attempt" -lt 10 ]; do
         if curl -s "${NOTEBOOK_URL}" > /dev/null 2>&1; then
             echo "✅ Notebook server ready (PID: ${NOTEBOOK_PID})"
             return 0
         fi
+        attempt=$((attempt + 1))
         sleep 1
     done
 

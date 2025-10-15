@@ -25,6 +25,28 @@
 6. DOCUMENT: Update lessons learned
 ```
 
+### EXTREME TOYOTA WAY: STOP THE LINE
+
+**MANDATORY BEHAVIOR**: When quality issues are discovered:
+
+❌ **NEVER SAY**: "The failures are pre-existing"
+✅ **ALWAYS SAY**: "Found pre-existing failures and fixing as I practice EXTREME TOYOTA WAY and always STOP THE LINE and fix"
+
+**STOP THE LINE means**:
+1. Immediately halt all new feature development
+2. Fix discovered defects before proceeding
+3. Never accept or rationalize broken quality gates
+4. Never defer quality issues for later
+5. Quality problems are ALWAYS priority #1
+
+**No Exceptions**: Every defect discovered MUST be fixed before continuing, regardless of:
+- When the defect was introduced
+- Who introduced the defect
+- How long the defect has existed
+- Whether the defect is "blocking" new work
+
+**Jidoka Philosophy**: Build quality in, never pass defects downstream
+
 ## Development Workflow
 
 ### Feature Verification Protocol (MANDATORY)

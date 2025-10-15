@@ -42,7 +42,7 @@ echo ""
 
 # Test REPL demos with full output
 if [ -d "demos/repl" ]; then
-    find demos/repl -name "*.ruchy" -type f | sort | while read -r demo; do
+    for demo in $(find demos/repl -name "*.ruchy" -type f | sort); do
         TOTAL=$((TOTAL + 1))
 
         echo "${BLUE}----------------------------------------${NC}"
@@ -70,7 +70,7 @@ echo ""
 
 # Test one-liner scripts with full output
 if [ -d "demos/one-liners" ]; then
-    find demos/one-liners -name "*.sh" -type f | sort | while read -r script; do
+    for script in $(find demos/one-liners -name "*.sh" -type f | sort); do
         TOTAL=$((TOTAL + 1))
 
         echo "${BLUE}----------------------------------------${NC}"
