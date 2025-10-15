@@ -32,9 +32,10 @@ help:
 	@echo "  make clean        - Clean generated files"
 	@echo ""
 	@echo "🧪 Test Commands:"
-	@echo "  make test-demos   - Test ALL demos for execution (200 demos)"
+	@echo "  make test-demos   - Test ALL demos for execution (148 demos)"
 	@echo "  make test-demos-verbose - Test with full output (debugging)"
 	@echo "  make test-notebook - Test demos in Ruchy notebook"
+	@echo "  make test-repl-contract - Test REPL interactive UX (10 contracts)"
 	@echo "  make test-repl    - Test all REPL demos"
 	@echo "  make test-oneliner - Test all one-liner demos"
 	@echo "  make test-repl-basics - Test basic REPL demos"
@@ -828,6 +829,16 @@ test-notebook:
 test-notebook-external:
 	@echo "📓 Testing with external notebook server..."
 	@./scripts/test-notebook.ts
+
+# ==============================================================================
+# REPL Contract Tests (Phase 2A - REPL-220)
+# ==============================================================================
+
+# Test REPL interactive UX (10 contract tests)
+test-repl-contract:
+	@echo "🔌 Testing REPL contract (interactive UX)..."
+	@chmod +x scripts/test-repl-contract.sh
+	@./scripts/test-repl-contract.sh
 
 # REPL replay validation (REPL-104) - placeholder for future implementation
 test-replay:
