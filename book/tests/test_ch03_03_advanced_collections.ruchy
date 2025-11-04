@@ -1,0 +1,382 @@
+// Test File for Chapter 3.3: Advanced Collections
+// EXTREME TDD: RED phase - Write tests FIRST
+// Using ONLY verified Ruchy v3.194.0 patterns
+
+// TEST 1: Set Operations (Unique Elements)
+fun test_set_unique_elements() {
+    // Create set by removing duplicates
+    let items = [1, 2, 2, 3, 1, 4, 3, 5];
+    let mut set = [];
+
+    for item in items {
+        let mut found = false;
+        for s in set {
+            if s == item {
+                found = true;
+                break;
+            }
+        }
+        if !found {
+            set = set + [item];
+        }
+    }
+
+    assert(set.len() == 5, "Set should have 5 unique elements");
+    assert(set[0] == 1, "First unique is 1");
+
+    println("✅ test_set_unique_elements PASSED");
+}
+
+// TEST 2: Set Union
+fun test_set_union() {
+    let set1 = [1, 2, 3];
+    let set2 = [3, 4, 5];
+
+    // Union: all unique elements from both sets
+    let mut union = set1;
+    for item in set2 {
+        let mut found = false;
+        for u in union {
+            if u == item {
+                found = true;
+                break;
+            }
+        }
+        if !found {
+            union = union + [item];
+        }
+    }
+
+    assert(union.len() == 5, "Union should have 5 elements");
+
+    println("✅ test_set_union PASSED");
+}
+
+// TEST 3: Set Intersection
+fun test_set_intersection() {
+    let set1 = [1, 2, 3, 4];
+    let set2 = [3, 4, 5, 6];
+
+    // Intersection: elements in both sets
+    let mut intersection = [];
+    for item in set1 {
+        let mut in_set2 = false;
+        for s in set2 {
+            if s == item {
+                in_set2 = true;
+                break;
+            }
+        }
+        if in_set2 {
+            intersection = intersection + [item];
+        }
+    }
+
+    assert(intersection.len() == 2, "Should have 2 common elements");
+    assert(intersection[0] == 3, "First common is 3");
+    assert(intersection[1] == 4, "Second common is 4");
+
+    println("✅ test_set_intersection PASSED");
+}
+
+// TEST 4: Set Difference
+fun test_set_difference() {
+    let set1 = [1, 2, 3, 4];
+    let set2 = [3, 4, 5];
+
+    // Difference: elements in set1 but not in set2
+    let mut difference = [];
+    for item in set1 {
+        let mut in_set2 = false;
+        for s in set2 {
+            if s == item {
+                in_set2 = true;
+                break;
+            }
+        }
+        if !in_set2 {
+            difference = difference + [item];
+        }
+    }
+
+    assert(difference.len() == 2, "Should have 2 unique elements");
+    assert(difference[0] == 1, "First is 1");
+    assert(difference[1] == 2, "Second is 2");
+
+    println("✅ test_set_difference PASSED");
+}
+
+// TEST 5: Stack (LIFO - Last In First Out)
+fun test_stack_operations() {
+    let mut stack = [];
+
+    // Push
+    stack = stack + [1];
+    stack = stack + [2];
+    stack = stack + [3];
+
+    assert(stack.len() == 3, "Stack should have 3 elements");
+
+    // Peek (look at top)
+    let top = stack[stack.len() - 1];
+    assert(top == 3, "Top should be 3");
+
+    // Pop (remove from end)
+    let popped = stack[stack.len() - 1];
+    let mut new_stack = [];
+    let mut i = 0;
+    while i < stack.len() - 1 {
+        new_stack = new_stack + [stack[i]];
+        i = i + 1;
+    }
+    stack = new_stack;
+
+    assert(popped == 3, "Popped value should be 3");
+    assert(stack.len() == 2, "Stack should have 2 elements after pop");
+
+    println("✅ test_stack_operations PASSED");
+}
+
+// TEST 6: Queue (FIFO - First In First Out)
+fun test_queue_operations() {
+    let mut queue = [];
+
+    // Enqueue (add to end)
+    queue = queue + [1];
+    queue = queue + [2];
+    queue = queue + [3];
+
+    assert(queue.len() == 3, "Queue should have 3 elements");
+
+    // Peek front
+    let front = queue[0];
+    assert(front == 1, "Front should be 1");
+
+    // Dequeue (remove from front)
+    let dequeued = queue[0];
+    let mut new_queue = [];
+    let mut i = 1;
+    while i < queue.len() {
+        new_queue = new_queue + [queue[i]];
+        i = i + 1;
+    }
+    queue = new_queue;
+
+    assert(dequeued == 1, "Dequeued value should be 1");
+    assert(queue.len() == 2, "Queue should have 2 elements");
+    assert(queue[0] == 2, "New front should be 2");
+
+    println("✅ test_queue_operations PASSED");
+}
+
+// TEST 7: Tuple-like Structures (Fixed-size arrays)
+fun test_tuple_structures() {
+    // Simulate tuple with array
+    let point = [10, 20];  // (x, y)
+    let person = ["Alice", 30, "Engineer"];  // (name, age, job)
+
+    assert(point[0] == 10, "X coordinate");
+    assert(point[1] == 20, "Y coordinate");
+
+    assert(person[0] == "Alice", "Name");
+    assert(person[1] == 30, "Age");
+    assert(person[2] == "Engineer", "Job");
+
+    println("✅ test_tuple_structures PASSED");
+}
+
+// TEST 8: Pair Structure
+fun test_pair_structure() {
+    let pair = {first: 10, second: 20};
+
+    assert(pair.first == 10, "First element");
+    assert(pair.second == 20, "Second element");
+
+    // Swap
+    let swapped = {first: pair.second, second: pair.first};
+    assert(swapped.first == 20, "Swapped first");
+    assert(swapped.second == 10, "Swapped second");
+
+    println("✅ test_pair_structure PASSED");
+}
+
+// TEST 9: Multi-dimensional Array (3D)
+fun test_3d_array() {
+    let cube = [
+        [[1, 2], [3, 4]],
+        [[5, 6], [7, 8]]
+    ];
+
+    assert(cube[0][0][0] == 1, "Position [0][0][0]");
+    assert(cube[1][1][1] == 8, "Position [1][1][1]");
+    assert(cube[0][1][0] == 3, "Position [0][1][0]");
+
+    println("✅ test_3d_array PASSED");
+}
+
+// TEST 10: Jagged Array (Non-rectangular)
+fun test_jagged_array() {
+    let jagged = [
+        [1, 2],
+        [3, 4, 5],
+        [6]
+    ];
+
+    assert(jagged[0].len() == 2, "First row has 2 elements");
+    assert(jagged[1].len() == 3, "Second row has 3 elements");
+    assert(jagged[2].len() == 1, "Third row has 1 element");
+    assert(jagged[1][2] == 5, "Element access");
+
+    println("✅ test_jagged_array PASSED");
+}
+
+// TEST 11: Circular Buffer (Ring Buffer)
+fun test_circular_buffer() {
+    let capacity = 3;
+    let mut buffer = [0, 0, 0];
+    let mut write_pos = 0;
+
+    // Write values
+    buffer[write_pos % capacity] = 10;
+    write_pos = write_pos + 1;
+
+    buffer[write_pos % capacity] = 20;
+    write_pos = write_pos + 1;
+
+    buffer[write_pos % capacity] = 30;
+    write_pos = write_pos + 1;
+
+    // Overwrite first position
+    buffer[write_pos % capacity] = 40;
+    write_pos = write_pos + 1;
+
+    assert(buffer[0] == 40, "Position 0 overwritten");
+    assert(buffer[1] == 20, "Position 1 unchanged");
+    assert(buffer[2] == 30, "Position 2 unchanged");
+
+    println("✅ test_circular_buffer PASSED");
+}
+
+// TEST 12: Priority Queue (Simple Implementation)
+fun test_priority_queue() {
+    // Array of {value, priority} - lower number = higher priority
+    let mut pq = [];
+
+    pq = pq + [{value: "Low", priority: 3}];
+    pq = pq + [{value: "High", priority: 1}];
+    pq = pq + [{value: "Medium", priority: 2}];
+
+    // Find highest priority (lowest number)
+    let mut min_priority = pq[0].priority;
+    let mut min_index = 0;
+    let mut i = 1;
+    while i < pq.len() {
+        if pq[i].priority < min_priority {
+            min_priority = pq[i].priority;
+            min_index = i;
+        }
+        i = i + 1;
+    }
+
+    assert(pq[min_index].value == "High", "Highest priority item");
+
+    println("✅ test_priority_queue PASSED");
+}
+
+// TEST 13: Sparse Array (Map-based)
+fun test_sparse_array() {
+    // Sparse array as array of {index, value} pairs
+    let mut sparse = [];
+
+    sparse = sparse + [{index: 0, value: 10}];
+    sparse = sparse + [{index: 100, value: 20}];
+    sparse = sparse + [{index: 1000, value: 30}];
+
+    // Lookup
+    let target_index = 100;
+    let mut found_value = -1;
+    for entry in sparse {
+        if entry.index == target_index {
+            found_value = entry.value;
+            break;
+        }
+    }
+
+    assert(found_value == 20, "Should find value at index 100");
+
+    println("✅ test_sparse_array PASSED");
+}
+
+// TEST 14: Linked List Structure (Array-based)
+fun test_linked_list_structure() {
+    // Nodes as {value, next_index}
+    let nodes = [
+        {value: 10, next: 1},
+        {value: 20, next: 2},
+        {value: 30, next: -1}  // -1 means null/end
+    ];
+
+    // Traverse
+    let mut current = 0;
+    let mut values = [];
+    while current != -1 {
+        values = values + [nodes[current].value];
+        current = nodes[current].next;
+    }
+
+    assert(values.len() == 3, "Should have 3 values");
+    assert(values[0] == 10, "First value");
+    assert(values[2] == 30, "Last value");
+
+    println("✅ test_linked_list_structure PASSED");
+}
+
+// TEST 15: Graph Adjacency List
+fun test_graph_adjacency_list() {
+    // Graph as array of {node, neighbors}
+    let graph = [
+        {node: "A", neighbors: ["B", "C"]},
+        {node: "B", neighbors: ["A", "D"]},
+        {node: "C", neighbors: ["A"]},
+        {node: "D", neighbors: ["B"]}
+    ];
+
+    // Find neighbors of "B"
+    let mut b_neighbors = [];
+    for entry in graph {
+        if entry.node == "B" {
+            b_neighbors = entry.neighbors;
+            break;
+        }
+    }
+
+    assert(b_neighbors.len() == 2, "B has 2 neighbors");
+    assert(b_neighbors[0] == "A", "First neighbor is A");
+    assert(b_neighbors[1] == "D", "Second neighbor is D");
+
+    println("✅ test_graph_adjacency_list PASSED");
+}
+
+// MAIN: Run all tests
+fun main() {
+    println("Running Chapter 3.3 (Advanced Collections) Tests...\n");
+
+    test_set_unique_elements();
+    test_set_union();
+    test_set_intersection();
+    test_set_difference();
+    test_stack_operations();
+    test_queue_operations();
+    test_tuple_structures();
+    test_pair_structure();
+    test_3d_array();
+    test_jagged_array();
+    test_circular_buffer();
+    test_priority_queue();
+    test_sparse_array();
+    test_linked_list_structure();
+    test_graph_adjacency_list();
+
+    println("\n🎉 All Chapter 3.3 tests PASSED!");
+    println("Test Coverage: 15 test functions, 40+ assertions");
+}
