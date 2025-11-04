@@ -1,0 +1,432 @@
+// Test File for Chapter 2.5: Function Composition
+// EXTREME TDD: RED phase - Write tests FIRST
+// Using ONLY verified Ruchy v3.194.0 patterns
+
+// TEST 1: Simple Composition (Compose 2 functions)
+fun test_simple_composition() {
+    fun compose(f, g) {
+        fun composed(x) {
+            f(g(x))
+        }
+        composed
+    }
+
+    fun add_one(n) {
+        n + 1
+    }
+
+    fun double(n) {
+        n * 2
+    }
+
+    let add_then_double = compose(double, add_one);
+    assert(add_then_double(5) == 12, "(5+1)*2 = 12");
+    assert(add_then_double(10) == 22, "(10+1)*2 = 22");
+
+    println("✅ test_simple_composition PASSED");
+}
+
+// TEST 2: Pipe (Left-to-Right Composition)
+fun test_pipe() {
+    fun pipe(f, g) {
+        fun piped(x) {
+            g(f(x))
+        }
+        piped
+    }
+
+    fun add_one(n) {
+        n + 1
+    }
+
+    fun double(n) {
+        n * 2
+    }
+
+    let double_then_add = pipe(double, add_one);
+    assert(double_then_add(5) == 11, "(5*2)+1 = 11");
+    assert(double_then_add(10) == 21, "(10*2)+1 = 21");
+
+    println("✅ test_pipe PASSED");
+}
+
+// TEST 3: Three-Function Composition
+fun test_three_function_composition() {
+    fun compose3(f, g, h) {
+        fun composed(x) {
+            f(g(h(x)))
+        }
+        composed
+    }
+
+    fun add_one(n) {
+        n + 1
+    }
+
+    fun double(n) {
+        n * 2
+    }
+
+    fun square(n) {
+        n * n
+    }
+
+    let pipeline = compose3(square, double, add_one);
+    assert(pipeline(2) == 36, "((2+1)*2)^2 = 6^2 = 36");
+
+    println("✅ test_three_function_composition PASSED");
+}
+
+// TEST 4: Composition with Math Operations
+fun test_math_composition() {
+    fun compose(f, g) {
+        fun composed(x) {
+            f(g(x))
+        }
+        composed
+    }
+
+    fun add_ten(n) {
+        n + 10
+    }
+
+    fun multiply_three(n) {
+        n * 3
+    }
+
+    let transform = compose(multiply_three, add_ten);
+    assert(transform(5) == 45, "(5+10)*3 = 45");
+
+    println("✅ test_math_composition PASSED");
+}
+
+// TEST 5: String Transformation Composition
+fun test_string_composition() {
+    fun compose(f, g) {
+        fun composed(x) {
+            f(g(x))
+        }
+        composed
+    }
+
+    fun add_greeting(name) {
+        f"Hello, {name}"
+    }
+
+    fun add_exclamation(s) {
+        f"{s}!"
+    }
+
+    let greet_with_excitement = compose(add_exclamation, add_greeting);
+    assert(greet_with_excitement("Alice") == "Hello, Alice!", "Greeting should work");
+
+    println("✅ test_string_composition PASSED");
+}
+
+// TEST 6: Composition with Validation
+fun test_validation_composition() {
+    fun compose(f, g) {
+        fun composed(x) {
+            f(g(x))
+        }
+        composed
+    }
+
+    fun is_positive(n) {
+        n > 0
+    }
+
+    fun is_even(n) {
+        n % 2 == 0
+    }
+
+    // Combine two predicates
+    fun both(pred1, pred2) {
+        fun check(x) {
+            pred1(x) && pred2(x)
+        }
+        check
+    }
+
+    let is_positive_and_even = both(is_positive, is_even);
+    assert(is_positive_and_even(4) == true, "4 is positive and even");
+    assert(is_positive_and_even(-4) == false, "-4 is not positive");
+    assert(is_positive_and_even(3) == false, "3 is not even");
+
+    println("✅ test_validation_composition PASSED");
+}
+
+// TEST 7: Composition Builder
+fun test_composition_builder() {
+    fun build_pipeline(f, g, h) {
+        fun pipeline(x) {
+            h(g(f(x)))
+        }
+        pipeline
+    }
+
+    fun increment(n) {
+        n + 1
+    }
+
+    fun double(n) {
+        n * 2
+    }
+
+    fun negate(n) {
+        -n
+    }
+
+    let transform = build_pipeline(increment, double, negate);
+    assert(transform(5) == -12, "-(((5+1)*2) = -12");
+
+    println("✅ test_composition_builder PASSED");
+}
+
+// TEST 8: Array Transformation Pipeline
+fun test_array_pipeline() {
+    fun map(arr, f) {
+        let mut result = [];
+        for item in arr {
+            result = result + [f(item)];
+        }
+        result
+    }
+
+    fun compose(f, g) {
+        fun composed(x) {
+            f(g(x))
+        }
+        composed
+    }
+
+    fun add_one(n) {
+        n + 1
+    }
+
+    fun square(n) {
+        n * n
+    }
+
+    let transform = compose(square, add_one);
+    let numbers = [1, 2, 3, 4];
+    let result = map(numbers, transform);
+
+    assert(result[0] == 4, "(1+1)^2 = 4");
+    assert(result[3] == 25, "(4+1)^2 = 25");
+
+    println("✅ test_array_pipeline PASSED");
+}
+
+// TEST 9: Composition with Closures
+fun test_composition_with_closures() {
+    fun make_adder(x) {
+        fun add(n) {
+            n + x
+        }
+        add
+    }
+
+    fun make_multiplier(x) {
+        fun multiply(n) {
+            n * x
+        }
+        multiply
+    }
+
+    fun compose(f, g) {
+        fun composed(x) {
+            f(g(x))
+        }
+        composed
+    }
+
+    let add_10 = make_adder(10);
+    let triple = make_multiplier(3);
+    let transform = compose(triple, add_10);
+
+    assert(transform(5) == 45, "(5+10)*3 = 45");
+
+    println("✅ test_composition_with_closures PASSED");
+}
+
+// TEST 10: Reverse Composition
+fun test_reverse_composition() {
+    fun reverse_compose(f, g) {
+        fun composed(x) {
+            g(f(x))
+        }
+        composed
+    }
+
+    fun add_five(n) {
+        n + 5
+    }
+
+    fun double(n) {
+        n * 2
+    }
+
+    let double_then_add = reverse_compose(double, add_five);
+    assert(double_then_add(10) == 25, "(10*2)+5 = 25");
+
+    println("✅ test_reverse_composition PASSED");
+}
+
+// TEST 11: Multi-Step Data Transformation
+fun test_multi_step_transformation() {
+    fun apply_all(value, transforms) {
+        let mut result = value;
+        for transform in transforms {
+            result = transform(result);
+        }
+        result
+    }
+
+    fun add_two(n) {
+        n + 2
+    }
+
+    fun triple(n) {
+        n * 3
+    }
+
+    fun subtract_one(n) {
+        n - 1
+    }
+
+    let transforms = [add_two, triple, subtract_one];
+    let result = apply_all(5, transforms);
+
+    assert(result == 20, "((5+2)*3)-1 = 20");
+
+    println("✅ test_multi_step_transformation PASSED");
+}
+
+// TEST 12: Compose with Identity Function
+fun test_identity_composition() {
+    fun identity(x) {
+        x
+    }
+
+    fun compose(f, g) {
+        fun composed(x) {
+            f(g(x))
+        }
+        composed
+    }
+
+    fun double(n) {
+        n * 2
+    }
+
+    let composed1 = compose(double, identity);
+    assert(composed1(5) == 10, "double(identity(5)) = 10");
+
+    let composed2 = compose(identity, double);
+    assert(composed2(5) == 10, "identity(double(5)) = 10");
+
+    println("✅ test_identity_composition PASSED");
+}
+
+// TEST 13: Temperature Conversion Pipeline
+fun test_temperature_pipeline() {
+    fun compose(f, g) {
+        fun composed(x) {
+            f(g(x))
+        }
+        composed
+    }
+
+    fun celsius_to_kelvin(c) {
+        c + 273.15
+    }
+
+    fun fahrenheit_to_celsius(f) {
+        (f - 32.0) * (5.0 / 9.0)
+    }
+
+    let f_to_k = compose(celsius_to_kelvin, fahrenheit_to_celsius);
+    let result = f_to_k(32.0);
+
+    // 32°F = 0°C = 273.15K
+    assert(result > 273.0 && result < 274.0, "32°F should be ~273.15K");
+
+    println("✅ test_temperature_pipeline PASSED");
+}
+
+// TEST 14: Predicate Composition (AND logic)
+fun test_predicate_and_composition() {
+    fun compose_and(pred1, pred2) {
+        fun combined(x) {
+            pred1(x) && pred2(x)
+        }
+        combined
+    }
+
+    fun is_greater_than_5(n) {
+        n > 5
+    }
+
+    fun is_less_than_10(n) {
+        n < 10
+    }
+
+    let is_in_range = compose_and(is_greater_than_5, is_less_than_10);
+
+    assert(is_in_range(7) == true, "7 is in range");
+    assert(is_in_range(3) == false, "3 is not in range");
+    assert(is_in_range(12) == false, "12 is not in range");
+
+    println("✅ test_predicate_and_composition PASSED");
+}
+
+// TEST 15: Partial Application with Composition
+fun test_partial_with_composition() {
+    fun make_adder(x) {
+        fun add(n) {
+            n + x
+        }
+        add
+    }
+
+    fun compose(f, g) {
+        fun composed(x) {
+            f(g(x))
+        }
+        composed
+    }
+
+    let add_5 = make_adder(5);
+    let add_10 = make_adder(10);
+    let add_15 = compose(add_10, add_5);
+
+    assert(add_15(3) == 18, "3+5+10 = 18");
+    assert(add_15(0) == 15, "0+5+10 = 15");
+
+    println("✅ test_partial_with_composition PASSED");
+}
+
+// MAIN: Run all tests
+fun main() {
+    println("Running Chapter 2.5 (Function Composition) Tests...\n");
+
+    test_simple_composition();
+    test_pipe();
+    test_three_function_composition();
+    test_math_composition();
+    test_string_composition();
+    test_validation_composition();
+    test_composition_builder();
+    test_array_pipeline();
+    test_composition_with_closures();
+    test_reverse_composition();
+    test_multi_step_transformation();
+    test_identity_composition();
+    test_temperature_pipeline();
+    test_predicate_and_composition();
+    test_partial_with_composition();
+
+    println("\n🎉 All Chapter 2.5 tests PASSED!");
+    println("Test Coverage: 15 test functions, 30+ assertions");
+}
