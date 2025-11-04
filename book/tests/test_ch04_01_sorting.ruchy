@@ -1,0 +1,607 @@
+// Test File for Chapter 4.1: Sorting Algorithms
+// EXTREME TDD: RED phase - Write tests FIRST
+// Using ONLY verified Ruchy v3.194.0 patterns
+
+// TEST 1: Bubble Sort (Simple)
+fun test_bubble_sort() {
+    fun bubble_sort(arr) {
+        let mut sorted = arr;
+        let mut changed = true;
+
+        while changed {
+            changed = false;
+            let mut i = 0;
+            while i < sorted.len() - 1 {
+                if sorted[i] > sorted[i + 1] {
+                    // Swap
+                    let temp = sorted[i];
+                    sorted[i] = sorted[i + 1];
+                    sorted[i + 1] = temp;
+                    changed = true;
+                }
+                i = i + 1;
+            }
+        }
+
+        sorted
+    }
+
+    let numbers = [64, 34, 25, 12, 22, 11, 90];
+    let sorted = bubble_sort(numbers);
+
+    assert(sorted[0] == 11, "First element should be 11");
+    assert(sorted[6] == 90, "Last element should be 90");
+    assert(sorted[3] == 25, "Middle element check");
+
+    println("✅ test_bubble_sort PASSED");
+}
+
+// TEST 2: Selection Sort
+fun test_selection_sort() {
+    fun selection_sort(arr) {
+        let mut sorted = arr;
+        let mut i = 0;
+
+        while i < sorted.len() {
+            // Find minimum in remaining array
+            let mut min_idx = i;
+            let mut j = i + 1;
+
+            while j < sorted.len() {
+                if sorted[j] < sorted[min_idx] {
+                    min_idx = j;
+                }
+                j = j + 1;
+            }
+
+            // Swap with current position
+            if min_idx != i {
+                let temp = sorted[i];
+                sorted[i] = sorted[min_idx];
+                sorted[min_idx] = temp;
+            }
+
+            i = i + 1;
+        }
+
+        sorted
+    }
+
+    let numbers = [64, 25, 12, 22, 11];
+    let sorted = selection_sort(numbers);
+
+    assert(sorted[0] == 11, "First element should be 11");
+    assert(sorted[4] == 64, "Last element should be 64");
+
+    println("✅ test_selection_sort PASSED");
+}
+
+// TEST 3: Insertion Sort
+fun test_insertion_sort() {
+    fun insertion_sort(arr) {
+        let mut sorted = arr;
+        let mut i = 1;
+
+        while i < sorted.len() {
+            let key = sorted[i];
+            let mut j = i - 1;
+
+            // Shift elements greater than key
+            while j >= 0 && sorted[j] > key {
+                sorted[j + 1] = sorted[j];
+                j = j - 1;
+            }
+
+            sorted[j + 1] = key;
+            i = i + 1;
+        }
+
+        sorted
+    }
+
+    let numbers = [12, 11, 13, 5, 6];
+    let sorted = insertion_sort(numbers);
+
+    assert(sorted[0] == 5, "First element should be 5");
+    assert(sorted[4] == 13, "Last element should be 13");
+
+    println("✅ test_insertion_sort PASSED");
+}
+
+// TEST 4: Merge Sort (Divide and Conquer)
+fun test_merge_sort() {
+    fun merge(left, right) {
+        let mut result = [];
+        let mut i = 0;
+        let mut j = 0;
+
+        while i < left.len() && j < right.len() {
+            if left[i] <= right[j] {
+                result = result + [left[i]];
+                i = i + 1;
+            } else {
+                result = result + [right[j]];
+                j = j + 1;
+            }
+        }
+
+        // Add remaining elements
+        while i < left.len() {
+            result = result + [left[i]];
+            i = i + 1;
+        }
+
+        while j < right.len() {
+            result = result + [right[j]];
+            j = j + 1;
+        }
+
+        result
+    }
+
+    fun merge_sort(arr) {
+        if arr.len() <= 1 {
+            return arr;
+        }
+
+        let mid = arr.len() / 2;
+
+        // Split array
+        let mut left = [];
+        let mut right = [];
+        let mut i = 0;
+
+        while i < mid {
+            left = left + [arr[i]];
+            i = i + 1;
+        }
+
+        while i < arr.len() {
+            right = right + [arr[i]];
+            i = i + 1;
+        }
+
+        // Recursively sort and merge
+        let sorted_left = merge_sort(left);
+        let sorted_right = merge_sort(right);
+
+        merge(sorted_left, sorted_right)
+    }
+
+    let numbers = [38, 27, 43, 3, 9, 82, 10];
+    let sorted = merge_sort(numbers);
+
+    assert(sorted[0] == 3, "First element should be 3");
+    assert(sorted[6] == 82, "Last element should be 82");
+    assert(sorted.len() == 7, "Length preserved");
+
+    println("✅ test_merge_sort PASSED");
+}
+
+// TEST 5: Quick Sort
+fun test_quick_sort() {
+    fun partition(arr, low, high) {
+        let pivot = arr[high];
+        let mut i = low - 1;
+        let mut result = arr;
+        let mut j = low;
+
+        while j < high {
+            if result[j] < pivot {
+                i = i + 1;
+                // Swap
+                let temp = result[i];
+                result[i] = result[j];
+                result[j] = temp;
+            }
+            j = j + 1;
+        }
+
+        // Swap pivot
+        let temp = result[i + 1];
+        result[i + 1] = result[high];
+        result[high] = temp;
+
+        {arr: result, pivot_idx: i + 1}
+    }
+
+    fun quick_sort_range(arr, low, high) {
+        if low < high {
+            let part = partition(arr, low, high);
+            let sorted = part.arr;
+            let pi = part.pivot_idx;
+
+            // Sort left and right
+            let left_sorted = quick_sort_range(sorted, low, pi - 1);
+            let right_sorted = quick_sort_range(left_sorted, pi + 1, high);
+
+            right_sorted
+        } else {
+            arr
+        }
+    }
+
+    fun quick_sort(arr) {
+        if arr.len() <= 1 {
+            return arr;
+        }
+        quick_sort_range(arr, 0, arr.len() - 1)
+    }
+
+    let numbers = [10, 7, 8, 9, 1, 5];
+    let sorted = quick_sort(numbers);
+
+    assert(sorted[0] == 1, "First element should be 1");
+    assert(sorted[5] == 10, "Last element should be 10");
+
+    println("✅ test_quick_sort PASSED");
+}
+
+// TEST 6: Sorting with Custom Comparator (Descending)
+fun test_sort_descending() {
+    fun bubble_sort_desc(arr) {
+        let mut sorted = arr;
+        let mut changed = true;
+
+        while changed {
+            changed = false;
+            let mut i = 0;
+            while i < sorted.len() - 1 {
+                if sorted[i] < sorted[i + 1] {  // Reversed comparison
+                    let temp = sorted[i];
+                    sorted[i] = sorted[i + 1];
+                    sorted[i + 1] = temp;
+                    changed = true;
+                }
+                i = i + 1;
+            }
+        }
+
+        sorted
+    }
+
+    let numbers = [5, 2, 8, 1, 9];
+    let sorted = bubble_sort_desc(numbers);
+
+    assert(sorted[0] == 9, "First should be largest");
+    assert(sorted[4] == 1, "Last should be smallest");
+
+    println("✅ test_sort_descending PASSED");
+}
+
+// TEST 7: Sorting Structs by Field
+fun test_sort_structs() {
+    fun sort_by_age(people) {
+        let mut sorted = people;
+        let mut changed = true;
+
+        while changed {
+            changed = false;
+            let mut i = 0;
+            while i < sorted.len() - 1 {
+                if sorted[i].age > sorted[i + 1].age {
+                    let temp = sorted[i];
+                    sorted[i] = sorted[i + 1];
+                    sorted[i + 1] = temp;
+                    changed = true;
+                }
+                i = i + 1;
+            }
+        }
+
+        sorted
+    }
+
+    let people = [
+        {name: "Alice", age: 30},
+        {name: "Bob", age: 25},
+        {name: "Charlie", age: 35}
+    ];
+
+    let sorted = sort_by_age(people);
+
+    assert(sorted[0].name == "Bob", "Bob is youngest");
+    assert(sorted[2].name == "Charlie", "Charlie is oldest");
+
+    println("✅ test_sort_structs PASSED");
+}
+
+// TEST 8: Checking if Array is Sorted
+fun test_is_sorted() {
+    fun is_sorted(arr) {
+        let mut i = 0;
+        while i < arr.len() - 1 {
+            if arr[i] > arr[i + 1] {
+                return false;
+            }
+            i = i + 1;
+        }
+        true
+    }
+
+    assert(is_sorted([1, 2, 3, 4, 5]) == true, "Sorted array");
+    assert(is_sorted([1, 3, 2, 4]) == false, "Unsorted array");
+    assert(is_sorted([5]) == true, "Single element");
+    assert(is_sorted([]) == true, "Empty array");
+
+    println("✅ test_is_sorted PASSED");
+}
+
+// TEST 9: Sorting with Duplicates
+fun test_sort_with_duplicates() {
+    fun bubble_sort(arr) {
+        let mut sorted = arr;
+        let mut changed = true;
+
+        while changed {
+            changed = false;
+            let mut i = 0;
+            while i < sorted.len() - 1 {
+                if sorted[i] > sorted[i + 1] {
+                    let temp = sorted[i];
+                    sorted[i] = sorted[i + 1];
+                    sorted[i + 1] = temp;
+                    changed = true;
+                }
+                i = i + 1;
+            }
+        }
+
+        sorted
+    }
+
+    let numbers = [5, 2, 8, 2, 9, 1, 5];
+    let sorted = bubble_sort(numbers);
+
+    assert(sorted[0] == 1, "First is 1");
+    assert(sorted[1] == 2, "Second is 2");
+    assert(sorted[2] == 2, "Third is 2 (duplicate)");
+    assert(sorted[6] == 9, "Last is 9");
+
+    println("✅ test_sort_with_duplicates PASSED");
+}
+
+// TEST 10: Partial Sort (Top K Elements)
+fun test_top_k_elements() {
+    fun top_k(arr, k) {
+        // Sort and take first k elements
+        let mut sorted = arr;
+        let mut changed = true;
+
+        while changed {
+            changed = false;
+            let mut i = 0;
+            while i < sorted.len() - 1 {
+                if sorted[i] > sorted[i + 1] {
+                    let temp = sorted[i];
+                    sorted[i] = sorted[i + 1];
+                    sorted[i + 1] = temp;
+                    changed = true;
+                }
+                i = i + 1;
+            }
+        }
+
+        // Take first k
+        let mut result = [];
+        let mut i = 0;
+        while i < k && i < sorted.len() {
+            result = result + [sorted[i]];
+            i = i + 1;
+        }
+
+        result
+    }
+
+    let numbers = [7, 10, 4, 3, 20, 15];
+    let top3 = top_k(numbers, 3);
+
+    assert(top3.len() == 3, "Should have 3 elements");
+    assert(top3[0] == 3, "Smallest is 3");
+    assert(top3[1] == 4, "Second is 4");
+    assert(top3[2] == 7, "Third is 7");
+
+    println("✅ test_top_k_elements PASSED");
+}
+
+// TEST 11: Sorting in Reverse Order
+fun test_reverse_sorted() {
+    fun reverse_array(arr) {
+        let mut reversed = [];
+        let mut i = arr.len();
+
+        while i > 0 {
+            i = i - 1;
+            reversed = reversed + [arr[i]];
+        }
+
+        reversed
+    }
+
+    let sorted = [1, 2, 3, 4, 5];
+    let reversed = reverse_array(sorted);
+
+    assert(reversed[0] == 5, "First is 5");
+    assert(reversed[4] == 1, "Last is 1");
+
+    println("✅ test_reverse_sorted PASSED");
+}
+
+// TEST 12: Counting Sort (for integers in range)
+fun test_counting_sort() {
+    fun counting_sort(arr, max_val) {
+        // Count occurrences
+        let mut counts = [];
+        let mut i = 0;
+        while i <= max_val {
+            counts = counts + [0];
+            i = i + 1;
+        }
+
+        for num in arr {
+            counts[num] = counts[num] + 1;
+        }
+
+        // Build sorted array
+        let mut sorted = [];
+        let mut i = 0;
+        while i <= max_val {
+            let mut j = 0;
+            while j < counts[i] {
+                sorted = sorted + [i];
+                j = j + 1;
+            }
+            i = i + 1;
+        }
+
+        sorted
+    }
+
+    let numbers = [4, 2, 2, 8, 3, 3, 1];
+    let sorted = counting_sort(numbers, 10);
+
+    assert(sorted[0] == 1, "First is 1");
+    assert(sorted[1] == 2, "Second is 2");
+    assert(sorted[6] == 8, "Last is 8");
+
+    println("✅ test_counting_sort PASSED");
+}
+
+// TEST 13: Three-Way Partitioning (Dutch Flag Problem)
+fun test_three_way_partition() {
+    fun partition_three_way(arr, pivot) {
+        let mut low = [];
+        let mut equal = [];
+        let mut high = [];
+
+        for num in arr {
+            if num < pivot {
+                low = low + [num];
+            } else if num == pivot {
+                equal = equal + [num];
+            } else {
+                high = high + [num];
+            }
+        }
+
+        low + equal + high
+    }
+
+    let numbers = [5, 2, 8, 5, 1, 5, 9, 3];
+    let partitioned = partition_three_way(numbers, 5);
+
+    // All elements < 5 come first
+    assert(partitioned[0] < 5, "First partition < 5");
+    assert(partitioned[1] < 5, "First partition < 5");
+    assert(partitioned[2] < 5, "First partition < 5");
+
+    // Elements = 5 in middle
+    assert(partitioned[3] == 5, "Middle partition = 5");
+    assert(partitioned[4] == 5, "Middle partition = 5");
+    assert(partitioned[5] == 5, "Middle partition = 5");
+
+    // Elements > 5 at end
+    assert(partitioned[6] > 5, "Last partition > 5");
+
+    println("✅ test_three_way_partition PASSED");
+}
+
+// TEST 14: Sorting Already Sorted Array (Best Case)
+fun test_sort_already_sorted() {
+    fun bubble_sort_optimized(arr) {
+        let mut sorted = arr;
+        let mut changed = true;
+        let mut pass_count = 0;
+
+        while changed {
+            changed = false;
+            pass_count = pass_count + 1;
+            let mut i = 0;
+            while i < sorted.len() - 1 {
+                if sorted[i] > sorted[i + 1] {
+                    let temp = sorted[i];
+                    sorted[i] = sorted[i + 1];
+                    sorted[i + 1] = temp;
+                    changed = true;
+                }
+                i = i + 1;
+            }
+        }
+
+        {sorted: sorted, passes: pass_count}
+    }
+
+    let already_sorted = [1, 2, 3, 4, 5];
+    let result = bubble_sort_optimized(already_sorted);
+
+    assert(result.passes == 1, "Should complete in 1 pass");
+    assert(result.sorted[0] == 1, "Array unchanged");
+
+    println("✅ test_sort_already_sorted PASSED");
+}
+
+// TEST 15: Finding Median After Sorting
+fun test_find_median() {
+    fun find_median(arr) {
+        // Sort first
+        let mut sorted = arr;
+        let mut changed = true;
+
+        while changed {
+            changed = false;
+            let mut i = 0;
+            while i < sorted.len() - 1 {
+                if sorted[i] > sorted[i + 1] {
+                    let temp = sorted[i];
+                    sorted[i] = sorted[i + 1];
+                    sorted[i + 1] = temp;
+                    changed = true;
+                }
+                i = i + 1;
+            }
+        }
+
+        // Find median
+        let mid = sorted.len() / 2;
+
+        if sorted.len() % 2 == 0 {
+            // Even: average of two middle elements
+            (sorted[mid - 1] + sorted[mid]) / 2
+        } else {
+            // Odd: middle element
+            sorted[mid]
+        }
+    }
+
+    let odd_numbers = [7, 3, 5, 1, 9];
+    assert(find_median(odd_numbers) == 5, "Median of odd array");
+
+    let even_numbers = [7, 3, 5, 1];
+    assert(find_median(even_numbers) == 4, "Median of even array: (3+5)/2 = 4");
+
+    println("✅ test_find_median PASSED");
+}
+
+// MAIN: Run all tests
+fun main() {
+    println("Running Chapter 4.1 (Sorting Algorithms) Tests...\n");
+
+    test_bubble_sort();
+    test_selection_sort();
+    test_insertion_sort();
+    test_merge_sort();
+    test_quick_sort();
+    test_sort_descending();
+    test_sort_structs();
+    test_is_sorted();
+    test_sort_with_duplicates();
+    test_top_k_elements();
+    test_reverse_sorted();
+    test_counting_sort();
+    test_three_way_partition();
+    test_sort_already_sorted();
+    test_find_median();
+
+    println("\n🎉 All Chapter 4.1 tests PASSED!");
+    println("Test Coverage: 15 test functions, 40+ assertions");
+}
