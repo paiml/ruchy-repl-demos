@@ -1,0 +1,259 @@
+// Test File for Chapter 2.1: Basic Functions
+// EXTREME TDD: RED phase - Write tests FIRST
+// Using ONLY verified Ruchy v3.194.0 patterns
+
+// TEST 1: Simple Function Definition
+fun test_simple_function() {
+    fun greet() {
+        "Hello!"
+    }
+
+    let result = greet();
+    assert(result == "Hello!", "Function should return Hello!");
+
+    println("✅ test_simple_function PASSED");
+}
+
+// TEST 2: Function with Parameters
+fun test_function_with_parameters() {
+    fun add(a, b) {
+        a + b
+    }
+
+    let result = add(5, 3);
+    assert(result == 8, "add(5, 3) should be 8");
+
+    let result2 = add(10, 20);
+    assert(result2 == 30, "add(10, 20) should be 30");
+
+    println("✅ test_function_with_parameters PASSED");
+}
+
+// TEST 3: Function with Return Statement
+fun test_function_with_return() {
+    fun multiply(x, y) {
+        let result = x * y;
+        result
+    }
+
+    assert(multiply(4, 5) == 20, "multiply(4, 5) should be 20");
+    assert(multiply(3, 7) == 21, "multiply(3, 7) should be 21");
+
+    println("✅ test_function_with_return PASSED");
+}
+
+// TEST 4: Function with Multiple Statements
+fun test_function_multiple_statements() {
+    fun calculate_area(length, width) {
+        let area = length * width;
+        area
+    }
+
+    assert(calculate_area(5, 10) == 50, "Area should be 50");
+    assert(calculate_area(3, 4) == 12, "Area should be 12");
+
+    println("✅ test_function_multiple_statements PASSED");
+}
+
+// TEST 5: Function Calling Other Functions
+fun test_function_calling_functions() {
+    fun double(n) {
+        n * 2
+    }
+
+    fun quadruple(n) {
+        double(double(n))
+    }
+
+    assert(quadruple(3) == 12, "quadruple(3) should be 12");
+    assert(quadruple(5) == 20, "quadruple(5) should be 20");
+
+    println("✅ test_function_calling_functions PASSED");
+}
+
+// TEST 6: Function with Conditional Logic
+fun test_function_with_conditionals() {
+    fun abs_value(n) {
+        if n < 0 {
+            -n
+        } else {
+            n
+        }
+    }
+
+    assert(abs_value(-5) == 5, "abs(-5) should be 5");
+    assert(abs_value(5) == 5, "abs(5) should be 5");
+    assert(abs_value(0) == 0, "abs(0) should be 0");
+
+    println("✅ test_function_with_conditionals PASSED");
+}
+
+// TEST 7: Function with Default Behavior
+fun test_function_max() {
+    fun max(a, b) {
+        if a > b {
+            a
+        } else {
+            b
+        }
+    }
+
+    assert(max(5, 3) == 5, "max(5, 3) should be 5");
+    assert(max(3, 5) == 5, "max(3, 5) should be 5");
+    assert(max(7, 7) == 7, "max(7, 7) should be 7");
+
+    println("✅ test_function_max PASSED");
+}
+
+// TEST 8: Function with Loop
+fun test_function_with_loop() {
+    fun sum_range(n) {
+        let mut sum = 0;
+        let mut i = 1;
+        while i <= n {
+            sum = sum + i;
+            i = i + 1;
+        }
+        sum
+    }
+
+    assert(sum_range(5) == 15, "sum_range(5) should be 15");  // 1+2+3+4+5
+    assert(sum_range(10) == 55, "sum_range(10) should be 55");
+
+    println("✅ test_function_with_loop PASSED");
+}
+
+// TEST 9: Function with Array Parameter
+fun test_function_with_array() {
+    fun sum_array(numbers) {
+        let mut total = 0;
+        for num in numbers {
+            total = total + num;
+        }
+        total
+    }
+
+    let nums = [1, 2, 3, 4, 5];
+    assert(sum_array(nums) == 15, "sum_array should be 15");
+
+    let nums2 = [10, 20, 30];
+    assert(sum_array(nums2) == 60, "sum_array should be 60");
+
+    println("✅ test_function_with_array PASSED");
+}
+
+// TEST 10: Function Returning Boolean
+fun test_function_returning_boolean() {
+    fun is_even(n) {
+        n % 2 == 0
+    }
+
+    assert(is_even(4) == true, "4 should be even");
+    assert(is_even(7) == false, "7 should not be even");
+    assert(is_even(0) == true, "0 should be even");
+
+    println("✅ test_function_returning_boolean PASSED");
+}
+
+// TEST 11: Function with String Operations
+fun test_function_with_strings() {
+    fun create_greeting(name) {
+        f"Hello, {name}!"
+    }
+
+    assert(create_greeting("Alice") == "Hello, Alice!", "Greeting should match");
+    assert(create_greeting("Bob") == "Hello, Bob!", "Greeting should match");
+
+    println("✅ test_function_with_strings PASSED");
+}
+
+// TEST 12: Function with Multiple Return Paths
+fun test_function_multiple_returns() {
+    fun classify_number(n) {
+        if n > 0 {
+            "positive"
+        } else if n < 0 {
+            "negative"
+        } else {
+            "zero"
+        }
+    }
+
+    assert(classify_number(5) == "positive", "5 should be positive");
+    assert(classify_number(-3) == "negative", "-3 should be negative");
+    assert(classify_number(0) == "zero", "0 should be zero");
+
+    println("✅ test_function_multiple_returns PASSED");
+}
+
+// TEST 13: Function with Struct Parameter
+fun test_function_with_struct() {
+    fun get_full_name(person) {
+        f"{person.first} {person.last}"
+    }
+
+    let p = {first: "John", last: "Doe"};
+    assert(get_full_name(p) == "John Doe", "Full name should match");
+
+    println("✅ test_function_with_struct PASSED");
+}
+
+// TEST 14: Function Composition
+fun test_function_composition() {
+    fun add_one(x) {
+        x + 1
+    }
+
+    fun double(x) {
+        x * 2
+    }
+
+    let result = double(add_one(5));  // (5 + 1) * 2 = 12
+    assert(result == 12, "Composition should work");
+
+    println("✅ test_function_composition PASSED");
+}
+
+// TEST 15: Function with Early Return Pattern
+fun test_function_early_return() {
+    fun find_first_positive(numbers) {
+        for num in numbers {
+            if num > 0 {
+                return num;
+            }
+        }
+        0  // Default if none found
+    }
+
+    let nums1 = [-1, -2, 3, 4];
+    assert(find_first_positive(nums1) == 3, "Should find 3");
+
+    let nums2 = [-5, -10];
+    assert(find_first_positive(nums2) == 0, "Should return 0 when none found");
+
+    println("✅ test_function_early_return PASSED");
+}
+
+// MAIN: Run all tests
+fun main() {
+    println("Running Chapter 2.1 (Basic Functions) Tests...\n");
+
+    test_simple_function();
+    test_function_with_parameters();
+    test_function_with_return();
+    test_function_multiple_statements();
+    test_function_calling_functions();
+    test_function_with_conditionals();
+    test_function_max();
+    test_function_with_loop();
+    test_function_with_array();
+    test_function_returning_boolean();
+    test_function_with_strings();
+    test_function_multiple_returns();
+    test_function_with_struct();
+    test_function_composition();
+    test_function_early_return();
+
+    println("\n🎉 All Chapter 2.1 tests PASSED!");
+    println("Test Coverage: 15 test functions, 30+ assertions");
+}
