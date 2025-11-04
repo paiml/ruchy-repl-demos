@@ -1,0 +1,298 @@
+// Test File for Chapter 3.1: Arrays and Vectors
+// EXTREME TDD: RED phase - Write tests FIRST
+// Using ONLY verified Ruchy v3.194.0 patterns
+
+// TEST 1: Array Creation Methods
+fun test_array_creation() {
+    // Literal creation
+    let arr1 = [1, 2, 3, 4, 5];
+    assert(arr1.len() == 5, "Literal array should have 5 elements");
+
+    // Empty array
+    let arr2 = [];
+    assert(arr2.len() == 0, "Empty array should have 0 elements");
+
+    // Array with repeated values (manual)
+    let mut arr3 = [];
+    let mut i = 0;
+    while i < 5 {
+        arr3 = arr3 + [0];
+        i = i + 1;
+    }
+    assert(arr3.len() == 5, "Should have 5 zeros");
+
+    println("✅ test_array_creation PASSED");
+}
+
+// TEST 2: Array Indexing and Access
+fun test_array_indexing() {
+    let numbers = [10, 20, 30, 40, 50];
+
+    assert(numbers[0] == 10, "First element should be 10");
+    assert(numbers[4] == 50, "Last element should be 50");
+    assert(numbers[2] == 30, "Middle element should be 30");
+
+    println("✅ test_array_indexing PASSED");
+}
+
+// TEST 3: Array Concatenation
+fun test_array_concatenation() {
+    let arr1 = [1, 2, 3];
+    let arr2 = [4, 5, 6];
+    let combined = arr1 + arr2;
+
+    assert(combined.len() == 6, "Combined should have 6 elements");
+    assert(combined[0] == 1, "First element from arr1");
+    assert(combined[5] == 6, "Last element from arr2");
+
+    println("✅ test_array_concatenation PASSED");
+}
+
+// TEST 4: Array Append (Building Arrays)
+fun test_array_append() {
+    let mut arr = [1, 2, 3];
+    arr = arr + [4];
+    arr = arr + [5];
+
+    assert(arr.len() == 5, "Should have 5 elements");
+    assert(arr[3] == 4, "Fourth element should be 4");
+    assert(arr[4] == 5, "Fifth element should be 5");
+
+    println("✅ test_array_append PASSED");
+}
+
+// TEST 5: Array Iteration (for loop)
+fun test_array_iteration() {
+    let numbers = [1, 2, 3, 4, 5];
+    let mut sum = 0;
+
+    for num in numbers {
+        sum = sum + num;
+    }
+
+    assert(sum == 15, "Sum should be 15");
+
+    println("✅ test_array_iteration PASSED");
+}
+
+// TEST 6: Array Transformation (Manual Map)
+fun test_array_map() {
+    let numbers = [1, 2, 3, 4, 5];
+    let mut doubled = [];
+
+    for num in numbers {
+        doubled = doubled + [num * 2];
+    }
+
+    assert(doubled.len() == 5, "Should have 5 elements");
+    assert(doubled[0] == 2, "First should be 2");
+    assert(doubled[4] == 10, "Last should be 10");
+
+    println("✅ test_array_map PASSED");
+}
+
+// TEST 7: Array Filtering
+fun test_array_filter() {
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+    let mut evens = [];
+
+    for num in numbers {
+        if num % 2 == 0 {
+            evens = evens + [num];
+        }
+    }
+
+    assert(evens.len() == 4, "Should have 4 even numbers");
+    assert(evens[0] == 2, "First even is 2");
+    assert(evens[3] == 8, "Last even is 8");
+
+    println("✅ test_array_filter PASSED");
+}
+
+// TEST 8: Array Reduction (Sum)
+fun test_array_reduce() {
+    let numbers = [10, 20, 30, 40, 50];
+    let mut total = 0;
+
+    for num in numbers {
+        total = total + num;
+    }
+
+    assert(total == 150, "Sum should be 150");
+
+    println("✅ test_array_reduce PASSED");
+}
+
+// TEST 9: Array Finding (First Match)
+fun test_array_find() {
+    let numbers = [1, 2, 3, 4, 5, 6];
+    let mut found = -1;
+
+    for num in numbers {
+        if num > 3 {
+            found = num;
+            break;
+        }
+    }
+
+    assert(found == 4, "First number > 3 should be 4");
+
+    println("✅ test_array_find PASSED");
+}
+
+// TEST 10: Array Contains Check
+fun test_array_contains() {
+    let numbers = [10, 20, 30, 40, 50];
+    let mut contains_30 = false;
+
+    for num in numbers {
+        if num == 30 {
+            contains_30 = true;
+            break;
+        }
+    }
+
+    assert(contains_30 == true, "Array should contain 30");
+
+    let mut contains_60 = false;
+    for num in numbers {
+        if num == 60 {
+            contains_60 = true;
+            break;
+        }
+    }
+
+    assert(contains_60 == false, "Array should not contain 60");
+
+    println("✅ test_array_contains PASSED");
+}
+
+// TEST 11: Array Reversal
+fun test_array_reverse() {
+    let original = [1, 2, 3, 4, 5];
+    let mut reversed = [];
+
+    let mut i = original.len() - 1;
+    while i >= 0 {
+        reversed = reversed + [original[i]];
+        if i == 0 {
+            break;
+        }
+        i = i - 1;
+    }
+
+    assert(reversed.len() == 5, "Should have 5 elements");
+    assert(reversed[0] == 5, "First should be 5");
+    assert(reversed[4] == 1, "Last should be 1");
+
+    println("✅ test_array_reverse PASSED");
+}
+
+// TEST 12: Array Slicing (Manual)
+fun test_array_slice() {
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+    let mut slice = [];
+
+    // Get elements from index 2 to 5 (exclusive)
+    let mut i = 2;
+    while i < 5 {
+        slice = slice + [numbers[i]];
+        i = i + 1;
+    }
+
+    assert(slice.len() == 3, "Slice should have 3 elements");
+    assert(slice[0] == 3, "First element should be 3");
+    assert(slice[2] == 5, "Last element should be 5");
+
+    println("✅ test_array_slice PASSED");
+}
+
+// TEST 13: Nested Arrays (2D Arrays)
+fun test_nested_arrays() {
+    let matrix = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ];
+
+    assert(matrix.len() == 3, "Should have 3 rows");
+    assert(matrix[0].len() == 3, "First row should have 3 columns");
+    assert(matrix[0][0] == 1, "Top-left should be 1");
+    assert(matrix[2][2] == 9, "Bottom-right should be 9");
+    assert(matrix[1][1] == 5, "Center should be 5");
+
+    println("✅ test_nested_arrays PASSED");
+}
+
+// TEST 14: Array of Structs
+fun test_array_of_structs() {
+    let people = [
+        {name: "Alice", age: 30},
+        {name: "Bob", age: 25},
+        {name: "Charlie", age: 35}
+    ];
+
+    assert(people.len() == 3, "Should have 3 people");
+    assert(people[0].name == "Alice", "First person is Alice");
+    assert(people[1].age == 25, "Bob is 25");
+    assert(people[2].name == "Charlie", "Third person is Charlie");
+
+    println("✅ test_array_of_structs PASSED");
+}
+
+// TEST 15: Array Statistics (Min, Max, Average)
+fun test_array_statistics() {
+    let numbers = [15, 8, 23, 4, 16, 42, 11];
+
+    // Find min
+    let mut min = numbers[0];
+    for num in numbers {
+        if num < min {
+            min = num;
+        }
+    }
+    assert(min == 4, "Min should be 4");
+
+    // Find max
+    let mut max = numbers[0];
+    for num in numbers {
+        if num > max {
+            max = num;
+        }
+    }
+    assert(max == 42, "Max should be 42");
+
+    // Calculate average
+    let mut sum = 0;
+    for num in numbers {
+        sum = sum + num;
+    }
+    let avg = sum / numbers.len();
+    assert(avg == 17, "Average should be 17");
+
+    println("✅ test_array_statistics PASSED");
+}
+
+// MAIN: Run all tests
+fun main() {
+    println("Running Chapter 3.1 (Arrays & Vectors) Tests...\n");
+
+    test_array_creation();
+    test_array_indexing();
+    test_array_concatenation();
+    test_array_append();
+    test_array_iteration();
+    test_array_map();
+    test_array_filter();
+    test_array_reduce();
+    test_array_find();
+    test_array_contains();
+    test_array_reverse();
+    test_array_slice();
+    test_nested_arrays();
+    test_array_of_structs();
+    test_array_statistics();
+
+    println("\n🎉 All Chapter 3.1 tests PASSED!");
+    println("Test Coverage: 15 test functions, 40+ assertions");
+}
