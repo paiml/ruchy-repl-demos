@@ -1,0 +1,490 @@
+// Test File for Chapter 4.2: Search Algorithms
+// EXTREME TDD: RED phase - Write tests FIRST
+// Using ONLY verified Ruchy v3.194.0 patterns
+
+// TEST 1: Linear Search (Sequential Search)
+fun test_linear_search() {
+    fun linear_search(arr, target) {
+        let mut i = 0;
+        while i < arr.len() {
+            if arr[i] == target {
+                return i;  // Found at index i
+            }
+            i = i + 1;
+        }
+        -1  // Not found
+    }
+
+    let numbers = [64, 34, 25, 12, 22, 11, 90];
+
+    assert(linear_search(numbers, 12) == 3, "Found 12 at index 3");
+    assert(linear_search(numbers, 90) == 6, "Found 90 at index 6");
+    assert(linear_search(numbers, 64) == 0, "Found 64 at index 0");
+    assert(linear_search(numbers, 99) == -1, "99 not found");
+
+    println("✅ test_linear_search PASSED");
+}
+
+// TEST 2: Binary Search (Requires Sorted Array)
+fun test_binary_search() {
+    fun binary_search(arr, target) {
+        let mut left = 0;
+        let mut right = arr.len() - 1;
+
+        while left <= right {
+            let mid = left + (right - left) / 2;
+
+            if arr[mid] == target {
+                return mid;  // Found at mid
+            } else if arr[mid] < target {
+                left = mid + 1;  // Search right half
+            } else {
+                right = mid - 1;  // Search left half
+            }
+        }
+
+        -1  // Not found
+    }
+
+    let sorted = [11, 12, 22, 25, 34, 64, 90];
+
+    assert(binary_search(sorted, 25) == 3, "Found 25 at index 3");
+    assert(binary_search(sorted, 11) == 0, "Found 11 at index 0");
+    assert(binary_search(sorted, 90) == 6, "Found 90 at index 6");
+    assert(binary_search(sorted, 99) == -1, "99 not found");
+
+    println("✅ test_binary_search PASSED");
+}
+
+// TEST 3: Recursive Binary Search
+fun test_recursive_binary_search() {
+    fun binary_search_recursive(arr, target, left, right) {
+        if left > right {
+            return -1;  // Not found
+        }
+
+        let mid = left + (right - left) / 2;
+
+        if arr[mid] == target {
+            mid
+        } else if arr[mid] < target {
+            binary_search_recursive(arr, target, mid + 1, right)
+        } else {
+            binary_search_recursive(arr, target, left, mid - 1)
+        }
+    }
+
+    fun binary_search(arr, target) {
+        binary_search_recursive(arr, target, 0, arr.len() - 1)
+    }
+
+    let sorted = [1, 3, 5, 7, 9, 11, 13, 15];
+
+    assert(binary_search(sorted, 7) == 3, "Found 7 at index 3");
+    assert(binary_search(sorted, 15) == 7, "Found 15 at index 7");
+    assert(binary_search(sorted, 2) == -1, "2 not found");
+
+    println("✅ test_recursive_binary_search PASSED");
+}
+
+// TEST 4: Find First Occurrence
+fun test_find_first_occurrence() {
+    fun find_first(arr, target) {
+        let mut first = -1;
+        let mut i = 0;
+
+        while i < arr.len() {
+            if arr[i] == target {
+                first = i;
+                break;
+            }
+            i = i + 1;
+        }
+
+        first
+    }
+
+    let numbers = [1, 2, 3, 3, 3, 4, 5];
+
+    assert(find_first(numbers, 3) == 2, "First 3 at index 2");
+    assert(find_first(numbers, 1) == 0, "First 1 at index 0");
+    assert(find_first(numbers, 5) == 6, "First 5 at index 6");
+
+    println("✅ test_find_first_occurrence PASSED");
+}
+
+// TEST 5: Find Last Occurrence
+fun test_find_last_occurrence() {
+    fun find_last(arr, target) {
+        let mut last = -1;
+        let mut i = arr.len();
+
+        while i > 0 {
+            i = i - 1;
+            if arr[i] == target {
+                last = i;
+                break;
+            }
+        }
+
+        last
+    }
+
+    let numbers = [1, 2, 3, 3, 3, 4, 5];
+
+    assert(find_last(numbers, 3) == 4, "Last 3 at index 4");
+    assert(find_last(numbers, 1) == 0, "Last 1 at index 0");
+    assert(find_last(numbers, 5) == 6, "Last 5 at index 6");
+
+    println("✅ test_find_last_occurrence PASSED");
+}
+
+// TEST 6: Find All Occurrences
+fun test_find_all_occurrences() {
+    fun find_all(arr, target) {
+        let mut indices = [];
+        let mut i = 0;
+
+        while i < arr.len() {
+            if arr[i] == target {
+                indices = indices + [i];
+            }
+            i = i + 1;
+        }
+
+        indices
+    }
+
+    let numbers = [1, 2, 3, 3, 3, 4, 5, 3];
+    let all_3s = find_all(numbers, 3);
+
+    assert(all_3s.len() == 4, "Found 4 occurrences of 3");
+    assert(all_3s[0] == 2, "First at index 2");
+    assert(all_3s[3] == 7, "Last at index 7");
+
+    println("✅ test_find_all_occurrences PASSED");
+}
+
+// TEST 7: Find Minimum Element
+fun test_find_minimum() {
+    fun find_min(arr) {
+        if arr.len() == 0 {
+            return -1;
+        }
+
+        let mut min = arr[0];
+        let mut i = 1;
+
+        while i < arr.len() {
+            if arr[i] < min {
+                min = arr[i];
+            }
+            i = i + 1;
+        }
+
+        min
+    }
+
+    let numbers = [64, 34, 25, 12, 22, 11, 90];
+
+    assert(find_min(numbers) == 11, "Minimum is 11");
+    assert(find_min([5]) == 5, "Single element");
+    assert(find_min([5, 1, 9, 3]) == 1, "Min is 1");
+
+    println("✅ test_find_minimum PASSED");
+}
+
+// TEST 8: Find Maximum Element
+fun test_find_maximum() {
+    fun find_max(arr) {
+        if arr.len() == 0 {
+            return -1;
+        }
+
+        let mut max = arr[0];
+        let mut i = 1;
+
+        while i < arr.len() {
+            if arr[i] > max {
+                max = arr[i];
+            }
+            i = i + 1;
+        }
+
+        max
+    }
+
+    let numbers = [64, 34, 25, 12, 22, 11, 90];
+
+    assert(find_max(numbers) == 90, "Maximum is 90");
+    assert(find_max([5]) == 5, "Single element");
+    assert(find_max([5, 1, 9, 3]) == 9, "Max is 9");
+
+    println("✅ test_find_maximum PASSED");
+}
+
+// TEST 9: Binary Search - Find Insert Position
+fun test_find_insert_position() {
+    fun find_insert_pos(arr, target) {
+        let mut left = 0;
+        let mut right = arr.len();
+
+        while left < right {
+            let mid = left + (right - left) / 2;
+
+            if arr[mid] < target {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+
+        left
+    }
+
+    let sorted = [1, 3, 5, 7, 9];
+
+    assert(find_insert_pos(sorted, 0) == 0, "Insert 0 at index 0");
+    assert(find_insert_pos(sorted, 4) == 2, "Insert 4 at index 2");
+    assert(find_insert_pos(sorted, 10) == 5, "Insert 10 at index 5");
+    assert(find_insert_pos(sorted, 5) == 2, "Insert 5 at index 2");
+
+    println("✅ test_find_insert_position PASSED");
+}
+
+// TEST 10: Search in Rotated Sorted Array
+fun test_search_rotated_array() {
+    fun search_rotated(arr, target) {
+        let mut left = 0;
+        let mut right = arr.len() - 1;
+
+        while left <= right {
+            let mid = left + (right - left) / 2;
+
+            if arr[mid] == target {
+                return mid;
+            }
+
+            // Determine which half is sorted
+            if arr[left] <= arr[mid] {
+                // Left half is sorted
+                if target >= arr[left] && target < arr[mid] {
+                    right = mid - 1;  // Target in left half
+                } else {
+                    left = mid + 1;   // Target in right half
+                }
+            } else {
+                // Right half is sorted
+                if target > arr[mid] && target <= arr[right] {
+                    left = mid + 1;   // Target in right half
+                } else {
+                    right = mid - 1;  // Target in left half
+                }
+            }
+        }
+
+        -1
+    }
+
+    let rotated = [4, 5, 6, 7, 0, 1, 2];  // Originally [0,1,2,3,4,5,6,7]
+
+    assert(search_rotated(rotated, 0) == 4, "Found 0 at index 4");
+    assert(search_rotated(rotated, 6) == 2, "Found 6 at index 2");
+    assert(search_rotated(rotated, 3) == -1, "3 not in array");
+
+    println("✅ test_search_rotated_array PASSED");
+}
+
+// TEST 11: Jump Search
+fun test_jump_search() {
+    fun jump_search(arr, target) {
+        let n = arr.len();
+        let step = 3;  // Jump size (simplified, normally sqrt(n))
+        let mut prev = 0;
+
+        // Jump forward
+        while prev < n && arr[prev] < target {
+            let next = prev + step;
+            if next >= n || arr[next] >= target {
+                break;
+            }
+            prev = next;
+        }
+
+        // Linear search in block
+        let mut i = prev;
+        while i < n && i < prev + step {
+            if arr[i] == target {
+                return i;
+            }
+            i = i + 1;
+        }
+
+        -1
+    }
+
+    let sorted = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19];
+
+    assert(jump_search(sorted, 7) == 3, "Found 7 at index 3");
+    assert(jump_search(sorted, 15) == 7, "Found 15 at index 7");
+    assert(jump_search(sorted, 20) == -1, "20 not found");
+
+    println("✅ test_jump_search PASSED");
+}
+
+// TEST 12: Search with Predicate
+fun test_search_with_predicate() {
+    fun find_first_matching(arr, predicate) {
+        let mut i = 0;
+        while i < arr.len() {
+            if predicate(arr[i]) {
+                return i;
+            }
+            i = i + 1;
+        }
+        -1
+    }
+
+    fun is_even(n) {
+        n % 2 == 0
+    }
+
+    fun is_greater_than_50(n) {
+        n > 50
+    }
+
+    let numbers = [11, 23, 35, 48, 52, 67];
+
+    assert(find_first_matching(numbers, is_even) == 3, "First even at index 3");
+    assert(find_first_matching(numbers, is_greater_than_50) == 4, "First >50 at index 4");
+
+    println("✅ test_search_with_predicate PASSED");
+}
+
+// TEST 13: Search in 2D Array
+fun test_search_2d_array() {
+    fun search_2d(matrix, target) {
+        let mut row = 0;
+
+        while row < matrix.len() {
+            let mut col = 0;
+            while col < matrix[row].len() {
+                if matrix[row][col] == target {
+                    return {row: row, col: col, found: true};
+                }
+                col = col + 1;
+            }
+            row = row + 1;
+        }
+
+        {row: -1, col: -1, found: false}
+    }
+
+    let matrix = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ];
+
+    let result1 = search_2d(matrix, 5);
+    assert(result1.found == true, "Found 5");
+    assert(result1.row == 1, "At row 1");
+    assert(result1.col == 1, "At col 1");
+
+    let result2 = search_2d(matrix, 10);
+    assert(result2.found == false, "10 not found");
+
+    println("✅ test_search_2d_array PASSED");
+}
+
+// TEST 14: Find Missing Number in Sequence
+fun test_find_missing_number() {
+    fun find_missing(arr, n) {
+        // Array should contain numbers 1 to n, one is missing
+        let expected_sum = n * (n + 1) / 2;
+        let mut actual_sum = 0;
+
+        for num in arr {
+            actual_sum = actual_sum + num;
+        }
+
+        expected_sum - actual_sum
+    }
+
+    let numbers = [1, 2, 4, 5, 6];  // Missing 3, n=6
+    assert(find_missing(numbers, 6) == 3, "Missing number is 3");
+
+    let numbers2 = [1, 2, 3, 4, 5, 7];  // Missing 6, n=7
+    assert(find_missing(numbers2, 7) == 6, "Missing number is 6");
+
+    println("✅ test_find_missing_number PASSED");
+}
+
+// TEST 15: Find Duplicate Elements
+fun test_find_duplicates() {
+    fun find_duplicates(arr) {
+        let mut duplicates = [];
+        let mut i = 0;
+
+        while i < arr.len() {
+            let mut j = i + 1;
+            let mut is_duplicate = false;
+
+            // Check if already in duplicates
+            for dup in duplicates {
+                if dup == arr[i] {
+                    is_duplicate = true;
+                    break;
+                }
+            }
+
+            if !is_duplicate {
+                // Check if appears later
+                while j < arr.len() {
+                    if arr[i] == arr[j] {
+                        duplicates = duplicates + [arr[i]];
+                        break;
+                    }
+                    j = j + 1;
+                }
+            }
+
+            i = i + 1;
+        }
+
+        duplicates
+    }
+
+    let numbers = [1, 2, 3, 2, 4, 3, 5];
+    let dups = find_duplicates(numbers);
+
+    assert(dups.len() == 2, "Found 2 duplicates");
+    assert(dups[0] == 2, "First duplicate is 2");
+    assert(dups[1] == 3, "Second duplicate is 3");
+
+    println("✅ test_find_duplicates PASSED");
+}
+
+// MAIN: Run all tests
+fun main() {
+    println("Running Chapter 4.2 (Search Algorithms) Tests...\n");
+
+    test_linear_search();
+    test_binary_search();
+    test_recursive_binary_search();
+    test_find_first_occurrence();
+    test_find_last_occurrence();
+    test_find_all_occurrences();
+    test_find_minimum();
+    test_find_maximum();
+    test_find_insert_position();
+    test_search_rotated_array();
+    test_jump_search();
+    test_search_with_predicate();
+    test_search_2d_array();
+    test_find_missing_number();
+    test_find_duplicates();
+
+    println("\n🎉 All Chapter 4.2 tests PASSED!");
+    println("Test Coverage: 15 test functions, 40+ assertions");
+}
