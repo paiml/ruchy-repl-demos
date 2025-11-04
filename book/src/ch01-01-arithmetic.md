@@ -15,7 +15,7 @@ Let's start with the fundamental arithmetic operators. Launch your Ruchy REPL an
 4
 ```
 
-**Test Status:** ✅ Verified with ruchy v1.14.0
+**Test Status:** ✅ Verified with ruchy v3.63.0
 
 ### Addition and Subtraction
 
@@ -263,6 +263,7 @@ Continue to [Variables and Assignment](ch01-02-variables.md) to learn how to sto
 
 ---
 
-**Test Coverage:** ✅ All examples tested with Ruchy v1.14.0  
-**Performance:** ✅ All operations complete in < 1ms  
+**Test Coverage:** ✅ All examples tested with Ruchy v3.63.0
+**Test File:** `book/tests/test_ch01_01_arithmetic.ruchy`
+**Performance:** ✅ All operations complete in < 1ms
 **Quality Score:** ✅ 0.95/1.0

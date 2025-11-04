@@ -1,0 +1,144 @@
+// Test file for Chapter 1.2: Variables and Assignment
+// Extracted from book/src/ch01-02-variables.md
+// Target: Ruchy v3.63.0
+// Note: Some advanced examples use Rust-specific syntax and may need adjustment
+
+// Basic variable declaration
+fun test_basic_variables() {
+    let x = 10
+    assert_eq(x, 10)
+
+    let name = "Ruchy"
+    let age = 5
+    let version = 1.14
+    assert_eq(name, "Ruchy")
+    assert_eq(age, 5)
+    assert_eq(version, 1.14)
+}
+
+// Integer variables
+fun test_integer_variables() {
+    let count = 42
+    let negative = -17
+    let zero = 0
+    assert_eq(count + negative, 25)
+}
+
+// Floating-point variables
+fun test_float_variables() {
+    let pi = 3.14159
+    let temperature = 98.6
+    let ratio = 2.5
+    assert_eq(pi * ratio, 7.853975)
+}
+
+// String variables
+fun test_string_variables() {
+    let greeting = "Hello, World!"
+    let language = "Ruchy"
+    let message = greeting + " Welcome to " + language
+    assert_eq(message, "Hello, World! Welcome to Ruchy")
+}
+
+// Boolean variables
+fun test_boolean_variables() {
+    let is_ready = true
+    let is_complete = false
+    let result = is_ready && !is_complete
+    assert_eq(result, true)
+}
+
+// Type inference
+fun test_type_inference() {
+    let number = 42
+    let decimal = 3.14
+    let text = "hello"
+    let flag = true
+    // Types are inferred automatically
+    assert_eq(number, 42)
+    assert_eq(decimal, 3.14)
+    assert_eq(text, "hello")
+    assert_eq(flag, true)
+}
+
+// Variable shadowing
+fun test_variable_shadowing() {
+    let x = 5
+    let x = 10  // New binding shadows old one
+    assert_eq(x, 10)
+}
+
+// Mutable variables
+fun test_mutable_variables() {
+    let mut counter = 0
+    counter = counter + 1
+    assert_eq(counter, 1)
+    counter += 5
+    assert_eq(counter, 6)
+}
+
+// Circle properties calculation
+fun test_circle_properties() {
+    let pi = 3.14159
+    let radius = 5
+    let diameter = 2 * radius
+    let circumference = 2 * pi * radius
+    let area = pi * radius * radius
+    assert_eq(diameter, 10)
+    assert_eq(circumference, 31.4159)
+    assert_eq(area, 78.53975)
+}
+
+// Temperature conversions
+fun test_temperature_conversions() {
+    let celsius = 25
+    let fahrenheit = celsius * 9 / 5 + 32
+    let kelvin = celsius + 273.15
+    assert_eq(fahrenheit, 77)
+    assert_eq(kelvin, 298.15)
+}
+
+// Tuple destructuring
+fun test_tuple_destructuring() {
+    let point = (10, 20)
+    let (x, y) = point
+    assert_eq(x, 10)
+    assert_eq(y, 20)
+}
+
+// Simple calculations
+fun test_simple_calculations() {
+    let principal = 1000.0
+    let rate = 0.05
+    let time = 3.0
+    let interest = principal * rate * time
+    let total = principal + interest
+    assert_eq(interest, 150.0)
+    assert_eq(total, 1150.0)
+}
+
+// Exercise solutions
+fun test_exercises() {
+    // Exercise 1: Personal information
+    let name = "Alice"
+    let age = 25
+    let favorite_lang = "Ruchy"
+    assert_eq(name, "Alice")
+    assert_eq(age, 25)
+    assert_eq(favorite_lang, "Ruchy")
+
+    // Exercise 2: Rectangle area and perimeter
+    let width = 8
+    let height = 12
+    let area = width * height
+    let perimeter = 2 * (width + height)
+    assert_eq(area, 96)
+    assert_eq(perimeter, 40)
+
+    // Exercise 3: Temperature converter
+    let celsius = 0
+    let fahrenheit = celsius * 9 / 5 + 32
+    let kelvin = celsius + 273.15
+    assert_eq(fahrenheit, 32)
+    assert_eq(kelvin, 273.15)
+}

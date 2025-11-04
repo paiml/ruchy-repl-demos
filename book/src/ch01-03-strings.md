@@ -18,7 +18,7 @@ Strings are fundamental for text processing, user interaction, and data manipula
 "Hello World"
 ```
 
-**Test Status:** ✅ Verified with ruchy v1.14.0
+**Test Status:** ⚠️ Requires verification with ruchy v3.63.0 (contains Rust-specific syntax)
 
 ### String Literals
 
@@ -335,6 +335,7 @@ Continue to [Boolean Logic](ch01-04-booleans.md) to learn about logical operatio
 
 ---
 
-**Test Coverage:** ✅ All examples tested with Ruchy v1.14.0  
-**Performance:** ✅ All operations complete in < 10ms  
-**Quality Score:** ✅ 0.91/1.0
+**Test Coverage:** ⚠️ Requires testing with Ruchy v3.63.0
+**Performance:** ✅ All operations target < 10ms
+**Quality Score:** Target 0.91/1.0
+**Critical Issue:** Chapter contains heavy Rust-specific syntax (String::new, format!, Vec<&str>, .collect::<String>(), closures with |c|) that may not be supported in Ruchy. Requires comprehensive syntax review and potential rewrite for Ruchy compatibility.

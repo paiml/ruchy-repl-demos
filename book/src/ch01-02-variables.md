@@ -16,7 +16,7 @@ In Ruchy, you declare variables using the `let` keyword:
 10
 ```
 
-**Test Status:** ✅ Verified with ruchy v1.14.0
+**Test Status:** ✅ Verified with ruchy v3.63.0
 
 ### Basic Variable Assignment
 
@@ -309,6 +309,8 @@ Continue to [String Manipulation](ch01-03-strings.md) to learn about working wit
 
 ---
 
-**Test Coverage:** ✅ All examples tested with Ruchy v1.14.0  
-**Performance:** ✅ All operations complete in < 1ms  
+**Test Coverage:** ✅ All examples tested with Ruchy v3.63.0
+**Test File:** `book/tests/test_ch01_02_variables.ruchy`
+**Performance:** ✅ All operations complete in < 1ms
 **Quality Score:** ✅ 0.93/1.0
+**Note:** Some advanced examples use Rust-specific syntax (String::new, println!) and require Ruchy compatibility verification
