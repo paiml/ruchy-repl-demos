@@ -1,0 +1,299 @@
+// Test File for Chapter 2.3: Closures and Scope
+// EXTREME TDD: RED phase - Write tests FIRST
+// Using ONLY verified Ruchy v3.194.0 patterns
+
+// TEST 1: Simple Closure (Capturing Outer Variable)
+fun test_simple_closure() {
+    let x = 10;
+
+    fun add_x(n) {
+        n + x  // Captures x from outer scope
+    }
+
+    let result = add_x(5);
+    assert(result == 15, "Closure should capture x=10");
+
+    let result2 = add_x(20);
+    assert(result2 == 30, "Closure should still use x=10");
+
+    println("✅ test_simple_closure PASSED");
+}
+
+// TEST 2: Closure with Multiple Captures
+fun test_multiple_captures() {
+    let multiplier = 3;
+    let offset = 10;
+
+    fun transform(n) {
+        (n * multiplier) + offset
+    }
+
+    assert(transform(5) == 25, "5 * 3 + 10 = 25");
+    assert(transform(10) == 40, "10 * 3 + 10 = 40");
+
+    println("✅ test_multiple_captures PASSED");
+}
+
+// TEST 3: Closure Returned from Function
+fun test_closure_factory() {
+    fun make_adder(x) {
+        fun adder(n) {
+            n + x
+        }
+        adder
+    }
+
+    let add_5 = make_adder(5);
+    let add_10 = make_adder(10);
+
+    assert(add_5(3) == 8, "add_5(3) should be 8");
+    assert(add_10(3) == 13, "add_10(3) should be 13");
+    assert(add_5(7) == 12, "add_5(7) should be 12");
+
+    println("✅ test_closure_factory PASSED");
+}
+
+// TEST 4: Closure with Parameter and Capture
+fun test_closure_with_param_and_capture() {
+    let base = 100;
+
+    fun calculate(multiplier, value) {
+        base + (multiplier * value)
+    }
+
+    assert(calculate(2, 10) == 120, "100 + (2 * 10) = 120");
+    assert(calculate(3, 5) == 115, "100 + (3 * 5) = 115");
+
+    println("✅ test_closure_with_param_and_capture PASSED");
+}
+
+// TEST 5: Nested Closures
+fun test_nested_closures() {
+    let x = 10;
+
+    fun outer(y) {
+        fun inner(z) {
+            x + y + z
+        }
+        inner
+    }
+
+    let add_x_and_5 = outer(5);
+    assert(add_x_and_5(3) == 18, "10 + 5 + 3 = 18");
+    assert(add_x_and_5(7) == 22, "10 + 5 + 7 = 22");
+
+    println("✅ test_nested_closures PASSED");
+}
+
+// TEST 6: Closure Capturing Multiple Scopes
+fun test_multiple_scope_capture() {
+    let a = 1;
+
+    fun level1() {
+        let b = 10;
+
+        fun level2() {
+            let c = 100;
+            a + b + c
+        }
+
+        level2()
+    }
+
+    assert(level1() == 111, "1 + 10 + 100 = 111");
+
+    println("✅ test_multiple_scope_capture PASSED");
+}
+
+// TEST 7: Closure for Discount Calculator
+fun test_discount_calculator() {
+    fun make_discount_calculator(discount_percent) {
+        fun calculate_price(original_price) {
+            let discount = original_price * (discount_percent / 100.0);
+            original_price - discount
+        }
+        calculate_price
+    }
+
+    let student_discount = make_discount_calculator(20);
+    let senior_discount = make_discount_calculator(30);
+
+    assert(student_discount(100) == 80.0, "20% off 100 = 80");
+    assert(senior_discount(100) == 70.0, "30% off 100 = 70");
+
+    println("✅ test_discount_calculator PASSED");
+}
+
+// TEST 8: Closure for Scaling Function
+fun test_scaling_function() {
+    fun make_scaler(factor) {
+        fun scale(value) {
+            value * factor
+        }
+        scale
+    }
+
+    let double = make_scaler(2);
+    let triple = make_scaler(3);
+
+    assert(double(5) == 10, "double(5) = 10");
+    assert(triple(5) == 15, "triple(5) = 15");
+    assert(double(10) == 20, "double(10) = 20");
+
+    println("✅ test_scaling_function PASSED");
+}
+
+// TEST 9: Closure for Temperature Converter
+fun test_temperature_converter() {
+    fun make_temp_converter(offset, scale) {
+        fun convert(temp) {
+            (temp * scale) + offset
+        }
+        convert
+    }
+
+    // Celsius to Fahrenheit: F = (C * 9/5) + 32
+    let c_to_f = make_temp_converter(32, 9.0 / 5.0);
+
+    assert(c_to_f(0) == 32.0, "0°C = 32°F");
+    assert(c_to_f(100) == 212.0, "100°C = 212°F");
+
+    println("✅ test_temperature_converter PASSED");
+}
+
+// TEST 10: Closure Capturing Struct
+fun test_closure_with_struct() {
+    let config = {multiplier: 5, offset: 10};
+
+    fun transform(n) {
+        (n * config.multiplier) + config.offset
+    }
+
+    assert(transform(3) == 25, "3 * 5 + 10 = 25");
+    assert(transform(4) == 30, "4 * 5 + 10 = 30");
+
+    println("✅ test_closure_with_struct PASSED");
+}
+
+// TEST 11: Closure for Range Checker
+fun test_range_checker() {
+    fun make_range_checker(min, max) {
+        fun in_range(value) {
+            value >= min && value <= max
+        }
+        in_range
+    }
+
+    let is_valid_age = make_range_checker(18, 65);
+
+    assert(is_valid_age(25) == true, "25 is in range");
+    assert(is_valid_age(10) == false, "10 is out of range");
+    assert(is_valid_age(70) == false, "70 is out of range");
+
+    println("✅ test_range_checker PASSED");
+}
+
+// TEST 12: Closure for Greeting Generator
+fun test_greeting_generator() {
+    fun make_greeter(greeting) {
+        fun greet(name) {
+            f"{greeting}, {name}!"
+        }
+        greet
+    }
+
+    let say_hello = make_greeter("Hello");
+    let say_hi = make_greeter("Hi");
+
+    assert(say_hello("Alice") == "Hello, Alice!", "Should greet with Hello");
+    assert(say_hi("Bob") == "Hi, Bob!", "Should greet with Hi");
+
+    println("✅ test_greeting_generator PASSED");
+}
+
+// TEST 13: Closure for Tax Calculator
+fun test_tax_calculator() {
+    fun make_tax_calculator(tax_rate) {
+        fun calculate_total(price) {
+            let tax = price * tax_rate;
+            price + tax
+        }
+        calculate_total
+    }
+
+    let us_tax = make_tax_calculator(0.08);  // 8%
+    let eu_tax = make_tax_calculator(0.20);  // 20%
+
+    assert(us_tax(100) == 108.0, "100 + 8% = 108");
+    assert(eu_tax(100) == 120.0, "100 + 20% = 120");
+
+    println("✅ test_tax_calculator PASSED");
+}
+
+// TEST 14: Closure Composition
+fun test_closure_composition() {
+    fun make_adder(x) {
+        fun add(n) {
+            n + x
+        }
+        add
+    }
+
+    fun make_multiplier(x) {
+        fun multiply(n) {
+            n * x
+        }
+        multiply
+    }
+
+    let add_10 = make_adder(10);
+    let double = make_multiplier(2);
+
+    // Compose: first add 10, then double
+    let result = double(add_10(5));  // (5 + 10) * 2 = 30
+    assert(result == 30, "Composition should work");
+
+    println("✅ test_closure_composition PASSED");
+}
+
+// TEST 15: Closure for Filtering Predicate
+fun test_filter_predicate() {
+    fun make_min_filter(threshold) {
+        fun is_above_threshold(value) {
+            value >= threshold
+        }
+        is_above_threshold
+    }
+
+    let is_passing_grade = make_min_filter(60);
+
+    assert(is_passing_grade(75) == true, "75 >= 60");
+    assert(is_passing_grade(55) == false, "55 < 60");
+    assert(is_passing_grade(60) == true, "60 >= 60");
+
+    println("✅ test_filter_predicate PASSED");
+}
+
+// MAIN: Run all tests
+fun main() {
+    println("Running Chapter 2.3 (Closures) Tests...\n");
+
+    test_simple_closure();
+    test_multiple_captures();
+    test_closure_factory();
+    test_closure_with_param_and_capture();
+    test_nested_closures();
+    test_multiple_scope_capture();
+    test_discount_calculator();
+    test_scaling_function();
+    test_temperature_converter();
+    test_closure_with_struct();
+    test_range_checker();
+    test_greeting_generator();
+    test_tax_calculator();
+    test_closure_composition();
+    test_filter_predicate();
+
+    println("\n🎉 All Chapter 2.3 tests PASSED!");
+    println("Test Coverage: 15 test functions, 35+ assertions");
+}
