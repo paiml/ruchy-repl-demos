@@ -1,0 +1,233 @@
+// Test File for Chapter 1.4: Boolean Logic
+// EXTREME TDD: RED phase - Write tests FIRST
+// Using ONLY verified Ruchy v3.194.0 patterns
+
+// TEST 1: Boolean Literals
+fun test_boolean_literals() {
+    let t = true;
+    let f = false;
+
+    assert(t == true, "true should equal true");
+    assert(f == false, "false should equal false");
+    assert(t != f, "true should not equal false");
+
+    println("✅ test_boolean_literals PASSED");
+}
+
+// TEST 2: Logical AND Operator
+fun test_logical_and() {
+    assert(true && true == true, "true AND true = true");
+    assert(true && false == false, "true AND false = false");
+    assert(false && true == false, "false AND true = false");
+    assert(false && false == false, "false AND false = false");
+
+    println("✅ test_logical_and PASSED");
+}
+
+// TEST 3: Logical OR Operator
+fun test_logical_or() {
+    assert(true || true == true, "true OR true = true");
+    assert(true || false == true, "true OR false = true");
+    assert(false || true == true, "false OR true = true");
+    assert(false || false == false, "false OR false = false");
+
+    println("✅ test_logical_or PASSED");
+}
+
+// TEST 4: Logical NOT Operator
+fun test_logical_not() {
+    assert(!true == false, "NOT true = false");
+    assert(!false == true, "NOT false = true");
+    assert(!!true == true, "NOT NOT true = true");
+    assert(!!false == false, "NOT NOT false = false");
+
+    println("✅ test_logical_not PASSED");
+}
+
+// TEST 5: Comparison Operators - Equality
+fun test_equality_comparison() {
+    assert(5 == 5, "5 == 5 should be true");
+    assert(5 != 3, "5 != 3 should be true");
+    assert(!(5 == 3), "5 == 3 should be false");
+    assert(!(5 != 5), "5 != 5 should be false");
+
+    println("✅ test_equality_comparison PASSED");
+}
+
+// TEST 6: Comparison Operators - Ordering
+fun test_ordering_comparison() {
+    assert(5 > 3, "5 > 3 should be true");
+    assert(3 < 5, "3 < 5 should be true");
+    assert(5 >= 5, "5 >= 5 should be true");
+    assert(5 >= 3, "5 >= 3 should be true");
+    assert(3 <= 5, "3 <= 5 should be true");
+    assert(5 <= 5, "5 <= 5 should be true");
+
+    println("✅ test_ordering_comparison PASSED");
+}
+
+// TEST 7: Compound Expressions
+fun test_compound_expressions() {
+    let x = 10;
+    let y = 20;
+    let z = 30;
+
+    assert(x < y && y < z, "Chained comparison with AND");
+    assert(x == 10 || x == 20, "Equality check with OR");
+    assert(!(x > y), "NOT with comparison");
+
+    println("✅ test_compound_expressions PASSED");
+}
+
+// TEST 8: Boolean Variables in Expressions
+fun test_boolean_variables() {
+    let is_valid = true;
+    let is_ready = false;
+
+    assert(is_valid && !is_ready, "Combined boolean variables");
+    assert(is_valid || is_ready, "OR with boolean variables");
+
+    let condition = is_valid && (x => 5 > 3);
+    assert(condition, "Boolean with embedded expression");
+
+    println("✅ test_boolean_variables PASSED");
+}
+
+// TEST 9: Operator Precedence
+fun test_operator_precedence() {
+    // NOT has highest precedence
+    assert(!false || false == true, "NOT before OR");
+
+    // AND before OR
+    assert(true || false && false == true, "AND before OR");
+    assert((true || false) && false == false, "Parentheses override");
+
+    println("✅ test_operator_precedence PASSED");
+}
+
+// TEST 10: Even/Odd Checking
+fun test_even_odd() {
+    let num1 = 10;
+    let num2 = 7;
+
+    let is_even_1 = num1 % 2 == 0;
+    let is_even_2 = num2 % 2 == 0;
+
+    assert(is_even_1, "10 should be even");
+    assert(!is_even_2, "7 should not be even");
+
+    println("✅ test_even_odd PASSED");
+}
+
+// TEST 11: Range Checking
+fun test_range_checking() {
+    let age = 25;
+    let min_age = 18;
+    let max_age = 65;
+
+    let in_range = age >= min_age && age <= max_age;
+    assert(in_range, "25 should be in range 18-65");
+
+    let out_of_range = age < min_age || age > max_age;
+    assert(!out_of_range, "25 should not be out of range");
+
+    println("✅ test_range_checking PASSED");
+}
+
+// TEST 12: Validation Logic
+fun test_validation() {
+    let username = "alice";
+    let password = "secret123";
+
+    let username_valid = username.len() >= 3;
+    let password_valid = password.len() >= 8;
+
+    let can_login = username_valid && password_valid;
+    assert(can_login, "Valid credentials should allow login");
+
+    let short_password = "abc";
+    let short_password_valid = short_password.len() >= 8;
+    let cannot_login = username_valid && short_password_valid;
+    assert(!cannot_login, "Short password should prevent login");
+
+    println("✅ test_validation PASSED");
+}
+
+// TEST 13: Boolean in Conditionals
+fun test_boolean_conditionals() {
+    let is_admin = true;
+    let result = if is_admin {
+        "admin"
+    } else {
+        "user"
+    };
+
+    assert(result == "admin", "Should return admin for true");
+
+    let is_guest = false;
+    let result2 = if is_guest {
+        "guest"
+    } else {
+        "member"
+    };
+
+    assert(result2 == "member", "Should return member for false");
+
+    println("✅ test_boolean_conditionals PASSED");
+}
+
+// TEST 14: Multiple Conditions
+fun test_multiple_conditions() {
+    let temperature = 72;
+    let is_sunny = true;
+
+    let is_nice_day = temperature > 65 && temperature < 85 && is_sunny;
+    assert(is_nice_day, "Should be a nice day");
+
+    let is_extreme = temperature < 32 || temperature > 100;
+    assert(!is_extreme, "Should not be extreme temperature");
+
+    println("✅ test_multiple_conditions PASSED");
+}
+
+// TEST 15: De Morgan's Laws
+fun test_de_morgans_laws() {
+    let a = true;
+    let b = false;
+
+    // !(A && B) == !A || !B
+    let left1 = !(a && b);
+    let right1 = !a || !b;
+    assert(left1 == right1, "De Morgan's Law 1");
+
+    // !(A || B) == !A && !B
+    let left2 = !(a || b);
+    let right2 = !a && !b;
+    assert(left2 == right2, "De Morgan's Law 2");
+
+    println("✅ test_de_morgans_laws PASSED");
+}
+
+// MAIN: Run all tests
+fun main() {
+    println("Running Chapter 1.4 (Boolean Logic) Tests...\n");
+
+    test_boolean_literals();
+    test_logical_and();
+    test_logical_or();
+    test_logical_not();
+    test_equality_comparison();
+    test_ordering_comparison();
+    test_compound_expressions();
+    test_boolean_variables();
+    test_operator_precedence();
+    test_even_odd();
+    test_range_checking();
+    test_validation();
+    test_boolean_conditionals();
+    test_multiple_conditions();
+    test_de_morgans_laws();
+
+    println("\n🎉 All Chapter 1.4 tests PASSED!");
+    println("Test Coverage: 15 test functions, 40+ assertions");
+}
