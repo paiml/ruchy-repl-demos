@@ -1,0 +1,278 @@
+// Test File for Chapter 3.2: Structs (Key-Value Data)
+// EXTREME TDD: RED phase - Write tests FIRST
+// Using ONLY verified Ruchy v3.194.0 patterns
+// Note: Ruchy uses structs for key-value data, not HashMap
+
+// TEST 1: Basic Struct Creation
+fun test_basic_struct() {
+    let person = {name: "Alice", age: 30};
+
+    assert(person.name == "Alice", "Name should be Alice");
+    assert(person.age == 30, "Age should be 30");
+
+    println("✅ test_basic_struct PASSED");
+}
+
+// TEST 2: Struct with Multiple Fields
+fun test_multi_field_struct() {
+    let book = {
+        title: "The Ruchy Guide",
+        author: "Bob",
+        pages: 250,
+        published: true
+    };
+
+    assert(book.title == "The Ruchy Guide", "Title check");
+    assert(book.author == "Bob", "Author check");
+    assert(book.pages == 250, "Pages check");
+    assert(book.published == true, "Published check");
+
+    println("✅ test_multi_field_struct PASSED");
+}
+
+// TEST 3: Nested Structs
+fun test_nested_structs() {
+    let person = {
+        name: "Charlie",
+        address: {
+            street: "123 Main St",
+            city: "Boston",
+            zip: 02101
+        }
+    };
+
+    assert(person.name == "Charlie", "Name check");
+    assert(person.address.street == "123 Main St", "Street check");
+    assert(person.address.city == "Boston", "City check");
+    assert(person.address.zip == 02101, "Zip check");
+
+    println("✅ test_nested_structs PASSED");
+}
+
+// TEST 4: Array of Structs (Key-Value Pairs)
+fun test_array_of_key_value_pairs() {
+    // Simulating key-value storage using array of structs
+    let config = [
+        {key: "host", value: "localhost"},
+        {key: "port", value: "8080"},
+        {key: "debug", value: "true"}
+    ];
+
+    assert(config[0].key == "host", "First key check");
+    assert(config[0].value == "localhost", "First value check");
+    assert(config.len() == 3, "Should have 3 entries");
+
+    println("✅ test_array_of_key_value_pairs PASSED");
+}
+
+// TEST 5: Lookup in Array of Pairs (Manual Search)
+fun test_lookup_in_pairs() {
+    let settings = [
+        {key: "theme", value: "dark"},
+        {key: "fontSize", value: "14"},
+        {key: "autoSave", value: "true"}
+    ];
+
+    // Find value for key "fontSize"
+    let mut found_value = "";
+    for setting in settings {
+        if setting.key == "fontSize" {
+            found_value = setting.value;
+            break;
+        }
+    }
+
+    assert(found_value == "14", "Should find fontSize value");
+
+    println("✅ test_lookup_in_pairs PASSED");
+}
+
+// TEST 6: Updating Struct Fields (Immutable)
+fun test_struct_immutability() {
+    let original = {x: 10, y: 20};
+
+    // Create new struct with updated field
+    let updated = {x: 15, y: original.y};
+
+    assert(original.x == 10, "Original unchanged");
+    assert(updated.x == 15, "Updated has new value");
+    assert(updated.y == 20, "Other field copied");
+
+    println("✅ test_struct_immutability PASSED");
+}
+
+// TEST 7: Struct with Mixed Types
+fun test_mixed_type_struct() {
+    let product = {
+        id: 101,
+        name: "Laptop",
+        price: 999.99,
+        inStock: true,
+        tags: ["electronics", "computers"]
+    };
+
+    assert(product.id == 101, "ID is integer");
+    assert(product.name == "Laptop", "Name is string");
+    assert(product.price == 999.99, "Price is float");
+    assert(product.inStock == true, "Stock is boolean");
+    assert(product.tags.len() == 2, "Tags is array");
+
+    println("✅ test_mixed_type_struct PASSED");
+}
+
+// TEST 8: Struct Comparison
+fun test_struct_comparison() {
+    let p1 = {x: 10, y: 20};
+    let p2 = {x: 10, y: 20};
+    let p3 = {x: 15, y: 20};
+
+    // Field-by-field comparison
+    let same_as_p1 = (p2.x == p1.x) && (p2.y == p1.y);
+    let same_as_p3 = (p3.x == p1.x) && (p3.y == p1.y);
+
+    assert(same_as_p1 == true, "p1 and p2 have same values");
+    assert(same_as_p3 == false, "p1 and p3 differ");
+
+    println("✅ test_struct_comparison PASSED");
+}
+
+// TEST 9: Extracting Values from Struct
+fun test_struct_value_extraction() {
+    let rect = {width: 100, height: 50};
+
+    let w = rect.width;
+    let h = rect.height;
+    let area = w * h;
+
+    assert(area == 5000, "Area calculation");
+
+    println("✅ test_struct_value_extraction PASSED");
+}
+
+// TEST 10: Array of Structs - Filtering
+fun test_filter_array_of_structs() {
+    let users = [
+        {name: "Alice", age: 30, active: true},
+        {name: "Bob", age: 25, active: false},
+        {name: "Charlie", age: 35, active: true}
+    ];
+
+    let mut active_users = [];
+    for user in users {
+        if user.active {
+            active_users = active_users + [user];
+        }
+    }
+
+    assert(active_users.len() == 2, "Should have 2 active users");
+    assert(active_users[0].name == "Alice", "First active is Alice");
+
+    println("✅ test_filter_array_of_structs PASSED");
+}
+
+// TEST 11: Struct as Function Parameter
+fun test_struct_parameter() {
+    fun calculate_area(rect) {
+        rect.width * rect.height
+    }
+
+    let r1 = {width: 10, height: 5};
+    let r2 = {width: 20, height: 3};
+
+    assert(calculate_area(r1) == 50, "Area of r1");
+    assert(calculate_area(r2) == 60, "Area of r2");
+
+    println("✅ test_struct_parameter PASSED");
+}
+
+// TEST 12: Struct as Function Return Value
+fun test_struct_return_value() {
+    fun make_point(x, y) {
+        {x: x, y: y}
+    }
+
+    let p1 = make_point(10, 20);
+    let p2 = make_point(30, 40);
+
+    assert(p1.x == 10 && p1.y == 20, "p1 correct");
+    assert(p2.x == 30 && p2.y == 40, "p2 correct");
+
+    println("✅ test_struct_return_value PASSED");
+}
+
+// TEST 13: Configuration Object Pattern
+fun test_config_object() {
+    let config = {
+        database: {
+            host: "localhost",
+            port: 5432,
+            name: "mydb"
+        },
+        cache: {
+            enabled: true,
+            ttl: 3600
+        }
+    };
+
+    assert(config.database.host == "localhost", "DB host");
+    assert(config.database.port == 5432, "DB port");
+    assert(config.cache.enabled == true, "Cache enabled");
+    assert(config.cache.ttl == 3600, "Cache TTL");
+
+    println("✅ test_config_object PASSED");
+}
+
+// TEST 14: Merging Structs (Manual)
+fun test_merge_structs() {
+    let defaults = {theme: "light", fontSize: 12};
+    let user_prefs = {fontSize: 16};
+
+    // Merge: user prefs override defaults
+    let final_config = {
+        theme: defaults.theme,        // From defaults
+        fontSize: user_prefs.fontSize  // From user (overrides)
+    };
+
+    assert(final_config.theme == "light", "Theme from defaults");
+    assert(final_config.fontSize == 16, "Font size from user prefs");
+
+    println("✅ test_merge_structs PASSED");
+}
+
+// TEST 15: Struct Transformation
+fun test_struct_transformation() {
+    let celsius_temp = {value: 25, unit: "C"};
+
+    // Convert to Fahrenheit
+    let fahrenheit_value = (celsius_temp.value * 9.0 / 5.0) + 32.0;
+    let fahrenheit_temp = {value: fahrenheit_value, unit: "F"};
+
+    assert(fahrenheit_temp.value == 77.0, "25°C = 77°F");
+    assert(fahrenheit_temp.unit == "F", "Unit is F");
+
+    println("✅ test_struct_transformation PASSED");
+}
+
+// MAIN: Run all tests
+fun main() {
+    println("Running Chapter 3.2 (Structs/Key-Value Data) Tests...\n");
+
+    test_basic_struct();
+    test_multi_field_struct();
+    test_nested_structs();
+    test_array_of_key_value_pairs();
+    test_lookup_in_pairs();
+    test_struct_immutability();
+    test_mixed_type_struct();
+    test_struct_comparison();
+    test_struct_value_extraction();
+    test_filter_array_of_structs();
+    test_struct_parameter();
+    test_struct_return_value();
+    test_config_object();
+    test_merge_structs();
+    test_struct_transformation();
+
+    println("\n🎉 All Chapter 3.2 tests PASSED!");
+    println("Test Coverage: 15 test functions, 35+ assertions");
+}
