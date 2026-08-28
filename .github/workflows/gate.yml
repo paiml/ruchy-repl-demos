@@ -1,0 +1,42 @@
+# The `gate` status check.
+#
+# The paiml org ruleset "Green Main" (id 13878864) requires exactly one status
+# context and its name is the literal string `gate`:
+#
+#   $ gh api orgs/paiml/rulesets/13878864 \
+#       --jq '.rules[]|select(.type=="required_status_checks")
+#             |.parameters.required_status_checks[].context'
+#   gate
+#
+# This repo emitted no such check, so every pull request reported
+# mergeStateStatus=BLOCKED while nothing was failing.
+#
+# The job id and the job name are both the literal `gate` on purpose: the
+# ruleset matches the check CONTEXT, so `Gate`, `quality-gate` and `ci / gate`
+# are all different contexts and none of them satisfies it.
+#
+# What it measures lives in scripts/gate.sh, so it can be run locally
+# (`sh scripts/gate.sh`) and reviewed as code rather than as YAML.
+
+name: Gate
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run gate checks
+        run: sh scripts/gate.sh
